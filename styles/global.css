@@ -1,6 +1,45 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+
+/* Set Poppins as the default font family */
+* {
+    font-family: 'Poppins-Regular', system-ui, -apple-system, sans-serif;
+}
+
+/* Font weight classes for different Poppins variants */
+.font-thin {
+    font-family: 'Poppins-Thin', system-ui, -apple-system, sans-serif;
+}
+
+.font-extralight {
+    font-family: 'Poppins-ExtraLight', system-ui, -apple-system, sans-serif;
+}
+
+.font-light {
+    font-family: 'Poppins-Light', system-ui, -apple-system, sans-serif;
+}
+
+.font-normal {
+    font-family: 'Poppins-Regular', system-ui, -apple-system, sans-serif;
+}
+
+.font-medium {
+    font-family: 'Poppins-Medium', system-ui, -apple-system, sans-serif;
+}
+
+.font-semibold {
+    font-family: 'Poppins-SemiBold', system-ui, -apple-system, sans-serif;
+}
+
+.font-bold {
+    font-family: 'Poppins-Bold', system-ui, -apple-system, sans-serif;
+}
+
+.font-extrabold {
+    font-family: 'Poppins-ExtraBold', system-ui, -apple-system, sans-serif;
+}
+
+.font-black {
+    font-family: 'Poppins-Black', system-ui, -apple-system, sans-serif;
+}
