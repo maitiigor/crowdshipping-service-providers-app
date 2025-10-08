@@ -1,10 +1,14 @@
+import {
+    AddressPicker,
+    AddressSelection
+} from "@/components/Custom/AddressPicker";
 import { AntDesign, MaterialIcons } from "@expo/vector-icons";
 import { Picker } from "@react-native-picker/picker"; // dropdown select
-import * as Location from "expo-location";
 import { router } from "expo-router";
 import { Formik } from "formik";
-import React, { useEffect } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import {
+    ActivityIndicator,
     ScrollView,
     Text,
     TextInput,
@@ -14,7 +18,12 @@ import {
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useDispatch } from "react-redux";
 import * as Yup from "yup";
-import { Button, ButtonText } from "../../../components/ui/button";
+import CountryDropdown from "../../../components/Custom/CountryDropdown";
+import InputLabelText from "../../../components/Custom/InputLabelText";
+import PhoneNumberInput from "../../../components/Custom/PhoneNumberInput";
+import { ThemedText } from "../../../components/ThemedText";
+import { ThemedView } from "../../../components/ThemedView";
+import { Button } from "../../../components/ui/button";
 import { useEditProfileForm } from "../../../hooks/useRedux";
 import { AppDispatch, useAppSelector } from "../../../store";
 import { setDocument } from "../../../store/slices/profileSlice";
@@ -25,8 +34,10 @@ export default function EditProfile() {
 
     const { profile } = useAppSelector((state) => state.profile);
 
+    const [phone, setPhone] = useState("");
 
 
+    const phoneInputRef = useRef<any>(null);
     const userProfile = useAppSelector((state) => state.auth.userProfile);
 
     const validationSchema = Yup.object().shape({
@@ -38,8 +49,10 @@ export default function EditProfile() {
         gender: Yup.string().required("Gender is required"),
         state: Yup.string().required("State is required"),
         city: Yup.string().required("City is required"),
-        location: Yup.string().required("Location is required"),
+        location: Yup.object().required("Location is required"),
     });
+
+    
 
     const formData = userProfile;
     const match = userProfile.phoneNumber.match(/\(\+?(\d+)\)\s*(\d+)/);;
@@ -51,9 +64,18 @@ export default function EditProfile() {
         country: userProfile.profile.country,
         gender: userProfile.profile.gender,
         state: userProfile.profile.state,
-        location: userProfile.profile.location,
+        location: {
+            coordinates: {
+                lat: userProfile.profile.location.lat,
+                lng: userProfile.profile.location.lng,
+            },
+            address: userProfile.profile.location.address
+        },
         city: userProfile.profile.city
     }
+
+    const [selectedPickupAddress, setSelectedPickupAddress] =
+        useState<AddressSelection | null>(null);
 
     const dispatch = useDispatch<AppDispatch>();
     // inside a component
@@ -71,56 +93,32 @@ export default function EditProfile() {
         router.push("/screens/onboarding/edit-profile-documents");
     };
 
+    const  formatPhoneNumber = (phone: string): string  => {
+        const match = phone.match(/^\+?(\d{1,3})(\d{6,})$/);
+        if (!match) return phone; // if format doesn't match, return original
+        const [, countryCode, number] = match;
+        return `(+${countryCode})${number}`;
+    }
 
-    const geocodeAddress = async (address: string) => {
-        try {
-            if (!address || address.trim() === "") return null;
-
-            // Request location permissions
-            const { status } = await Location.requestForegroundPermissionsAsync();
-            if (status !== "granted") {
-                console.log("Permission to access location was denied");
-                return { lat: 0, lng: 0 };
-            }
-
-            // Convert the address into coordinates
-            const geocoded = await Location.geocodeAsync(address);
-
-            if (geocoded.length > 0) {
-                const { latitude, longitude } = geocoded[0];
-                return { lat: latitude, lng: longitude };
-            }
-
-            return null;
-        } catch (error) {
-            console.log("Geocoding error:", error);
-            return { lat: 0, lng: 0 };
-        }
-    };
 
     const submitData = async (values: any) => {
 
-        console.log("jjeejejjeje hehe")
         const formData = {
             fullName: values.fullName,
             email: values.email,
-            phoneNumber: "(" + values.countryCode + ")" + values.phoneNumber.replace(/\s/g, "").replace(/^0/, ""),
-            password: values.password,
-            confirmPassword: values.confirmPassword,
+            phoneNumber: formatPhoneNumber(values.phoneNumber),
             city: values.city,
             state: values.state,
             gender: values.gender,
             country: values.country,
             location: {
-                lat: 0,
-                lng: 0,
-                address: values.location,
+                lat: values.location.coordinates.lat,
+                lng: values.location.coordinates.lng,
+                address: values.location.address,
             }
         }
         console.log("Form data:", formData);
-        const location = await geocodeAddress(values.location);
-        formData.location.lat = location?.lat || 0;
-        formData.location.lng = location?.lng || 0;
+
         dispatch(setDocument(formData));
 
         router.push("/screens/onboarding/edit-profile-documents");
@@ -166,7 +164,7 @@ export default function EditProfile() {
                 validationSchema={validationSchema}
                 onSubmit={submitData}
             >
-                {({ handleChange, handleSubmit, values, errors, touched }) => (
+                {({ handleChange, handleSubmit, values, errors, touched, setFieldValue }) => (
                     <ScrollView
                         className="flex-1 px-6"
                         showsVerticalScrollIndicator={false}
@@ -176,23 +174,22 @@ export default function EditProfile() {
                         </Text>
 
                         {/* Full Name */}
-                        <View className="mb-4">
-                            <Text className="text-sm text-gray-700 mb-2">Your Full Name</Text>
+                        <ThemedView>
+                            <InputLabelText className="">Full Name</InputLabelText>
                             <TextInput
                                 placeholder="Full Name"
                                 value={values.fullName}
-                                editable={false}
                                 onChangeText={handleChange("fullName")}
                                 className="bg-[#FDF2F0] rounded-lg px-4 py-4 text-base"
                             />
                             {touched.fullName && errors.fullName && (
                                 <Text style={{ color: "red", fontSize: 12 }}>{errors.fullName}</Text>
                             )}
-                        </View>
+                        </ThemedView>
 
                         {/* Email */}
-                        <View className="mb-4">
-                            <Text className="text-sm text-gray-700 mb-2">Email Address</Text>
+                        <ThemedView>
+                            <InputLabelText className="">Email Address</InputLabelText>
                             <TextInput
                                 placeholder="Email"
                                 value={values.email}
@@ -204,63 +201,40 @@ export default function EditProfile() {
                             {touched.email && errors.email && (
                                 <Text style={{ color: "red", fontSize: 12 }}>{errors.email}</Text>
                             )}
-                        </View>
+                        </ThemedView>
 
                         {/* Phone Number */}
-                        <View className="mb-4">
-                            <Text className="text-sm text-gray-700 mb-2">Phone Number</Text>
-                            <View className="flex-row bg-[#FDF2F0] rounded-lg items-center">
-                                <Picker
-                                    selectedValue={values.countryCode}
-                                    style={{ width: 100 }}
-                                    onValueChange={handleChange("countryCode")}
-                                >
-                                    {dropdownOptions.countryCodes.map((code) => (
-                                        <Picker.Item
-                                            key={code.value}
-                                            label={code.label}
-                                            value={code.value}
-                                        />
-                                    ))}
-                                </Picker>
-                                <TextInput
-                                    placeholder="Phone"
-                                    value={values.phoneNumber}
-                                    onChangeText={handleChange("phoneNumber")}
-                                    className="flex-1 px-4 py-4 text-base"
-                                    keyboardType="phone-pad"
-                                />
-                            </View>
-                            {touched.phoneNumber && errors.phoneNumber && (
-                                <Text style={{ color: "red", fontSize: 12 }}>{errors.phoneNumber}</Text>
+                        <ThemedView>
+                            <InputLabelText className="">Phone Number</InputLabelText>
+                            <PhoneNumberInput
+                                ref={phoneInputRef}
+                                value={values.phoneNumber}
+                                onChangeFormattedText={(t) => {
+                                    setPhone(t);
+                                    setFieldValue("phoneNumber", t);
+                                }}
+                            />
+                            {errors.phoneNumber && touched.phoneNumber && (
+                                <ThemedText type="b4_body" className="text-error-500">
+                                    {errors.phoneNumber}
+                                </ThemedText>
                             )}
-                        </View>
+                        </ThemedView>
 
                         {/* Country */}
-                        <View className="mb-4">
-                            <Text className="text-sm text-gray-700 mb-2">Country</Text>
-                            <Picker
-                                selectedValue={values.country}
-                                onValueChange={handleChange("country")}
-                                style={{ backgroundColor: "#FDF2F0", borderRadius: 50 }}
-                                className="rounded-lg"
-                            >
-                                {dropdownOptions.countries.map((country) => (
-                                    <Picker.Item
-                                        key={country.value}
-                                        label={country.label}
-                                        value={country.value}
-                                    />
-                                ))}
-                            </Picker>
-                            {touched.country && errors.country && (
-                                <Text style={{ color: "red", fontSize: 12 }}>{errors.country}</Text>
-                            )}
-                        </View>
+                        <ThemedView>
+                            <CountryDropdown
+                                values={values}
+                                errors={errors}
+                                touched={touched}
+                                handleChange={handleChange("country")}
+                            />
+                        </ThemedView>
+
 
                         {/* Gender */}
-                        <View className="mb-4">
-                            <Text className="text-sm text-gray-700 mb-2">Gender</Text>
+                        <ThemedView>
+                            <InputLabelText className="">Gender</InputLabelText>
                             <Picker
                                 selectedValue={values.gender}
                                 onValueChange={handleChange("gender")}
@@ -278,11 +252,11 @@ export default function EditProfile() {
                             {touched.gender && errors.gender && (
                                 <Text style={{ color: "red", fontSize: 12 }}>{errors.gender}</Text>
                             )}
-                        </View>
+                        </ThemedView>
 
                         {/* State */}
-                        <View className="mb-4">
-                            <Text className="text-sm text-gray-700 mb-2">State</Text>
+                        <ThemedView>
+                            <InputLabelText className="">State</InputLabelText>
                             <Picker
                                 selectedValue={values.state}
                                 onValueChange={handleChange("state")}
@@ -300,11 +274,11 @@ export default function EditProfile() {
                             {touched.state && errors.state && (
                                 <Text style={{ color: "red", fontSize: 12 }}>{errors.state}</Text>
                             )}
-                        </View>
+                        </ThemedView>
 
                         {/* City */}
-                        <View className="mb-4">
-                            <Text className="text-sm text-gray-700 mb-2">City</Text>
+                        <ThemedView>
+                            <InputLabelText className="">City</InputLabelText>
                             <Picker
                                 selectedValue={values.city}
                                 onValueChange={handleChange("city")}
@@ -322,32 +296,42 @@ export default function EditProfile() {
                             {touched.city && errors.city && (
                                 <Text style={{ color: "red", fontSize: 12 }}>{errors.city}</Text>
                             )}
-                        </View>
+                        </ThemedView>
 
                         {/* Location */}
-                        <View className="mb-8">
-                            <Text className="text-sm text-gray-700 mb-2">Location</Text>
-                            <TextInput
-                                placeholder="Enter Location"
+                        <ThemedView>
+                            <InputLabelText className="">Pickup Address</InputLabelText>
+                            <AddressPicker
                                 value={values.location}
-                                onChangeText={handleChange("location")}
-                                className="bg-[#FDF2F0] rounded-lg px-4 py-4 text-base"
+                                onSelect={(sel) => {
+                                    setSelectedPickupAddress(sel);
+                                    // Reflect selection in Formik values.location
+                                    setFieldValue("location", {
+                                        coordinates: {
+                                            lat: sel.coordinates.lat,
+                                            lng: sel.coordinates.lng,
+                                        },
+                                        address: sel.address,
+                                    });
+                                }}
                             />
                             {touched.location && errors.location && (
-                                <Text style={{ color: "red", fontSize: 12 }}>{errors.location}</Text>
+                                <Text style={{ color: "red", fontSize: 12 }}>{errors.location.address}</Text>
                             )}
-                        </View>
-                        {/* Next Button */}
-                        <View className="pb-8">
-                            <Button
-                                size="xl"
-                                className="bg-[#E75B3B] rounded-xl"
+                        </ThemedView>
 
-                                onPress={() => handleSubmit()}
-                            >
-                                <ButtonText className="text-white font-semibold">Next</ButtonText>
-                            </Button>
-                        </View>
+                        <Button
+                            variant="solid"
+                            size="2xl"
+                            isDisabled={false}
+                            className="mt-5 rounded-[12px]"
+                            onPress={() => handleSubmit()}
+                        >
+                            <ThemedText type="s1_subtitle" className="text-white">
+                                {false ? <ActivityIndicator color="white" /> : "Next"}
+                            </ThemedText>
+                        </Button>
+
                     </ScrollView>
                 )}
             </Formik>

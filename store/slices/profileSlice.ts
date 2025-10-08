@@ -1,11 +1,12 @@
 
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import apiClient from "../../lib/api/client";
-import { ApiError, ApiResponse, CompleProfilePayload, RegistrationPayload } from "../../models";
+import { ApiError, ApiResponse, CompleteProfilePayload } from "../../models";
+import { setUserProfile } from "./authSlice";
 
 
 interface EditProfileForm {
-    profile: CompleProfilePayload;
+    profile: CompleteProfilePayload;
     loading: boolean;
     error: ApiError | null;
     success: boolean;
@@ -19,7 +20,7 @@ const initialState: EditProfileForm = {
         fullName: "",
         email: "",
         phoneNumber: "",
-        countryCode: "",
+        //  countryCode: "",
         country: "",
         gender: "",
         state: "",
@@ -51,54 +52,35 @@ const profileSlice = createSlice({
         setLoading(state, action: PayloadAction<boolean>) {
             state.loading = action.payload;
         },
-        setProfile(state, action: PayloadAction<CompleProfilePayload>) {
+        setProfile(state, action: PayloadAction<CompleteProfilePayload>) {
             state.profile = action.payload;
         },
-        setDocument(state, action: PayloadAction<Partial<CompleProfilePayload>>) {
+        setDocument(state, action: PayloadAction<Partial<CompleteProfilePayload>>) {
             state.profile = { ...state.profile, ...action.payload };
         },
-        initializeProfile(state, action: PayloadAction<Partial<CompleProfilePayload>>) {
+        initializeProfile(state, action: PayloadAction<Partial<CompleteProfilePayload>>) {
             state.profile = { ...state.profile, ...action.payload };
+        },
+        setPaymentData(state, action: PayloadAction<Partial<CompleteProfilePayload>>) {
+            state.profile.accountName = action.payload.accountName || state.profile.accountName;
+            state.profile.accountNumber = action.payload.accountNumber || state.profile.accountNumber;
+            state.profile.bankName = action.payload.bankName || state.profile.bankName;
         },
 
     },
     extraReducers: (builder) => {
         builder
-            .addCase(compleProfile.pending, (state) => {
+            .addCase(completeProfile.pending, (state) => {
                 state.loading = true;
                 state.error = null;
-                state.profile = {
-                    accountType: "",
-                    fullName: "",
-                    email: "",
-                    phoneNumber: "",
-                    countryCode: "",
-                    country: "",
-                    gender: "",
-                    state: "",
-                    city: "",
-                    location: {
-                        lat: 0,
-                        lng: 0,
-                        address: "",
-                    },
-                    identificationType: "",
-                    licenseNumber: "",
-                    identificationPicture: "",
-                    proofOfAddress: "",
-                    insuranceResidenceProof: "",
-                    bankName: "",
-                    accountName: "",
-                    accountNumber: "",
-                    driverPassport: "",
-                };
             })
-            .addCase(compleProfile.fulfilled, (state, action) => {
+            .addCase(completeProfile.fulfilled, (state, action) => {
                 state.loading = false;
                 state.success = true;
                 state.profile = action.payload.data;
+                console.log("completeing profile:", action.payload.data);
             })
-            .addCase(compleProfile.rejected, (state, action) => {
+            .addCase(completeProfile.rejected, (state, action) => {
                 state.loading = false;
             }).addCase(uploadDocument.fulfilled, (state, action) => {
                 state.loading = false;
@@ -111,11 +93,26 @@ const profileSlice = createSlice({
                     ...state.profile,
                     [documentType]: url,
                 };
+                console.log(state.profile, "profile datata jsjdjsj", documentType, url);
             })
             .addCase(uploadDocument.pending, (state) => {
                 state.loading = true;
             })
             .addCase(uploadDocument.rejected, (state, action) => {
+                state.loading = false;
+                state.error = action.payload as ApiError;
+            }).addCase(getUserProfile.pending, (state, action) => {
+                state.loading = true;
+                state.error = null;
+                
+            }).addCase(getUserProfile.fulfilled, (state, action) => {
+                state.loading = false;
+                state.error = null;
+                console.log("get user profile:", action.payload?.data);
+                if(action.payload?.data){
+                    setUserProfile(action.payload.data);
+                }         
+            }).addCase(getUserProfile.rejected, (state, action) => {
                 state.loading = false;
                 state.error = action.payload as ApiError;
             });
@@ -124,17 +121,74 @@ const profileSlice = createSlice({
     },
 });
 
-export const compleProfile = createAsyncThunk(
-    "profile/complete-profile",
-    async (payload: RegistrationPayload, { rejectWithValue }) => {
+
+
+const getFileType = (file: string) => {
+    const extension = file.split(".").pop();
+    return `image/${extension}`;
+};
+
+
+export const uploadDocument = createAsyncThunk(
+    "profile/upload-document",
+    async (
+        { documentType, file }: { documentType: "identificationPicture" | "proofOfAddress" | "insuranceResidenceProof" | "driverPassport"; file: string },
+        { rejectWithValue }
+    ) => {
         try {
-            console.log("completing profile:", payload)
-            setLoading(true);
+            console.log("uploading document:", documentType, file);
+            const formData = new FormData();
+
+            const extension = file.split(".").pop();
+
+
+            formData.append(
+                "file",
+                {
+                    uri: file,
+                    type: `image/${extension}`,
+                    name: `${documentType}.${extension}`,
+                } as any
+            );
+
+            // optionally include document type if API expects it
+            formData.append("documentType", documentType);
+
             const response = await apiClient.post<ApiResponse<any>>(
+                "/storage-upload",
+                formData,
+                {
+                    headers: {
+                        "Content-Type": "multipart/form-data",
+                    },
+                }
+            );
+            console.log("upload responsejjjjj:", response.data.data.data);
+
+            return { documentType, url: response.data.data.data }; // assuming your API returns { url: "..." }
+        } catch (error: any) {
+            console.log("upload error:", error);
+            return rejectWithValue(
+                error.response?.data
+                    ? { code: error.response.status, message: error.response.data.message }
+                    : ({ code: 0, message: "Network error" } as ApiError)
+            );
+        }
+    }
+);
+
+
+export const completeProfile = createAsyncThunk(
+    "profile/complete-profile",
+    async (payload: CompleteProfilePayload, { rejectWithValue }) => {
+        try {
+            //console.log("completing profile:", payload)
+            setLoading(true);
+            const response = await apiClient.patch<ApiResponse<any>>(
                 "/user/complete-profile",
                 payload,
             );
-            console.log("signup response:", response.data);
+            //  console.log("completeing profile:", response.data);
             return response.data;
         } catch (error: any) {
             console.log("signup error:", error.response.data)
@@ -148,53 +202,21 @@ export const compleProfile = createAsyncThunk(
     }
 );
 
-
-export const uploadDocument = createAsyncThunk(
-    "profile/upload-document",
-    async (
-        { documentType, file }: { documentType: "idFrontImage" | "idBackImage" | "selfieImage"; file: any },
-        { rejectWithValue }
-    ) => {
+export const getUserProfile = createAsyncThunk(
+    "prodile/get-user-profile",
+    async () => {
         try {
-            console.log("uploading document:", documentType, file);
-            const formData = new FormData();
-            if (!file?.uri) throw new Error("File object missing uri");
-
-            formData.append(
-                "file",
-                {
-                    uri: file.uri,
-                    type: file.type || "image/jpeg",
-                    name: file.name || "document.jpg",
-                } as any
+            const response = await apiClient.get<ApiResponse<any>>(
+                "/user/profile",
             );
 
-            // optionally include document type if API expects it
-            formData.append("documentType", documentType);
-            console.log("documente attached");
-            const response = await apiClient.post<ApiResponse<any>>(
-                "/storage-upload",
-                formData,
-                {
-                    headers: {
-
-                        "Content-Type": "multipart/form-data",
-                    },
-                }
-            );
-            console.log("upload responsejjjjj:", response.data);
-
-            return { documentType, url: response.data }; // assuming your API returns { url: "..." }
+            return response.data;
         } catch (error: any) {
-            console.log("upload error:", error);
-            return rejectWithValue(
-                error.response?.data
-                    ? { code: error.response.status, message: error.response.data.message }
-                    : ({ code: 0, message: "Network error" } as ApiError)
-            );
+            console.log("get user profile error:", error)
         }
     }
 );
+
 
 
 
@@ -205,6 +227,7 @@ export const {
     setLoading,
     setProfile,
     setDocument,
+    setPaymentData,
     initializeProfile
 } = profileSlice.actions;
 

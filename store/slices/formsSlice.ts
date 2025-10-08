@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { EditProfileFormState, FormValidation, DropdownOptions, SelectOption } from "../../models";
+import { DropdownOptions, EditProfileFormState, FormValidation, SelectOption } from "../../models";
 
 interface FormsState {
   editProfile: EditProfileFormState;
@@ -10,7 +10,7 @@ interface FormsState {
     gender: boolean;
     state: boolean;
     city: boolean;
-    idType: boolean;
+    identificationType: boolean;
     bank: boolean;
   };
 }
@@ -35,9 +35,9 @@ const initialDropdownOptions: DropdownOptions = {
   ],
   genders: [
     { label: "Select Gender", value: "" },
-    { label: "Male", value: "Male" },
-    { label: "Female", value: "Female" },
-    { label: "Other", value: "Other" },
+    { label: "Male", value: "male" },
+    { label: "Female", value: "female" },
+    { label: "ther", value: "other" },
   ],
   states: [
     { label: "Select State", value: "" },
@@ -91,7 +91,7 @@ const initialState: FormsState = {
     gender: false,
     state: false,
     city: false,
-    idType: false,
+    identificationType: false,
     bank: false,
   },
 };

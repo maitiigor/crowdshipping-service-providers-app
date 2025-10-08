@@ -3,6 +3,7 @@ import { MaterialIcons } from "@expo/vector-icons";
 import { Picker } from "@react-native-picker/picker"; // dropdown select
 import { router } from "expo-router";
 import { Formik } from "formik";
+import { HelpCircleIcon, LucideIcon } from 'lucide-react-native';
 import React from "react";
 import {
     ScrollView,
@@ -14,6 +15,7 @@ import {
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useDispatch } from "react-redux";
 import * as Yup from "yup";
+import CustomToast from '../../../components/Custom/CustomToast';
 import { Button, ButtonText } from "../../../components/ui/button";
 import { Toast, ToastDescription, ToastTitle, useToast } from "../../../components/ui/toast";
 import { useEditProfileForm } from "../../../hooks/useRedux";
@@ -42,6 +44,41 @@ export default function Registration() {
             .oneOf([Yup.ref("password")], "Passwords must match")
             .required("Confirm password is required"),
     });
+
+
+    const showNewToast = ({
+        title,
+        description,
+        icon,
+        action = "error",
+        variant = "solid",
+    }: {
+        title: string;
+        description: string;
+        icon: LucideIcon;
+        action: "error" | "success" | "info" | "muted" | "warning";
+        variant: "solid" | "outline";
+    }) => {
+        const newId = Math.random();
+        toast.show({
+            id: newId.toString(),
+            placement: "top",
+            duration: 3000,
+            render: ({ id }) => {
+                const uniqueToastId = "toast-" + id;
+                return (
+                    <CustomToast
+                        uniqueToastId={uniqueToastId}
+                        icon={icon}
+                        action={action}
+                        title={title}
+                        variant={variant}
+                        description={description}
+                    />
+                );
+            },
+        });
+    };
 
 
 
@@ -79,45 +116,36 @@ export default function Registration() {
                 });
 
                 setTimeout(() => {
-                    router.replace({
+                    router.push({
                         pathname: '/screens/onboarding/create-pin',
                         params: {
-                          type: "sign-up",        // could be "sign-up" | "reset-password" | "change-email"
-                          email: values.email,      // pass email dynamically
+                            type: "sign-up",        // could be "sign-up" | "password-reset" | "change-email"
+                            email: values.email,      // pass email dynamically
                         }
-                      });
+                    });
                 }, 3000);
 
             } else {
                 const errorMessage =
                     (resultAction.payload as ApiError) || { code: 0, message: "Something went wrong" } as ApiError;
 
-                toast.show({
-                    placement: "top",
-                    duration: 3000,
-                    render: ({ id }) => {
-                        return (
-                            <Toast nativeID={id}>
-                                <ToastTitle>Registration Failed</ToastTitle>
-                                <ToastDescription>{errorMessage.message}</ToastDescription>
-                            </Toast>
-                        );
-                    },
+                showNewToast({
+                    title: "Registration Failed",
+                    description: errorMessage.message,
+                    icon: HelpCircleIcon,
+                    action: "success",
+                    variant: "solid",
                 });
+
             }
         } catch (error) {
             console.error("🚨 Error dispatching register:", error);
-            toast.show({
-                placement: "top",
-                duration: 3000,
-                render: ({ id }) => {
-                    return (
-                        <Toast nativeID={id} action="error">
-                            <ToastTitle>Unexpected Error 🚨</ToastTitle>
-                            <ToastDescription>Please try again later</ToastDescription>
-                        </Toast>
-                    );
-                },
+            showNewToast({
+                title: "Unexpected Error 🚨",
+                description: "Please try again later",
+                icon: HelpCircleIcon,
+                action: "error",
+                variant: "solid",
             });
         }
     };

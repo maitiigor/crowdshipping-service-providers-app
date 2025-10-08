@@ -10,6 +10,7 @@ export default function OnboardingLayout() {
       <Stack.Screen name="index" />
       <Stack.Screen name="login" />
       <Stack.Screen name="forgot-password" />
+      <Stack.Screen name="reset-password" />
       <Stack.Screen name="welcome" />
       <Stack.Screen name="registration" />
       <Stack.Screen name="edit-profile" />

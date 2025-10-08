@@ -124,8 +124,9 @@ const styles = StyleSheet.create({
     fontWeight: "400", // Regular
   },
   b2_body: {
-    fontSize: 16,
+    fontSize: 14,
     lineHeight: 24,
+    fontFamily: "Inter-Regular",
     fontWeight: "500", // Medium
   },
   b3_body: {

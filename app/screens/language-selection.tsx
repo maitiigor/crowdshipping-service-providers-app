@@ -1,5 +1,7 @@
-import { router } from 'expo-router';
-import React, { useState } from 'react';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { router, useNavigation } from 'expo-router';
+import React, { useEffect, useMemo, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import {
     ScrollView,
     StatusBar,
@@ -10,6 +12,7 @@ import {
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Icon, SearchIcon } from '../../components/ui/icon';
+import { changeAppLanguage, LANGUAGE_STORAGE_KEY } from '../../lib/i18n';
 
 interface Language {
     code: string;
@@ -33,6 +36,30 @@ const languages: Language[] = [
 export default function LanguageSelectionScreen() {
     const [selectedLanguage, setSelectedLanguage] = useState<string>('en');
     const [searchQuery, setSearchQuery] = useState('');
+
+    const navigation = useNavigation();
+
+    const { t, i18n } = useTranslation();
+
+
+    const selectedLabel = useMemo(() => {
+        const found = languages.find(
+            (l) => l.code === (selectedLanguage || i18n.language)
+        );
+        return found?.name ?? "English";
+    }, [selectedLanguage, i18n.language]);
+
+    useEffect(() => {
+        navigation.setOptions({ headerShown: false });
+    }, [navigation]);
+
+    useEffect(() => {
+        // preload persisted language to reflect selection
+        AsyncStorage.getItem(LANGUAGE_STORAGE_KEY)
+            .then((saved) => saved && setSelectedLanguage(saved))
+            .catch(() => { });
+    }, []);
+
 
     const filteredLanguages = languages.filter(language =>
         language.name.toLowerCase().includes(searchQuery.toLowerCase())
@@ -107,7 +134,10 @@ export default function LanguageSelectionScreen() {
                 {filteredLanguages.map((language) => (
                     <TouchableOpacity
                         key={language.code}
-                        onPress={() => handleLanguageSelect(language.code)}
+                        onPress={async () => {
+                            setSelectedLanguage(language.code);
+                            await changeAppLanguage(language.code);
+                        }}
                         className={`flex-row items-center p-4 rounded-lg mb-3 ${selectedLanguage === language.code
                             ? 'bg-[#E75B3B]/10 border border-[#E75B3B]'
                             : 'bg-gray-50'

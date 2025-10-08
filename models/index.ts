@@ -1,5 +1,4 @@
 import { Float } from "react-native/Libraries/Types/CodegenTypes";
-import { forgotPassword } from "../store/slices/authSlice";
 
 // User Profile Models
 export interface RegistrationPayload {
@@ -16,29 +15,29 @@ export interface ApiError {
     message: string;
 }
 
-export interface ForgotPasswordRequest{
+export interface ForgotPasswordRequest {
     email: string;
 }
 
-export interface ResetPasswordRequest{
+export interface ResetPasswordRequest {
     password: string;
     confirmPassword: string;
 }
 
-export interface User{
+export interface User {
     id: string,
     fullName: string,
     email: string,
     phoneNumber: string,
-    role : string,
+    role: string,
     lastLogin: string,
     status: string,
     kycStatus: string,
-    profilePicUrl: string|null
+    profilePicUrl: string | null
 }
 
 
-export interface UserProfile{
+export interface UserProfile {
     _id: string,
     userId: string,
     fullName: string,
@@ -55,15 +54,15 @@ export interface UserProfile{
 }
 
 
-interface Profile{
-    _id: string,
-    profilePicUrl: string|null,
+interface Profile {
+    // _id: string,
+    profilePicUrl: string | null,
     country: string,
-    address:  string,
+    address: string,
     city: string,
     state: string,
     gender: string
-    location: string,
+    location: Location,
 }
 
 
@@ -100,9 +99,14 @@ export interface DocumentInfo {
     verificationStatus: 'pending' | 'approved' | 'rejected';
 }
 
-export interface OTPVerificationRequest{
-    type: string,
+export interface OTPVerificationRequest {
+    type: "password-reset" | "sign-up",
     otp: string,
+    email: string,
+}
+
+export interface ResendOTPRequest {
+    type: "password-reset" | "sign-up",
     email: string,
 }
 
@@ -121,12 +125,12 @@ interface Location {
 }
 
 
-export interface CompleProfilePayload{
+export interface CompleteProfilePayload {
     accountType: string;
     fullName: string;
     email: string;
     phoneNumber: string;
-    countryCode: string;
+    // countryCode: string;
     country: string;
     gender: string;
     state: string;
@@ -170,8 +174,8 @@ export interface AuthState {
     loginError?: string;
     loading: boolean;
     success: boolean,
-    error: Array<any>|null|unknown,
-    token: string|null
+    error: Array<any> | null | unknown,
+    token: string | null
     user: User,
     userProfile: UserProfile,
     resetToken: string,

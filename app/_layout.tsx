@@ -17,6 +17,8 @@ import { QueryClientProvider } from "@tanstack/react-query";
 import React from "react";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { Provider } from "react-redux";
+import { Platform } from "react-native";
+import { ensureI18n } from "../lib/i18n";
 
 export default function RootLayout() {
   const colorScheme = useColorScheme();
@@ -37,7 +39,21 @@ export default function RootLayout() {
     "Inter-Italic": require("../assets/fonts/Inter-Italic-VariableFont_opsz,wght.ttf"),
   });
 
-  if (!loaded) {
+  const [i18nReady, setI18nReady] = React.useState(false);
+
+  // Load phone input CSS only on web to show country flags (web only)
+  React.useEffect(() => {
+    if (Platform.OS === "web") {
+      // Dynamic import avoids bundling into native builds
+      import("react-phone-number-input/style.css").catch(() => {});
+    }
+  }, []);
+
+  React.useEffect(() => {
+    ensureI18n().finally(() => setI18nReady(true));
+  }, []);
+
+  if (!loaded || !i18nReady) {
     // Async font loading only occurs in development.
     return null;
   }
@@ -51,9 +67,7 @@ export default function RootLayout() {
             value={colorScheme === "dark" ? DarkTheme : DefaultTheme}
           >
             <GestureHandlerRootView>
-
               <Stack>
-
                 <Stack.Screen name="index" options={{ headerShown: false }} />
                 <Stack.Screen name="screens/language-selection" options={{ headerShown: false }} />
                 <Stack.Screen name="screens/onboarding" options={{ headerShown: false }} />

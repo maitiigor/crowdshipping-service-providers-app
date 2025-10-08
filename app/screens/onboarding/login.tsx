@@ -2,6 +2,7 @@ import { router } from 'expo-router';
 import { Formik } from 'formik';
 import React, { useEffect, useState } from 'react';
 import {
+    ActivityIndicator,
     KeyboardAvoidingView,
     Platform,
     ScrollView,
@@ -18,11 +19,14 @@ import { Button, ButtonText } from '@/components/ui/button';
 import { Apple, ArrowLeftIcon, EyeIcon, EyeOffIcon, Facebook, Google, Icon } from '@/components/ui/icon';
 import { Input, InputField, InputSlot } from '@/components/ui/input';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { CircleCheckIcon, HelpCircleIcon, LucideIcon } from 'lucide-react-native';
 import { useDispatch } from 'react-redux';
-import { Toast, ToastDescription, ToastTitle, useToast } from '../../../components/ui/toast';
+import CustomToast from '../../../components/Custom/CustomToast';
+import { useToast } from '../../../components/ui/toast';
 import { ApiError, LoginFormValues } from '../../../models';
 import { AppDispatch, useAppSelector } from '../../../store';
 import { login, setHasLaunched } from '../../../store/slices/authSlice';
+import { getUserProfile } from '../../../store/slices/profileSlice';
 
 
 // Validation Schema
@@ -44,7 +48,41 @@ export default function LoginScreen() {
         AsyncStorage.setItem("hasLaunched", "true");
         dispatch(setHasLaunched(true));
     }, []);
-    
+
+    const showNewToast = ({
+        title,
+        description,
+        icon,
+        action = "error",
+        variant = "solid",
+    }: {
+        title: string;
+        description: string;
+        icon: LucideIcon;
+        action: "error" | "success" | "info" | "muted" | "warning";
+        variant: "solid" | "outline";
+    }) => {
+        const newId = Math.random();
+        toast.show({
+            id: newId.toString(),
+            placement: "top",
+            duration: 3000,
+            render: ({ id }) => {
+                const uniqueToastId = "toast-" + id;
+                return (
+                    <CustomToast
+                        uniqueToastId={uniqueToastId}
+                        icon={icon}
+                        action={action}
+                        title={title}
+                        variant={variant}
+                        description={description}
+                    />
+                );
+            },
+        });
+    };
+
     const handleLogin = async (values: LoginFormValues) => {
         console.log(values);
         const resultAction = await dispatch(login(values));
@@ -57,39 +95,36 @@ export default function LoginScreen() {
                     router.replace({
                         pathname: '/screens/onboarding/create-pin',
                         params: {
-                            type: "sign-up",        // could be "sign-up" | "reset-password" | "change-email"
+                            type: "sign-up",        // could be "sign-up" | "password-reset" | "change-email"
                             email: values.email,      // pass email dynamically
                         }
                     });
                 } else if (resultAction.payload.data.user.kycStatus === "pending") {
-                    toast.show({
-                        placement: "top",
-                        duration: 2000,
-                        render: ({ id }) => {
-                            return (
-                                <Toast nativeID={id} action="success">
-                                    <ToastTitle>Login Successful</ToastTitle>
-                                    <ToastDescription>Welcome back!</ToastDescription>
-                                </Toast>
-                            );
-                        },
+
+                    showNewToast({
+                        title: "Login Successful",
+                        description: "Welcome back!",
+                        icon: CircleCheckIcon,
+                        action: "success",
+                        variant: "solid",
                     });
                     router.replace('/screens/onboarding/edit-profile');
 
                 } else {
-                    toast.show({
-                        placement: "top",
-                        duration: 2000,
-                        render: ({ id }) => {
-                            return (
-                                <Toast nativeID={id} action="success">
-                                    <ToastTitle>Login Successful</ToastTitle>
-                                    <ToastDescription>Welcome back!</ToastDescription>
-                                </Toast>
-                            );
-                        },
+                    showNewToast({
+                        title: "Login Successful",
+                        description: "Welcome back!",
+                        icon: CircleCheckIcon,
+                        action: "success",
+                        variant: "solid",
                     });
-                    router.replace('/screens/dashboard');
+
+                    dispatch(getUserProfile());
+
+                    setTimeout(() => {
+                        router.replace('/screens/dashboard');
+                    }, 2000);
+
                 }
             } else {
 
@@ -97,32 +132,22 @@ export default function LoginScreen() {
                     (resultAction.payload as ApiError) || { code: 0, message: "Something went wrong" } as ApiError;
                 console.log("Login failed:", errorMessage);
 
-                toast.show({
-                    placement: "top",
-                    duration: 3000,
-                    render: ({ id }) => {
-                        return (
-                            <Toast nativeID={id} action="error">
-                                <ToastTitle>Login Failed</ToastTitle>
-                                <ToastDescription>{errorMessage.message}</ToastDescription>
-                            </Toast>
-                        );
-                    },
+                showNewToast({
+                    title: "Login Failed",
+                    description: errorMessage.message,
+                    icon: HelpCircleIcon,
+                    action: "error",
+                    variant: "solid",
                 });
             }
         } catch (error) {
 
-            toast.show({
-                placement: "top",
-                duration: 3000,
-                render: ({ id }) => {
-                    return (
-                        <Toast nativeID={id} action="error">
-                            <ToastTitle>Unexpected Error 🚨</ToastTitle>
-                            <ToastDescription>Please try again later</ToastDescription>
-                        </Toast>
-                    );
-                },
+            showNewToast({
+                title: "Unexpected Error 🚨",
+                description: "Please try again later",
+                icon: HelpCircleIcon,
+                action: "error",
+                variant: "solid",
             });
         }
 
@@ -261,7 +286,7 @@ export default function LoginScreen() {
                                         disabled={loading}
                                     >
                                         <ButtonText className="text-white font-semibold text-base" style={{ fontFamily: 'Poppins-SemiBold' }}>
-                                            {loading ? 'Signing in...' : 'Login'}
+                                            {loading ? <ActivityIndicator color="white" /> : 'Login'}
                                         </ButtonText>
                                     </Button>
 

@@ -1,6 +1,6 @@
 import { LogoutModal } from '@/components/ui/logout-modal';
 import { router } from 'expo-router';
-import React, { use, useState } from 'react';
+import React, { useState } from 'react';
 import {
   ScrollView,
   StatusBar,
@@ -59,6 +59,10 @@ const Sidebar: React.FC<SidebarProps> = ({ isVisible, onClose, onEditProfile, on
 
   const [isOnline, setIsOnline] = useState(false);
 
+  const user = useAppSelector((state) => state.auth.user);
+
+  const firstName = user.fullName.split(' ')[0];
+
   const setAvailablity = () => {
     setIsOnline(!isOnline);
   }
@@ -109,7 +113,7 @@ const Sidebar: React.FC<SidebarProps> = ({ isVisible, onClose, onEditProfile, on
                 </View>
                 <View>
                   <Text className="text-lg font-semibold text-gray-900">Welcome back,</Text>
-                  <Text className="text-lg font-semibold text-gray-900">Gbemisola</Text>
+                  <Text className="text-lg font-semibold text-gray-900">{firstName}</Text>
                 </View>
               </View>
               <TouchableOpacity onPress={onClose}>
@@ -200,9 +204,11 @@ export default function DashboardScreen() {
   const [showLogoutModal, setShowLogoutModal] = useState(false);
   const dispatch = useAppDispatch();
 
-  const userProfile = useAppSelector((state) => state.auth.user);
-  console.log(userProfile.fullName);
-  const firstName = "Gbemisola"// userProfile.fullName.split(' ')[0];
+  const user = useAppSelector((state) => state.auth.user);
+  const profile = useAppSelector((state) => state.auth.userProfile);
+
+  console.log(user.fullName);
+  const firstName = user.fullName.split(' ')[0];
   const auth = useAppSelector
   const transportTypes = [
     { type: 'Ground', IconComponent: GroundIcon },
@@ -254,7 +260,7 @@ export default function DashboardScreen() {
     setSidebarVisible(false);
     // Handle logout logic here
     dispatch(logout());
-    
+
     router.replace('/screens/onboarding/login');
   };
 
@@ -276,8 +282,9 @@ export default function DashboardScreen() {
           </View>
           <View className="flex-row items-center">
             <LocationIcon />
-            <Text className="text-sm text-gray-600 ml-1">Surulere, Lagos..</Text>
+            <Text className="text-sm text-gray-600 ml-1">{profile.profile.address}</Text>
             <Text className="text-sm text-gray-400 ml-1">▼</Text>
+
           </View>
         </View>
 

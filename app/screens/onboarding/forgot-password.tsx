@@ -1,7 +1,9 @@
 import { router } from 'expo-router';
 import { Formik } from 'formik';
-import React, { useState } from 'react';
+import React from 'react';
 import {
+    ActivityIndicator,
+    Image,
     KeyboardAvoidingView,
     Platform,
     ScrollView,
@@ -17,6 +19,14 @@ import * as Yup from 'yup';
 import { Button, ButtonText } from '@/components/ui/button';
 import { ArrowLeftIcon, Icon } from '@/components/ui/icon';
 import { Input, InputField } from '@/components/ui/input';
+import { CircleCheckIcon, HelpCircleIcon, LucideIcon } from 'lucide-react-native';
+import { useDispatch } from 'react-redux';
+import CustomToast from '../../../components/Custom/CustomToast';
+import InputLabelText from '../../../components/Custom/InputLabelText';
+import { useToast } from '../../../components/ui/toast';
+import { ApiError } from '../../../models';
+import { AppDispatch, useAppSelector } from '../../../store';
+import { forgotPassword } from '../../../store/slices/authSlice';
 
 // Validation Schema
 const forgotPasswordSchema = Yup.object().shape({
@@ -30,30 +40,94 @@ interface ForgotPasswordFormValues {
 }
 
 export default function ForgotPasswordScreen() {
-    const [isLoading, setIsLoading] = useState(false);
-
+    const { loading } = useAppSelector((state) => state.auth);
+    const dispatch = useDispatch<AppDispatch>();
+    const toast = useToast();
+    const showNewToast = ({
+        title,
+        description,
+        icon,
+        action = "error",
+        variant = "solid",
+    }: {
+        title: string;
+        description: string;
+        icon: LucideIcon;
+        action: "error" | "success" | "info" | "muted" | "warning";
+        variant: "solid" | "outline";
+    }) => {
+        const newId = Math.random();
+        toast.show({
+            id: newId.toString(),
+            placement: "top",
+            duration: 3000,
+            render: ({ id }) => {
+                const uniqueToastId = "toast-" + id;
+                return (
+                    <CustomToast
+                        uniqueToastId={uniqueToastId}
+                        icon={icon}
+                        action={action}
+                        title={title}
+                        variant={variant}
+                        description={description}
+                    />
+                );
+            },
+        });
+    };
     const handleForgotPassword = async (values: ForgotPasswordFormValues) => {
-        setIsLoading(true);
-        try {
-            // TODO: Implement actual forgot password logic
-            console.log('Forgot password values:', values);
-                //  router.replace({
-                //                     pathname: '/screens/onboarding/create-pin',
-                //                     params: {
-                //                       type: "sign-up",        // could be "sign-up" | "reset-password" | "change-email"
-                //                       email: values.email,      // pass email dynamically
-                //                     }
-                //                   });
-            // Simulate API call
-            await new Promise(resolve => setTimeout(resolve, 2000));
 
-            // Navigate to success screen or show success message
-            // router.push('/screens/onboarding/forgot-password-success');
-        } catch (error) {
-            console.error('Forgot password error:', error);
-        } finally {
-            setIsLoading(false);
+        const formData = {
+            email: values.email,
         }
+
+        try {
+            const resultAction = await dispatch(forgotPassword(formData));
+
+            if (forgotPassword.fulfilled.match(resultAction)) {
+                console.log("Forgot password success:", resultAction.payload);
+
+                showNewToast({
+                    title: "Password Reset Email Sent",
+                    description: "Please check your email for the reset link",
+                    icon: CircleCheckIcon,
+                    action: "success",
+                    variant: "solid",
+                });
+
+                setTimeout(() => {
+                    router.push({
+                        pathname: '/screens/onboarding/create-pin',
+                        params: {
+                            type: "password-reset",        // could be "sign-up" | "password-reset" | "change-email"
+                            email: values.email,      // pass email dynamically
+                        }
+                    });
+                }, 2000);
+            } else {
+                const errorMessage =
+                    (resultAction.payload as ApiError) || { code: 0, message: "Something went wrong" } as ApiError;
+                showNewToast({
+                    title: "Password Reset Failed",
+                    description: errorMessage.message,
+                    icon: HelpCircleIcon,
+                    action: "error",
+                    variant: "solid",
+                });
+            }
+
+        } catch (error) {
+            showNewToast({
+                title: "Unexpected Error 🚨",
+                description: "Please try again later",
+                icon: HelpCircleIcon,
+                action: "error",
+                variant: "solid",
+            });
+        }
+
+
     };
 
     return (
@@ -89,15 +163,12 @@ export default function ForgotPasswordScreen() {
                     <View className="flex-1 px-6 pt-8">
                         {/* Icon */}
                         <View className="items-center mb-8">
-                            <View className="w-20 h-20 bg-[#E75B3B] rounded-2xl items-center justify-center mb-6 relative">
-                                <View className="w-10 h-10 bg-white rounded-full items-center justify-center">
-                                    <Text className="text-[#E75B3B] text-2xl">🔑</Text>
-                                </View>
-                                {/* Question mark indicator */}
-                                <View className="absolute -top-1 -right-1 w-6 h-6 bg-[#E75B3B] rounded-full items-center justify-center border-2 border-white">
-                                    <Text className="text-white text-xs font-bold">?</Text>
-                                </View>
-                            </View>
+                            <Image
+                                alt="Lock"
+                                source={require("@/assets/images/onboarding/lock.png")}
+                                className="w-auto h-[100px]"
+                                resizeMode="contain"
+                            />
                         </View>
 
                         {/* Title and Description */}
@@ -120,16 +191,16 @@ export default function ForgotPasswordScreen() {
                                 <View className="space-y-6">
                                     {/* Email Input */}
                                     <View>
-                                        <Text className="text-sm font-medium text-gray-700 mb-2">
+                                        <InputLabelText>
                                             Email address
-                                        </Text>
+                                        </InputLabelText>
                                         <Input
                                             variant="outline"
                                             size="lg"
                                             className={`${errors.email && touched.email
                                                 ? 'border-red-500'
                                                 : 'border-gray-300'
-                                                } bg-rose-50 border-0 min-h-[54px]`}
+                                                } bg-rose-50 rounded-lg border-0 min-h-[54px]`}
                                         >
                                             <InputField
                                                 placeholder="user@gmail.com"
@@ -154,10 +225,10 @@ export default function ForgotPasswordScreen() {
                                         size="lg"
                                         className="bg-[#E75B3B] mt-12 h-[48px] rounded-xl"
                                         onPress={() => handleSubmit()}
-                                        disabled={isLoading}
+                                        disabled={loading}
                                     >
                                         <ButtonText className="text-white font-semibold text-base">
-                                            {isLoading ? 'Sending...' : 'Send'}
+                                            {loading ? <ActivityIndicator /> : 'Send'}
                                         </ButtonText>
                                     </Button>
                                 </View>

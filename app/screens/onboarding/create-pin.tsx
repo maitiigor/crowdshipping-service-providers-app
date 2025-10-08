@@ -1,5 +1,6 @@
 import { AntDesign } from "@expo/vector-icons";
-import { router } from "expo-router";
+import { router, useLocalSearchParams } from "expo-router";
+import { CircleCheckIcon, HelpCircleIcon, LucideIcon } from "lucide-react-native";
 import React, { useEffect, useState } from "react";
 import {
     Text,
@@ -8,14 +9,14 @@ import {
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useDispatch } from "react-redux";
+import CustomToast from "../../../components/Custom/CustomToast";
 import OTPVerification from "../../../components/ui/otp-verification";
 import RegistrationSuccessModal from "../../../components/ui/registration-success-modal";
-import { Toast, ToastDescription, ToastTitle, useToast } from "../../../components/ui/toast";
+import { useToast } from "../../../components/ui/toast";
 import { useAuth } from "../../../hooks/useRedux";
-import { ApiError, OTPVerificationRequest } from "../../../models";
+import { ApiError, OTPVerificationRequest, ResendOTPRequest } from "../../../models";
 import { AppDispatch, useAppSelector } from "../../../store";
 import { resendOTP, verifyOTP } from "../../../store/slices/authSlice";
-import { useLocalSearchParams } from "expo-router";
 
 export default function CreatePin() {
     const { verificationCountdown, startCountdown } = useAuth();
@@ -34,39 +35,70 @@ export default function CreatePin() {
         }
     }, []);
 
+    const showNewToast = ({
+        title,
+        description,
+        icon,
+        action = "error",
+        variant = "solid",
+    }: {
+        title: string;
+        description: string;
+        icon: LucideIcon;
+        action: "error" | "success" | "info" | "muted" | "warning";
+        variant: "solid" | "outline";
+    }) => {
+        const newId = Math.random();
+        toast.show({
+            id: newId.toString(),
+            placement: "top",
+            duration: 3000,
+            render: ({ id }) => {
+                const uniqueToastId = "toast-" + id;
+                return (
+                    <CustomToast
+                        uniqueToastId={uniqueToastId}
+                        icon={icon}
+                        action={action}
+                        title={title}
+                        variant={variant}
+                        description={description}
+                    />
+                );
+            },
+        });
+    };
+
     const handleVerifyOTP = async (otp: string) => {
         const payload: OTPVerificationRequest = {
-            type: type,
+            type: type as "password-reset" | "sign-up",
             otp,
-            email: userProfile.email,
+            email: email,
         };
         try {
             const resultAction = await dispatch(verifyOTP(payload));
 
             if (verifyOTP.fulfilled.match(resultAction)) {
                 console.log("Verification success:", resultAction.payload);
-                if (resultAction.payload.data.status === "approved") {
-                    toast.show({
-                        placement: "top",
-                        duration: 2000,
-                        render: ({ id }) => {
-                            return (
-                                <Toast nativeID={id} action="success">
-                                    <ToastTitle>Email Verified</ToastTitle>
-                                    <ToastDescription>Your email has been verified</ToastDescription>
-                                </Toast>
-                            );
-                        },
+                if (resultAction.payload.data.status === "approved" && type == "sign-up") {
+                    showNewToast({
+                        title: "Email Verified",
+                        description: "Your email has been verified",
+                        icon: CircleCheckIcon,
+                        action: "success",
+                        variant: "solid",
                     });
 
                     setTimeout(() => {
                         if (type == "sign-up") {
-                            
+
                             router.push('/screens/onboarding/edit-profile');
-                        }else{
+                        } else {
                             router.push('/screens/dashboard');
                         }
                     }, 2000);
+                } else if (type == "password-reset") {
+                    router.push('/screens/onboarding/reset-password');
                 }
 
 
@@ -75,33 +107,23 @@ export default function CreatePin() {
 
                 const errorMessage =
                     (resultAction.payload as ApiError) || { code: 0, message: "Something went wrong" } as ApiError;
-                toast.show({
-                    placement: "top",
-                    duration: 3000,
-                    render: ({ id }) => {
-                        return (
-                            <Toast nativeID={id} action="error">
-                                <ToastTitle>Registration Failed</ToastTitle>
-                                <ToastDescription>{errorMessage.message}</ToastDescription>
-                            </Toast>
-                        );
-                    },
+                showNewToast({
+                    title: "Verification Failed",
+                    description: errorMessage.message,
+                    icon: HelpCircleIcon,
+                    action: "error",
+                    variant: "solid",
                 });
             }
 
         } catch (error) {
 
-            toast.show({
-                placement: "top",
-                duration: 3000,
-                render: ({ id }) => {
-                    return (
-                        <Toast nativeID={id} action="error">
-                            <ToastTitle>Unexpected Error 🚨</ToastTitle>
-                            <ToastDescription>Please try again later</ToastDescription>
-                        </Toast>
-                    );
-                },
+            showNewToast({
+                title: "Unexpected Error 🚨",
+                description: "Please try again later",
+                icon: HelpCircleIcon,
+                action: "error",
+                variant: "solid",
             });
         }
 
@@ -111,10 +133,9 @@ export default function CreatePin() {
         if (verificationCountdown === 0) {
             startCountdown(20);
             // Here you would typically resend the verification code
-            const payload: OTPVerificationRequest = {
+            const payload: ResendOTPRequest = {
                 type: "sign-up",
-                otp: "",
-                email: userProfile.email,
+                email: email,
             };
 
             try {
@@ -124,50 +145,16 @@ export default function CreatePin() {
                 if (resendOTP.fulfilled.match(resultAction)) {
                     console.log("Resend success:", resultAction.payload);
 
-                    toast.show({
-                        placement: "top",
-                        duration: 2000,
-                        render: ({ id }) => {
-                            return (
-                                <Toast nativeID={id} action="success">
-                                    <ToastTitle>OTP Resent</ToastTitle>
-                                    <ToastDescription>Check your email for the new code</ToastDescription>
-                                </Toast>
-                            );
-                        },
-                    });
-                } else if (resendOTP.rejected.match(resultAction)) {
-                    console.log("Resend failed:", resultAction.payload);
-                    const errorMessage =
-                        (resultAction.payload as ApiError) || { code: 0, message: "Something went wrong" } as ApiError;
-                    toast.show({
-                        placement: "top",
-                        duration: 3000,
-                        render: ({ id }) => {
-                            return (
-                                <Toast nativeID={id} action="error">
-                                    <ToastTitle>Resend Failed</ToastTitle>
-                                    <ToastDescription>{errorMessage.message}</ToastDescription>
-                                </Toast>
-                            );
-                        },
+                    showNewToast({
+                        title: "OTP Resent",
+                        description: "A new OTP has been sent to your email",
+                        icon: CircleCheckIcon,
+                        action: "success",
+                        variant: "solid",
                     });
                 }
             } catch (error) {
-
-                toast.show({
-                    placement: "top",
-                    duration: 3000,
-                    render: ({ id }) => {
-                        return (
-                            <Toast nativeID={id} action="error">
-                                <ToastTitle>Resend Failed</ToastTitle>
-                                <ToastDescription>Something went wrong</ToastDescription>
-                            </Toast>
-                        );
-                    },
-                });
-
+                console.log("Resend failed:", error);
             }
         }
     };
@@ -193,7 +180,7 @@ export default function CreatePin() {
             {/* OTP Verification Component */}
             <OTPVerification
                 title="OTP Verification"
-                subtitle={`Enter the 5-digit code sent to your email at ${userProfile.email}`}
+                subtitle={`Enter the 5-digit code sent to your email at ${email}`}
                 pinLength={5}
                 onVerify={handleVerifyOTP}
                 onResend={handleResendCode}

@@ -1,7 +1,7 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import apiClient, { setAuthToken } from "../../lib/api/client";
-import { ApiError, ApiResponse, AuthState, ForgotPasswordRequest, LoginFormValues, OTPVerificationRequest, RegistrationPayload, ResetPasswordRequest } from "../../models";
+import { ApiError, ApiResponse, AuthState, ForgotPasswordRequest, LoginFormValues, OTPVerificationRequest, RegistrationPayload, ResendOTPRequest, ResetPasswordRequest, User, UserProfile } from "../../models";
 
 
 
@@ -22,11 +22,11 @@ const initialState: AuthState = {
     user: {
         id: "",
         email: "",
-        fullName:"",
+        fullName: "",
         lastLogin: "",
-        phoneNumber:"",
+        phoneNumber: "",
         profilePicUrl: null,
-        role:"",
+        role: "",
         kycStatus: "",
         status: "",
     },
@@ -34,32 +34,36 @@ const initialState: AuthState = {
     userProfile: {
         _id: "",
         deviceTokens: [],
-       email: "",
-       fullName: "",
-       isVerfied: false,
-       phoneNumber: "",
-       profile: {
-         _id: "",
-         location: "",
-          address: "",
-          city: "",
-         country: "",
-         gender: "",
-         profilePicUrl: "",
-         state: "",
-       },
-       profileId: "",
-       role: "",
-       status:"",
-       userId: "",
-       wallet:{
-        _id: "",
-        availableBalance: 0,
-        balance: 0,
+        email: "",
+        fullName: "",
+        isVerfied: false,
+        phoneNumber: "",
+        profile: {
+            // _id: "",
+            location: {
+                lat: 0,
+                lng: 0,
+                address: "",
+            },
+            address: "",
+            city: "",
+            country: "",
+            gender: "",
+            profilePicUrl: "",
+            state: "",
+        },
+        profileId: "",
+        role: "",
+        status: "",
+        userId: "",
+        wallet: {
+            _id: "",
+            availableBalance: 0,
+            balance: 0,
+            walletId: ""
+        },
         walletId: ""
-       },
-       walletId: ""
-      //  profileCompletion: 0,
+        //  profileCompletion: 0,
         //isOnboardingComplete: false,
     },
 
@@ -85,6 +89,14 @@ const authSlice = createSlice({
         },
         setPin(state, action: PayloadAction<string>) {
             state.pin = action.payload;
+        },
+        setUser(state, action: PayloadAction<User>) {
+            state.user = action.payload;
+        },
+        setUserProfile(state, action: PayloadAction<UserProfile>) {
+            state.userProfile = action.payload;
+
+            AsyncStorage.setItem("userProfile", JSON.stringify(state.userProfile));
         },
         clearPin(state) {
             state.pin = "";
@@ -135,17 +147,6 @@ const authSlice = createSlice({
             .addCase(register.pending, (state) => {
                 state.loading = true;
                 state.error = null;
-                state.user =  {
-                    id: "",
-                    email: "",
-                    fullName:"",
-                    lastLogin: "",
-                    phoneNumber:"",
-                    kycStatus: "",
-                    profilePicUrl: null,
-                    role:"",
-                    status: "",
-                };
             })
             .addCase(register.fulfilled, (state, action) => {
                 state.loading = false;
@@ -159,37 +160,39 @@ const authSlice = createSlice({
             }).addCase(login.pending, (state) => {
                 state.loading = true;
                 state.error = null;
-                state.user =  {
+                state.user = {
                     id: "",
                     email: "",
-                    fullName:"",
+                    fullName: "",
                     lastLogin: "",
-                    phoneNumber:"",
+                    phoneNumber: "",
                     profilePicUrl: null,
                     kycStatus: "",
-                    role:"",
+                    role: "",
                     status: "",
                 };
             })
             .addCase(login.fulfilled, (state, action) => {
                 state.loading = false;
                 state.success = true;
-                console.log("user info",action.payload.data.user);              
+                console.log("user info", action.payload.data.user);
                 state.user = action.payload.data.user;
                 state.userProfile._id = state.user.id
                 state.userProfile.email = state.user.email,
-                state.userProfile.fullName = state.user.fullName,
-                state.userProfile.role = state.user.role
+                    state.userProfile.fullName = state.user.fullName,
+                    state.userProfile.role = state.user.role
                 state.userProfile.status = state.user.status
                 state.userProfile.phoneNumber = state.user.phoneNumber,
-                state.token = action.payload.data.token
+                    state.token = action.payload.data.token
                 const match = action.payload.data.user.phoneNumber.match(/\(\+?(\d+)\)\s*(\d+)/);;
-                setAuthToken(action.payload.data.token); 
-                
-               // state.userProfile.personalInfo.countryCode = match && match[1] ? match[1] : "";
+                setAuthToken(action.payload.data.token);
+
+                // state.userProfile.personalInfo.countryCode = match && match[1] ? match[1] : "";
                 //state.userProfile.personalInfo.phoneNumber = match && match[2] ? match[2] : "";
                 state.isAuthenticated = true;
                 AsyncStorage.setItem("user", JSON.stringify(state.user));
+
+
             })
             .addCase(login.rejected, (state, action) => {
                 state.loading = false;
@@ -202,18 +205,28 @@ const authSlice = createSlice({
             }).addCase(verifyOTP.fulfilled, (state, action) => {
                 state.loading = false;
                 state.error = null;
-                state.user = action.payload.data.user
-                state.userProfile._id = state.user.id
-                state.userProfile.email = state.user.email,
-                state.userProfile.fullName = state.user.fullName,
-                state.userProfile.role = state.user.role
-                state.userProfile.status = state.user.status
-                state.userProfile.phoneNumber = state.user.phoneNumber,
-                state.token = action.payload.data.token
-                setAuthToken(action.payload.data.token); 
-                state.isAuthenticated = true;
-                AsyncStorage.setItem("user", JSON.stringify(state.user));
-                
+                if (action.payload.data.resetType == "sign-up") {
+                    state.isVerified = true;
+                    state.user = action.payload.data.user
+                    state.userProfile._id = state.user.id
+                    state.userProfile.email = state.user.email,
+                        state.userProfile.fullName = state.user.fullName,
+                        state.userProfile.role = state.user.role
+                    state.userProfile.status = state.user.status
+                    state.userProfile.phoneNumber = state.user.phoneNumber,
+                        state.token = action.payload.data.token
+                    setAuthToken(action.payload.data.token);
+
+                    state.isAuthenticated = true;
+                    AsyncStorage.setItem("user", JSON.stringify(state.user));
+                    AsyncStorage.setItem("token", action.payload.data.token);
+                    AsyncStorage.setItem("userProfile", JSON.stringify(state.userProfile));
+                    AsyncStorage.setItem("isVerified", "true");
+                } else {
+                    state.resetToken = action.payload.data.token;
+                }
+
+
             }).addCase(verifyOTP.rejected, (state, action) => {
                 state.loading = false;
                 state.error = action.payload;
@@ -226,17 +239,27 @@ const authSlice = createSlice({
             }).addCase(resendOTP.rejected, (state, action) => {
                 state.loading = false;
                 state.error = action.payload;
-            }).addCase(restoreSession.fulfilled, (state, action) => {
-                if (action.payload) {
-                    state.user = action.payload;
-                    state.isAuthenticated = true;
-                    if (state.user?.status === "active") {
-                        state.isVerified = true
-                    }
-                }
             }).addCase(loadHasLaunched.fulfilled, (state, action) => {
                 state.hasLaunched = action.payload;
-            });
+            }).addCase(resetPassword.pending, (state, action) => {
+                state.loading = true;
+                state.error = null;
+            }).addCase(resetPassword.fulfilled, (state, action) => {
+                state.loading = false;
+                state.error = null;
+            }).addCase(resetPassword.rejected, (state, action) => {
+                state.loading = false;
+                state.error = action.payload;
+            }).addCase(forgotPassword.pending, (state, action) => {
+                state.loading = true;
+                state.error = null;
+            }).addCase(forgotPassword.fulfilled, (state, action) => {
+                state.loading = false;
+                state.error = null;
+            }).addCase(forgotPassword.rejected, (state, action) => {
+                state.loading = false;
+                state.error = action.payload;
+            })
 
     },
 });
@@ -295,7 +318,15 @@ export const restoreSession = createAsyncThunk(
     "auth/restoreSession",
     async () => {
         const storedUser = await AsyncStorage.getItem("user");
-        return storedUser ? JSON.parse(storedUser) : null;
+        const storedToken = await AsyncStorage.getItem("token");
+        const storedUserProfile = await AsyncStorage.getItem("userProfile");
+        if (storedToken) {
+            setAuthToken(storedToken);
+            setAuthenticated(true);
+            setUser(JSON.parse(storedUser ? storedUser : ""));
+            setUserProfile(JSON.parse(storedUserProfile ? storedUserProfile : ""));
+
+        }
     }
 );
 
@@ -310,7 +341,9 @@ export const verifyOTP = createAsyncThunk(
                 payload,
             );
 
-            return response.data;
+            console.log("verify otp response:", payload, response.data);
+
+            return { ...response.data, "resetType": payload.type };
         } catch (error: any) {
             console.log("verify otp error:", error)
             return rejectWithValue(
@@ -323,9 +356,13 @@ export const verifyOTP = createAsyncThunk(
 );
 
 
+
+
+
+
 export const resendOTP = createAsyncThunk(
     "auth/send-otp",
-    async (payload: OTPVerificationRequest, { rejectWithValue }) => {
+    async (payload: ResendOTPRequest, { rejectWithValue }) => {
         try {
             console.log("verify otp payload:", payload)
             const response = await apiClient.post<ApiResponse<any>>(
@@ -368,38 +405,9 @@ export const forgotPassword = createAsyncThunk(
     }
 );
 
-// export const resetPassword = createAsyncThunk(
-//     "auth/reset-password",
-//     async (
-//       {
-//         resetToken,
-//         payload,
-//       }: { resetToken: string; payload: ResetPasswordRequest },
-//       { rejectWithValue }
-//     ) => {
-//       try {
-//         const response = await apiClient.post<ApiResponse<any>>(
-//           `/auth/reset-password/${resetToken}`,
-//           payload
-//         );
-
-//         return response.data;
-//       } catch (error: any) {
-//         return rejectWithValue(
-//           error.response?.data
-//             ? {
-//                 code: error.response.status,
-//                 message: error.response.data.message,
-//               }
-//             : ({ code: 0, message: "Network error" } as ApiError)
-//         );
-//       }
-//     }
-//   );
-
 
 export const resetPassword = createAsyncThunk(
-    "auth/reset-password",
+    "auth/password-reset",
     async (
         payload: ResetPasswordRequest,
         { getState, rejectWithValue }
@@ -409,7 +417,9 @@ export const resetPassword = createAsyncThunk(
             const state: any = getState();
             const resetToken = state.auth.resetToken; // adjust to your slice
 
-            const response = await apiClient.post<ApiResponse<any>>(
+            console.log("resteToken", resetToken)
+
+            const response = await apiClient.patch<ApiResponse<any>>(
                 `/auth/reset-password/${resetToken}`,
                 payload
             );
@@ -447,8 +457,10 @@ export const {
     setLoading,
     setHasLaunched,
     setPin,
+    setUser,
     clearPin,
     setVerified,
+    setUserProfile,
     setVerificationCode,
     setVerificationCountdown,
     decrementCountdown,

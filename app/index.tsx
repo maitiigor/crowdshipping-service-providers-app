@@ -7,12 +7,12 @@ import { restoreSession } from "../store/slices/authSlice";
 export default function AppIndex() {
     const dispatch = useAppDispatch();
     const auth = useAppSelector((state) => state.auth);
-    useEffect(() => {
-        const clearSession = async () => {
-            await AsyncStorage.removeItem("user");
-        };
-        clearSession();
-    }, []); // 👈 runs only once, not every render
+    // useEffect(() => {
+    //     const clearSession = async () => {
+    //         await AsyncStorage.removeItem("user");
+    //     };
+    //     clearSession();
+    // }, []); // 👈 runs only once, not every render
     // restore session on mount
     useEffect(() => {
         dispatch(restoreSession());
@@ -25,8 +25,12 @@ export default function AppIndex() {
         return <Redirect href="/screens/language-selection" />;
     }
 
-    if (auth.isAuthenticated) {
+    if (auth.isAuthenticated && auth.user.kycStatus != "pending") {
         return <Redirect href="/screens/dashboard" />;
+    }
+
+    if(auth.isAuthenticated && auth.user.kycStatus === "pending"){
+        return <Redirect href="/screens/onboarding/edit-profile" />;
     }
 
     return <Redirect href="/screens/onboarding/login" />;
