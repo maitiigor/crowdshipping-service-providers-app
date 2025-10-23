@@ -25,7 +25,7 @@ import CustomToast from '../../../components/Custom/CustomToast';
 import { useToast } from '../../../components/ui/toast';
 import { ApiError, LoginFormValues } from '../../../models';
 import { AppDispatch, useAppSelector } from '../../../store';
-import { login, setHasLaunched } from '../../../store/slices/authSlice';
+import { login, setHasLaunched, setRestoring } from '../../../store/slices/authSlice';
 import { getUserProfile } from '../../../store/slices/profileSlice';
 
 
@@ -47,7 +47,8 @@ export default function LoginScreen() {
     useEffect(() => {
         AsyncStorage.setItem("hasLaunched", "true");
         dispatch(setHasLaunched(true));
-    }, []);
+        dispatch(setRestoring(false));
+    }, [dispatch]);
 
     const showNewToast = ({
         title,

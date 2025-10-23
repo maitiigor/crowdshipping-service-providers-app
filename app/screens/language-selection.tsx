@@ -34,7 +34,7 @@ const languages: Language[] = [
 ];
 
 export default function LanguageSelectionScreen() {
-    const [selectedLanguage, setSelectedLanguage] = useState<string>('en');
+    const [selectedLanguage, setSelectedLanguage] = useState<string>();
     const [searchQuery, setSearchQuery] = useState('');
 
     const navigation = useNavigation();
@@ -43,9 +43,8 @@ export default function LanguageSelectionScreen() {
 
 
     const selectedLabel = useMemo(() => {
-        const found = languages.find(
-            (l) => l.code === (selectedLanguage || i18n.language)
-        );
+        const currentCode = selectedLanguage || i18n.language;
+        const found = languages.find((l) => l.code === currentCode);
         return found?.name ?? "English";
     }, [selectedLanguage, i18n.language]);
 
@@ -56,19 +55,26 @@ export default function LanguageSelectionScreen() {
     useEffect(() => {
         // preload persisted language to reflect selection
         AsyncStorage.getItem(LANGUAGE_STORAGE_KEY)
-            .then((saved) => saved && setSelectedLanguage(saved))
-            .catch(() => { });
-    }, []);
+            .then((saved) => {
+                if (saved) {
+                    setSelectedLanguage(saved);
+                } else {
+                    setSelectedLanguage(i18n.language);
+                }
+            })
+            .catch(() => {
+                setSelectedLanguage(i18n.language);
+            });
+    }, [i18n.language]);
 
 
     const filteredLanguages = languages.filter(language =>
         language.name.toLowerCase().includes(searchQuery.toLowerCase())
     );
 
-    const handleLanguageSelect = (languageCode: string) => {
+    const handleLanguageSelect = async (languageCode: string) => {
         setSelectedLanguage(languageCode);
-        // TODO: Save language preference to storage
-        console.log('Selected language:', languageCode);
+        await changeAppLanguage(languageCode);
     };
 
     const handleContinue = () => {

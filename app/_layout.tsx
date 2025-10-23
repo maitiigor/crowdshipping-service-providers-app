@@ -74,6 +74,7 @@ export default function RootLayout() {
                 <Stack.Screen name="screens/dashboard" options={{ headerShown: false }} />
 
                 <Stack.Screen name="screens/bookings" options={{ headerShown: false }} />
+                <Stack.Screen name="screens/vehicles" options={{ headerShown: false }} />
                 <Stack.Screen name="screens/payments" options={{ headerShown: false }} />
                 <Stack.Screen name="screens/notifications" options={{ headerShown: false }} />
                 <Stack.Screen name="screens/chats" options={{ headerShown: false }} />

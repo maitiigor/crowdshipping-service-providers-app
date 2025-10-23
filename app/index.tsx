@@ -1,8 +1,7 @@
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Redirect } from "expo-router";
 import { useEffect } from "react";
 import { useAppDispatch, useAppSelector } from "../store";
-import { restoreSession } from "../store/slices/authSlice";
+import { loadHasLaunched, restoreSession } from "../store/slices/authSlice";
 
 export default function AppIndex() {
     const dispatch = useAppDispatch();
@@ -16,9 +15,14 @@ export default function AppIndex() {
     // restore session on mount
     useEffect(() => {
         dispatch(restoreSession());
-    }, []);
+        dispatch(loadHasLaunched());
+    }, [dispatch]);
 
     // don't call router.replace() here, let Redirect handle it
+
+    if (auth.isRestoring) {
+        return null;
+    }
 
     if (!auth.hasLaunched) {
         // first launch → go onboarding
@@ -29,7 +33,7 @@ export default function AppIndex() {
         return <Redirect href="/screens/dashboard" />;
     }
 
-    if(auth.isAuthenticated && auth.user.kycStatus === "pending"){
+    if (auth.isAuthenticated && auth.user.kycStatus === "pending") {
         return <Redirect href="/screens/onboarding/edit-profile" />;
     }
 

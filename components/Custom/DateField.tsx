@@ -1,9 +1,7 @@
 import { ThemedText } from "@/components/ThemedText";
 import { ThemedView } from "@/components/ThemedView";
 import AntDesign from "@expo/vector-icons/AntDesign";
-import DateTimePicker, {
-  DateTimePickerEvent,
-} from "@react-native-community/datetimepicker";
+import DateTimePicker, { DateTimePickerEvent } from "@react-native-community/datetimepicker";
 import React, { useMemo, useState } from "react";
 import { Modal, Platform, Pressable, View } from "react-native";
 
@@ -15,36 +13,39 @@ export type DateFieldProps = {
   mode?: "date" | "time" | "datetime";
   label?: string;
   placeholder?: string;
-  // Cross-platform; narrowed internally to valid options per OS
   display?: "default" | "spinner" | "calendar" | "clock" | "inline" | "compact";
   className?: string;
   labelClassName?:
-  | "default"
-  | "link"
-  | "h1_header"
-  | "h2_header"
-  | "h3_header"
-  | "h4_header"
-  | "h5_header"
-  | "s1_subtitle"
-  | "s2_subtitle"
-  | "b2_body"
-  | "b3_body"
-  | "b4_body"
-  | "c1_caption"
-  | "c2_caption"
-  | "c3_caption"
-  | "label_text"
-  | "btn_giant"
-  | "btn_large"
-  | "btn_medium"
-  | "btn_small"
-  | "btn_tiny"
-  | undefined;
+    | "default"
+    | "link"
+    | "h1_header"
+    | "h2_header"
+    | "h3_header"
+    | "h4_header"
+    | "h5_header"
+    | "s1_subtitle"
+    | "s2_subtitle"
+    | "b2_body"
+    | "b3_body"
+    | "b4_body"
+    | "c1_caption"
+    | "c2_caption"
+    | "c3_caption"
+    | "label_text"
+    | "btn_giant"
+    | "btn_large"
+    | "btn_medium"
+    | "btn_small"
+    | "btn_tiny"
+    | undefined;
   format?: (d: Date) => string;
 };
 
-const defaultFormat = (d: Date) => d.toLocaleDateString();
+const defaultFormat = (d: Date) =>
+  d.toLocaleString(undefined, {
+    dateStyle: "medium",
+    timeStyle: "short",
+  });
 
 const DateField: React.FC<DateFieldProps> = ({
   value,
@@ -53,7 +54,7 @@ const DateField: React.FC<DateFieldProps> = ({
   maximumDate,
   labelClassName,
   mode = "date",
-  label = "Date of birth",
+  label = "Date",
   placeholder = "Select date",
   display = Platform.select({
     ios: "spinner",
@@ -63,7 +64,8 @@ const DateField: React.FC<DateFieldProps> = ({
   className,
   format = defaultFormat,
 }) => {
-  const [open, setOpen] = useState(false);
+  const [openDate, setOpenDate] = useState(false);
+  const [openTime, setOpenTime] = useState(false);
   const [temp, setTemp] = useState<Date>(value ?? new Date());
 
   const labelText = useMemo(
@@ -71,18 +73,36 @@ const DateField: React.FC<DateFieldProps> = ({
     [value, placeholder, format]
   );
 
-  const confirm = () => {
-    setOpen(false);
-    onChange(temp);
-  };
-
-  const onNativeChange = (_: DateTimePickerEvent, selected?: Date) => {
+  const handleDateChange = (event: DateTimePickerEvent, selected?: Date) => {
     if (Platform.OS === "android") {
-      setOpen(false);
-      if (selected) onChange(selected);
+      setOpenDate(false);
+      if (selected && event.type === "set") {
+        setTemp(selected);
+        if (mode === "datetime") {
+          // Open time picker immediately after selecting date
+          setOpenTime(true);
+        } else {
+          onChange(selected);
+        }
+      }
     } else if (selected) {
       setTemp(selected);
     }
+  };
+
+  const handleTimeChange = (event: DateTimePickerEvent, selected?: Date) => {
+    setOpenTime(false);
+    if (selected && event.type === "set") {
+      const combined = new Date(temp);
+      combined.setHours(selected.getHours());
+      combined.setMinutes(selected.getMinutes());
+      onChange(combined);
+    }
+  };
+
+  const confirmIOS = () => {
+    setOpenDate(false);
+    onChange(temp);
   };
 
   return (
@@ -96,8 +116,8 @@ const DateField: React.FC<DateFieldProps> = ({
         </ThemedText>
       )}
       <Pressable
-        onPress={() => (Platform.OS === "web" ? undefined : setOpen(true))}
-        className="h-[55px] rounded-lg bg-rose-50 px-3  flex-row items-center justify-between border border-primary-100"
+        onPress={() => (Platform.OS === "web" ? undefined : setOpenDate(true))}
+        className="h-[55px] mb-2 rounded-lg bg-rose-50 px-3 flex-row items-center justify-between border border-primary-100"
       >
         <ThemedText
           className={value ? "text-typography-900" : "text-typography-500"}
@@ -107,28 +127,40 @@ const DateField: React.FC<DateFieldProps> = ({
         <AntDesign name="calendar" size={24} color="black" />
       </Pressable>
 
-      {open && Platform.OS !== "ios" && (
+      {/* Android: Date Picker */}
+      {openDate && Platform.OS === "android" && (
         <DateTimePicker
-          value={value ?? new Date()}
-          // Android doesn't support 'datetime' mode directly
-          mode={(mode === "datetime" ? "date" : mode) as any}
+          value={temp}
+          mode="date"
           display={(display ?? "default") as any}
-          onChange={onNativeChange}
+          onChange={handleDateChange}
           minimumDate={minimumDate}
           maximumDate={maximumDate}
         />
       )}
 
+      {/* Android: Time Picker for datetime mode */}
+      {openTime && Platform.OS === "android" && (
+        <DateTimePicker
+          value={temp}
+          mode="time"
+          is24Hour={true}
+          display="default"
+          onChange={handleTimeChange}
+        />
+      )}
+
+      {/* iOS Modal */}
       {Platform.OS === "ios" && (
         <Modal
           transparent
-          visible={open}
+          visible={openDate}
           animationType="fade"
-          onRequestClose={() => setOpen(false)}
+          onRequestClose={() => setOpenDate(false)}
         >
           <Pressable
             className="flex-1 bg-black/40"
-            onPress={() => setOpen(false)}
+            onPress={() => setOpenDate(false)}
           >
             <View className="mt-auto bg-white rounded-t-3xl p-4">
               <View className="items-center">
@@ -136,8 +168,7 @@ const DateField: React.FC<DateFieldProps> = ({
               </View>
               <DateTimePicker
                 value={temp}
-                // iOS picker displayed in modal; 'datetime' visually handled via confirmation
-                mode={(mode === "datetime" ? "date" : mode) as any}
+                mode={mode === "datetime" ? "date" : mode}
                 display={(display ?? "spinner") as any}
                 onChange={(_, d) => d && setTemp(d)}
                 minimumDate={minimumDate}
@@ -145,12 +176,10 @@ const DateField: React.FC<DateFieldProps> = ({
                 themeVariant="light"
               />
               <View className="flex-row justify-end gap-4 mt-3">
-                <Pressable onPress={() => setOpen(false)}>
-                  <ThemedText className="text-typography-700">
-                    Cancel
-                  </ThemedText>
+                <Pressable onPress={() => setOpenDate(false)}>
+                  <ThemedText className="text-typography-700">Cancel</ThemedText>
                 </Pressable>
-                <Pressable onPress={confirm}>
+                <Pressable onPress={confirmIOS}>
                   <ThemedText className="text-primary-600 font-bold">
                     Confirm
                   </ThemedText>

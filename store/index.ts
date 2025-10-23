@@ -4,12 +4,18 @@ import appReducer from "./slices/appSlice";
 import authReducer from "./slices/authSlice";
 import formsReducer from "./slices/formsSlice";
 import profileReducer from "./slices/profileSlice";
+import airTripReducer from "./slices/airTripSlice";
+import marineTripReducer from "./slices/marineTripSlice";
+import vechileReducer from "./slices/vechileSlice";
 
 export const store = configureStore({
   reducer: {
     app: appReducer,
     profile: profileReducer,
     auth: authReducer,
+    airTrip: airTripReducer,
+    marineTrip: marineTripReducer,
+    vechile: vechileReducer,
     forms: formsReducer,
   },
   middleware: (getDefaultMiddleware) =>

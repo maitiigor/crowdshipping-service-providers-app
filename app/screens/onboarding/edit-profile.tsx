@@ -61,17 +61,17 @@ export default function EditProfile() {
         email: userProfile.email,
         phoneNumber: match && match[2] ? match[2] : "",
         countryCode: match && match[1] ? match[1] : "",
-        country: userProfile.profile.country,
-        gender: userProfile.profile.gender,
-        state: userProfile.profile.state,
+        country: userProfile.profile?.country,
+        gender: userProfile.profile?.gender,
+        state: userProfile.profile?.state,
         location: {
             coordinates: {
-                lat: userProfile.profile.location.lat,
-                lng: userProfile.profile.location.lng,
+                lat: userProfile.profile?.location?.lat ?? 0,
+                lng: userProfile.profile?.location?.lng ?? 0,
             },
-            address: userProfile.profile.location.address
+            address: userProfile.profile?.location?.address ?? ''
         },
-        city: userProfile.profile.city
+        city: userProfile.profile?.city ?? ''
     }
 
     const [selectedPickupAddress, setSelectedPickupAddress] =

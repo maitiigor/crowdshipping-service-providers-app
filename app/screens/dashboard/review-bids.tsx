@@ -1,6 +1,7 @@
-import { router } from 'expo-router';
-import React, { useState } from 'react';
+import { router, useLocalSearchParams } from 'expo-router';
+import React, { useEffect, useState } from 'react';
 import {
+    ActivityIndicator,
     Modal,
     ScrollView,
     StatusBar,
@@ -11,6 +12,11 @@ import {
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Button, ButtonText } from '../../../components/ui/button';
 import { ArrowLeftIcon, BellIcon, CheckCircleIcon, Icon, Location } from '../../../components/ui/icon';
+import { BidDetail } from '../../../models';
+import { useAppDispatch, useAppSelector } from '../../../store';
+import { fetchAirTripById } from '../../../store/slices/airTripSlice';
+import { fetchMarineById } from '../../../store/slices/marineTripSlice';
+import { acceptBid } from '../../../store/slices/bidSlice';
 
 interface BidData {
     id: string;
@@ -22,7 +28,7 @@ interface BidData {
 }
 
 interface BidCardProps {
-    bid: BidData;
+    bid: BidDetail;
     onRenegotiate: (bidId: string) => void;
     onAccept: (bidId: string) => void;
 }
@@ -33,16 +39,19 @@ const BidCard: React.FC<BidCardProps> = ({ bid, onRenegotiate, onAccept }) => (
         <View className="flex-row items-center mb-3">
             <View className="w-12 h-12 rounded-full mr-3 bg-[#E75B3B] items-center justify-center">
                 <Text className="text-white text-lg font-bold">
-                    {bid.bidderName.charAt(0)}
+                    {bid.sender.fullName.charAt(0)}
                 </Text>
             </View>
             <View className="flex-1">
                 <Text className="text-lg font-semibold text-gray-900 mb-1">
-                    {bid.bidderName}
+                    {bid.sender.fullName}
+
+
+
                 </Text>
                 <View className="flex-row items-center">
                     <Icon as={Location} size="sm" className="text-gray-500 mr-1" />
-                    <Text className="text-gray-600 text-sm">{bid.route}</Text>
+                    <Text className="text-gray-600 text-sm">{bid.dropOffLocation.address}</Text>
                 </View>
             </View>
         </View>
@@ -50,24 +59,24 @@ const BidCard: React.FC<BidCardProps> = ({ bid, onRenegotiate, onAccept }) => (
         {/* Bid Details */}
         <View className="mb-4">
             <Text className="text-gray-700 mb-1">
-                <Text className="font-medium">Space:</Text> {bid.space}
+                <Text className="font-medium">Space:</Text> N/A
             </Text>
             <Text className="text-gray-700">
-                <Text className="font-medium">Amount:</Text> {bid.amount}
+                <Text className="font-medium">Amount:</Text> {bid.finalPrice}
             </Text>
         </View>
 
         {/* Action Buttons */}
         <View className="flex-row space-x-3 gap-3">
             <TouchableOpacity
-                onPress={() => onRenegotiate(bid.id)}
+                onPress={() => onRenegotiate(bid._id)}
                 className="flex-1 border-[#E75B3B] border-[1.5px] rounded-xl py-3 items-center"
             >
                 <Text className="text-[#E75B3B] font-medium">Renegotiate</Text>
             </TouchableOpacity>
 
             <TouchableOpacity
-                onPress={() => onAccept(bid.id)}
+                onPress={() => onAccept(bid._id)}
                 className="flex-1 bg-[#E75B3B] rounded-xl py-3 items-center"
             >
                 <Text className="text-white font-medium">Accept</Text>
@@ -121,45 +130,167 @@ const SuccessModal: React.FC<SuccessModalProps> = ({ visible, onClose }) => (
 export default function ReviewBidsScreen() {
     const [showSuccessModal, setShowSuccessModal] = useState(false);
 
-    // Mock data - in real app this would come from props or API
-    const tripInfo = {
-        route: "Lagos (LOS) → Atlanta (ATL)",
-        date: "in 3 days"
-    };
+    const routParams = useLocalSearchParams<{ tripId?: string; type?: string }>();
+    const { tripId, type } = routParams;
+    const { airTrip, loading: airTripLoading } = useAppSelector((state) => state.airTrip);
+    const { marineTrip, loading: marineTripLoading } = useAppSelector((state) => state.marineTrip);
+    const dispatch = useAppDispatch();
 
-    const bids: BidData[] = [
-        {
-            id: '1',
-            bidderName: 'Kemi Johnson',
-            bidderImage: '', // Will use default image
-            route: 'Lagos (LOS) → Atlanta (ATL)',
-            space: '12kg, 12x34x45cm',
-            amount: '₦3,500'
-        },
-        {
-            id: '2',
-            bidderName: 'Temitope Joyce',
-            bidderImage: '', // Will use default image
-            route: 'Lagos (LOS) → Atlanta (ATL)',
-            space: '12kg, 12x34x45cm',
-            amount: '₦3,800'
+
+    const reloadBidData = () => {
+        setShowSuccessModal(false);
+        if (type == 'Air' && tripId) {
+            dispatch(fetchAirTripById(tripId));
+        } else if (type == 'Maritime' && tripId) {
+            dispatch(fetchMarineById(tripId));
         }
-    ];
+    }
+
+    if (type == 'Air' && tripId) {
+        console.log("Fetching air trip for ID:", tripId);
+        useEffect(() => {
+            dispatch(fetchAirTripById(tripId));
+        }, [dispatch]);
+    }
+
+
+    if (type == 'Maritime' && tripId) {
+        console.log("Fetching marine trip for ID:", tripId);
+        useEffect(() => {
+            dispatch(fetchMarineById(tripId));
+        }, [dispatch]);
+    }
+
+
+
 
     const handleRenegotiate = (bidId: string) => {
         console.log('Renegotiate bid:', bidId);
-        // TODO: Implement renegotiation logic
+        router.push({
+            pathname: '/screens/dashboard/negotiate-bid',
+            params: {
+                bidId: bidId,
+                tripId: tripId || '',
+                type: type || ''
+            }
+        });
     };
 
     const handleAccept = (bidId: string) => {
-        console.log('Accept bid:', bidId);
-        setShowSuccessModal(true);
 
-        setTimeout(() => {
-            router.navigate('/screens/dashboard/depart-port');
-        }, 2000);
-        // TODO: Implement bid acceptance logic
+        dispatch(acceptBid({ bidId }))
+            .then((res) => {
+                console.log("Bid accepted:", res);
+                setShowSuccessModal(true);
+               
+            })
+            .catch((err) => {
+                console.error("Error accepting bid:", err);
+            });
     };
+
+    const renderAirTripDetails = () => {
+        if (airTripLoading) return (
+            <View className="flex h-full items-center justify-center">
+                <ActivityIndicator size="large" color="#E75B3B" />
+            </View>
+        );
+        const bids = airTrip.bids_recieved || [];
+        console.log("Received bids:", bids);
+        return (
+
+            <ScrollView className="flex-1" showsVerticalScrollIndicator={false}>
+                {/* Trip Info Card */}
+                <View className="mx-4 mt-4 mb-6">
+                    <View className="bg-[#FEF7E6] rounded-lg p-4 border border-[#F5E6A3]">
+                        <Text className="text-lg font-semibold text-gray-900 mb-1">
+                            {airTrip.departureCity} ({airTrip.departureAirport.iata}) → {airTrip.arrivalCity} ({airTrip.arrivalAirport.iata})
+                        </Text>
+                        <Text className="text-gray-700">
+                            Date: {new Date(airTrip.departureDate).toLocaleDateString()}
+                        </Text>
+                    </View>
+                </View>
+
+                {/* Bids List */}
+                <View className="px-4">
+                    {Array.isArray(bids) && bids.length > 0 ? (
+                        bids.map((bid) => (
+                            <BidCard
+                                key={bid._id}
+                                bid={bid}
+                                onRenegotiate={handleRenegotiate}
+                                onAccept={handleAccept}
+                            />
+                        ))
+                    ) : null}
+                </View>
+
+                {/* Empty State - Show when no bids */}
+                {Array.isArray(bids) && bids.length === 0 && (
+                    <View className="flex-1 items-center justify-center px-4 py-20">
+                        <Text className="text-gray-500 text-center text-lg mb-2">
+                            No bids received yet
+                        </Text>
+                        <Text className="text-gray-400 text-center">
+                            Bids will appear here when travelers are interested in your trip
+                        </Text>
+                    </View>
+                )}
+            </ScrollView>
+        );
+    }
+
+
+
+    const renderMarineTripDetails = () => {
+        if (marineTripLoading) return (<ActivityIndicator size="large" color="#E75B3B" />);
+        const bids =
+            typeof marineTrip.bids_recieved === 'number'
+                ? []
+                : marineTrip.bids_recieved || [];
+        console.log("Received bids:", bids);
+        return (
+
+            <ScrollView className="flex-1" showsVerticalScrollIndicator={false}>
+                {/* Trip Info Card */}
+                <View className="mx-4 mt-4 mb-6">
+                    <View className="bg-[#FEF7E6] rounded-lg p-4 border border-[#F5E6A3]">
+                        <Text className="text-lg font-semibold text-gray-900 mb-1">
+                            {marineTrip.containerNumber}  {marineTrip.departurePort} → {marineTrip.arrivalPort}
+                        </Text>
+                        <Text className="text-gray-700">
+                            Date: {new Date(marineTrip.departureDate).toLocaleDateString()}
+                        </Text>
+                    </View>
+                </View>
+
+                {/* Bids List */}
+                <View className="px-4">
+                    {bids.map((bid) => (
+                        <BidCard
+                            key={bid._id}
+                            bid={bid}
+                            onRenegotiate={handleRenegotiate}
+                            onAccept={handleAccept}
+                        />
+                    ))}
+                </View>
+
+                {/* Empty State - Show when no bids */}
+                {bids.length === 0 && (
+                    <View className="flex-1 items-center justify-center px-4 py-20">
+                        <Text className="text-gray-500 text-center text-lg mb-2">
+                            No bids received yet
+                        </Text>
+                        <Text className="text-gray-400 text-center">
+                            Bids will appear here when travelers are interested in your trip
+                        </Text>
+                    </View>
+                )}
+            </ScrollView>
+        );
+    }
 
     return (
         <SafeAreaView className="flex-1 bg-gray-50">
@@ -181,48 +312,18 @@ export default function ReviewBidsScreen() {
                 </TouchableOpacity>
             </View>
 
-            <ScrollView className="flex-1" showsVerticalScrollIndicator={false}>
-                {/* Trip Info Card */}
-                <View className="mx-4 mt-4 mb-6">
-                    <View className="bg-[#FEF7E6] rounded-lg p-4 border border-[#F5E6A3]">
-                        <Text className="text-lg font-semibold text-gray-900 mb-1">
-                            {tripInfo.route}
-                        </Text>
-                        <Text className="text-gray-700">
-                            Date: {tripInfo.date}
-                        </Text>
-                    </View>
+            {type === 'Air' ? renderAirTripDetails() : type === 'Maritime' ? renderMarineTripDetails() : (
+                <View className="flex-1 items-center justify-center px-4 py-20">
+                    <Text className="text-gray-500 text-center text-lg mb-2">
+                        No bids available for this trip type
+                    </Text>
                 </View>
-
-                {/* Bids List */}
-                <View className="px-4">
-                    {bids.map((bid) => (
-                        <BidCard
-                            key={bid.id}
-                            bid={bid}
-                            onRenegotiate={handleRenegotiate}
-                            onAccept={handleAccept}
-                        />
-                    ))}
-                </View>
-
-                {/* Empty State - Show when no bids */}
-                {bids.length === 0 && (
-                    <View className="flex-1 items-center justify-center px-4 py-20">
-                        <Text className="text-gray-500 text-center text-lg mb-2">
-                            No bids received yet
-                        </Text>
-                        <Text className="text-gray-400 text-center">
-                            Bids will appear here when travelers are interested in your trip
-                        </Text>
-                    </View>
-                )}
-            </ScrollView>
+            )}
 
             {/* Success Modal */}
             <SuccessModal
                 visible={showSuccessModal}
-                onClose={() => setShowSuccessModal(false)}
+                onClose={reloadBidData}
             />
         </SafeAreaView>
     );

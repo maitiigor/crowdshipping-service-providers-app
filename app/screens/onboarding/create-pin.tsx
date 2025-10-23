@@ -80,7 +80,7 @@ export default function CreatePin() {
 
             if (verifyOTP.fulfilled.match(resultAction)) {
                 console.log("Verification success:", resultAction.payload);
-                if (resultAction.payload.data.status === "approved" && type == "sign-up") {
+                if (resultAction.payload.data.user?.isVerified && type == "sign-up") {
                     showNewToast({
                         title: "Email Verified",
                         description: "Your email has been verified",

@@ -165,7 +165,8 @@ export interface LoginFormValues {
 export interface AuthState {
     isAuthenticated: boolean;
     email: string;
-    hasLaunched: boolean,
+    hasLaunched: boolean;
+    isRestoring: boolean;
     pin: string;
     isVerified: boolean;
     verificationCode: string;
@@ -173,12 +174,12 @@ export interface AuthState {
     lastVerificationAttempt?: Date;
     loginError?: string;
     loading: boolean;
-    success: boolean,
-    error: Array<any> | null | unknown,
-    token: string | null
-    user: User,
-    userProfile: UserProfile,
-    resetToken: string,
+    success: boolean;
+    error: Array<any> | null | unknown;
+    token: string | null;
+    user: User;
+    userProfile: UserProfile;
+    resetToken: string;
 }
 
 // Form State Models
@@ -244,4 +245,219 @@ export interface AppSettings {
     theme: 'light' | 'dark' | 'system';
     notifications: boolean;
     language: string;
+}
+
+
+export interface Airport {
+    iata: string;
+    icao: string;
+    name: string;
+    city: string;
+    country: string;
+    latitude: number;
+    longitude: number;
+}
+
+export interface Capacity {
+    pounds: string;
+    dimension: string;
+}
+
+
+export interface AirTripRequest {
+    departureCity: string;
+    departureAirport: Airport;
+    arrivalCity: string;
+    arrivalAirport: Airport;
+    airlineName: string;
+    flightNumber: string;
+    departureDate: string;
+    arrivalDate: string;
+    capacity: Capacity;
+}
+
+
+
+
+export interface Port {
+    name: string;
+    nameWoDiacritics: string;
+    coordinates: string;
+    country: string;
+    location: string;
+    iata: string;
+    icao: string;
+}
+
+export interface MarineTripRequest {
+    mmsiNumber: string;
+    vesselName: string;
+    vesselOperator: string;
+    containerNumber: string;
+    voyageNumber: string;
+    departurePort: string;
+    arrivalPort: string;
+    departureDate: string;
+    arrivalDate: string;
+    capacity: Capacity;
+}
+
+export interface MarineTrip {
+    _id: string;
+    vesselName: string;
+    tripId: string;
+    creatorId: string;
+    shipId: string;
+    fleetType: string;
+    containerNumber: string;
+    status: string;
+    capacity: {
+        pounds: number | string;
+        dimension: string;
+    };
+    route: {
+        via: string[];
+    };
+    departurePort: string;
+    arrivalPort: string;
+    departureDate: string;
+    arrivalDate: string;
+    createdAt: string;
+    updatedAt: string;
+    bids_recieved: BidDetail[] | number;
+    creator?: {
+        _id: string;
+        userId: string;
+        fullName: string;
+    };
+    __v?: number;
+}
+
+
+export interface AirTrip {
+    _id: string;
+    tripId: string;
+    creatorId: string;
+    flightId: string;
+    departureAirport: Airport;
+    arrivalAirport: Airport;
+    airlineName: string;
+    flightNumber: string;
+    fleetType: string;
+    status: string;
+    departureCity: string;
+    arrivalCity: string;
+    departureDate: string;
+    arrivalDate: string;
+    createdAt: string;
+    updatedAt: string;
+    capacity: {
+        pounds: number | string;
+        dimension: string;
+    };
+
+
+
+    route: {
+        via: string[];
+    },
+    creator?: {
+        _id: string;
+        userId: string;
+        fullName: string;
+    };
+    bids_recieved: BidDetail[] | number;
+}
+
+
+export interface BidDetail {
+    _id: string;
+    dropOffLocation: {
+        address: string;
+    };
+    finalPrice: number;
+    packages: Array<any>;
+    pickUpLocation: {
+        address: string;
+    };
+    sender: {
+        _id: string;
+        fullName: string;
+        profile: any;
+        profileId: string;
+        userId: string;
+    };
+    senderId: string;
+    tripOption: string;
+}
+
+
+export interface VesselOperator {
+    name: string;
+    scac: string;
+    maintenance: boolean;
+}
+
+
+export interface Bank {
+    id: string;
+    name: string;
+    slug: string;
+    code: string;
+    longcode: string;
+    gateway: string;
+    payWithBank: boolean;
+    supportsTransfer: boolean;
+    availableForDirectDebit: boolean;
+    active: boolean;
+    country: string;
+    currency: string;
+    type: string;
+    isDeleted: boolean;
+    createdAt: string;
+    updatedAt: string;
+}
+export interface VehicleCategory {
+    _id: string;
+    name: string;
+    description: string;
+}
+
+export interface VehicleDocument {
+    name: string;
+    document: string;
+    status: string;
+    _id: string;
+    id: string;
+}
+
+
+export interface AddVehicleRequest {
+    categoryId: string;
+    type: string;
+    make: string;
+    model: string;
+    year: number;
+    licensePlate: string;
+    color: string;
+    image: string;
+    vehicleDocuments: Array<Partial<VehicleDocument>>;
+
+}
+
+export interface Vehicle {
+    _id: string;
+    ownerId: string;
+    categoryId: string;
+    type: string;
+    make: string;
+    model: string;
+    year: number;
+    licensePlate: string;
+    color: string;
+    image: string;
+    vehicleDocuments: Array<VehicleDocument>;
+    status: string;
+    createdAt: string;
+    updatedAt: string;
 }

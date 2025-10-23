@@ -37,7 +37,7 @@ interface FormData {
     availableCapacityDimensions: string;
 }
 
-export default function PostTripScreen() {
+export default function GroundTripScreen() {
     const [formData, setFormData] = useState<FormData>({
         departureCity: '',
         arrivalCity: '',

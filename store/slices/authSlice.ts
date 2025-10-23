@@ -10,6 +10,7 @@ const initialState: AuthState = {
     email: "",
     pin: "",
     hasLaunched: false,
+    isRestoring: true,
     isVerified: false,
     verificationCode: "",
     verificationCountdown: 0,
@@ -84,6 +85,12 @@ const authSlice = createSlice({
         setHasLaunched(state, action: PayloadAction<boolean>) {
             state.hasLaunched = action.payload;
         },
+        setRestoring(state, action: PayloadAction<boolean>) {
+            state.isRestoring = action.payload;
+        },
+        setToken(state, action: PayloadAction<string | null>) {
+            state.token = action.payload;
+        },
         setEmail(state, action: PayloadAction<string>) {
             state.email = action.payload;
         },
@@ -132,7 +139,8 @@ const authSlice = createSlice({
             return initialState;
         },
         logout(state) {
-            AsyncStorage.removeItem("user");
+            AsyncStorage.multiRemove(["user", "token", "userProfile"]);
+            setAuthToken(null);
             state.isAuthenticated = false;
             state.email = "";
             state.pin = "";
@@ -140,6 +148,9 @@ const authSlice = createSlice({
             state.verificationCode = "";
             state.verificationCountdown = 0;
             state.loginError = undefined;
+            state.token = null;
+            state.user = initialState.user;
+            state.userProfile = initialState.userProfile;
         },
     },
     extraReducers: (builder) => {
@@ -177,21 +188,20 @@ const authSlice = createSlice({
                 state.success = true;
                 console.log("user info", action.payload.data.user);
                 state.user = action.payload.data.user;
-                state.userProfile._id = state.user.id
-                state.userProfile.email = state.user.email,
-                    state.userProfile.fullName = state.user.fullName,
-                    state.userProfile.role = state.user.role
-                state.userProfile.status = state.user.status
-                state.userProfile.phoneNumber = state.user.phoneNumber,
-                    state.token = action.payload.data.token
-                const match = action.payload.data.user.phoneNumber.match(/\(\+?(\d+)\)\s*(\d+)/);;
+                state.userProfile._id = state.user.id;
+                state.userProfile.email = state.user.email;
+                state.userProfile.fullName = state.user.fullName;
+                state.userProfile.role = state.user.role;
+                state.userProfile.status = state.user.status;
+                state.userProfile.phoneNumber = state.user.phoneNumber;
+                state.token = action.payload.data.token;
                 setAuthToken(action.payload.data.token);
 
-                // state.userProfile.personalInfo.countryCode = match && match[1] ? match[1] : "";
-                //state.userProfile.personalInfo.phoneNumber = match && match[2] ? match[2] : "";
                 state.isAuthenticated = true;
+                // persist auth data
                 AsyncStorage.setItem("user", JSON.stringify(state.user));
-
+                AsyncStorage.setItem("token", action.payload.data.token);
+                AsyncStorage.setItem("userProfile", JSON.stringify(state.userProfile));
 
             })
             .addCase(login.rejected, (state, action) => {
@@ -205,7 +215,7 @@ const authSlice = createSlice({
             }).addCase(verifyOTP.fulfilled, (state, action) => {
                 state.loading = false;
                 state.error = null;
-                if (action.payload.data.resetType == "sign-up") {
+                if (action.payload.resetType == "sign-up") {
                     state.isVerified = true;
                     state.user = action.payload.data.user
                     state.userProfile._id = state.user.id
@@ -316,16 +326,29 @@ export const login = createAsyncThunk(
 
 export const restoreSession = createAsyncThunk(
     "auth/restoreSession",
-    async () => {
-        const storedUser = await AsyncStorage.getItem("user");
-        const storedToken = await AsyncStorage.getItem("token");
-        const storedUserProfile = await AsyncStorage.getItem("userProfile");
-        if (storedToken) {
-            setAuthToken(storedToken);
-            setAuthenticated(true);
-            setUser(JSON.parse(storedUser ? storedUser : ""));
-            setUserProfile(JSON.parse(storedUserProfile ? storedUserProfile : ""));
-
+    async (_, { dispatch }) => {
+        dispatch(setRestoring(true));
+        try {
+            const storedUser = await AsyncStorage.getItem("user");
+            const storedToken = await AsyncStorage.getItem("token");
+            const storedUserProfile = await AsyncStorage.getItem("userProfile");
+            if (storedToken && storedUser) {
+                setAuthToken(storedToken);
+                dispatch(setAuthenticated(true));
+                dispatch(setUser(JSON.parse(storedUser)));
+                if (storedUserProfile) {
+                    dispatch(setUserProfile(JSON.parse(storedUserProfile)));
+                }
+            } else {
+                setAuthToken(null);
+                dispatch(setAuthenticated(false));
+            }
+        } catch (error) {
+            console.error("Failed to restore session", error);
+            setAuthToken(null);
+            dispatch(setAuthenticated(false));
+        } finally {
+            dispatch(setRestoring(false));
         }
     }
 );
@@ -456,6 +479,8 @@ export const {
     setEmail,
     setLoading,
     setHasLaunched,
+    setRestoring,
+    setToken,
     setPin,
     setUser,
     clearPin,

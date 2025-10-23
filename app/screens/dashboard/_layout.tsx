@@ -9,8 +9,11 @@ export default function DashboardLayout() {
             }}
         >
             <Stack.Screen name="index" />
-            <Stack.Screen name="post-trip" />
+            <Stack.Screen name="post-maritime-trip" />
+            <Stack.Screen name="post-ground-trip" />
+            <Stack.Screen name="post-air-trip" />
             <Stack.Screen name="review-bids" />
+            <Stack.Screen name="negotiate-bid" />
             <Stack.Screen name="depart-port" />
             <Stack.Screen name="arrived-location" />
             <Stack.Screen name="driver-feedback" />

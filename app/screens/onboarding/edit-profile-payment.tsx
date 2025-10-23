@@ -1,7 +1,7 @@
 import { AntDesign, MaterialIcons } from "@expo/vector-icons";
 import { router } from "expo-router";
 import { Formik } from "formik";
-import React from "react";
+import React, { useState } from "react";
 import {
     ActivityIndicator,
     ScrollView,
@@ -20,9 +20,10 @@ import { Button } from "../../../components/ui/button";
 import { Input, InputField } from "../../../components/ui/input";
 import { Toast, ToastDescription, ToastTitle, useToast } from "../../../components/ui/toast";
 import { useEditProfileForm } from "../../../hooks/useRedux";
-import { ApiError, CompleteProfilePayload } from "../../../models";
+import { ApiError, Bank, CompleteProfilePayload } from "../../../models";
 import { AppDispatch, useAppSelector } from "../../../store";
 import { completeProfile, setDocument } from "../../../store/slices/profileSlice";
+import BankDropdown from "../../../components/Custom/BankDropdown";
 
 export default function EditProfilePayment() {
     const [showModal, setShowModal] = React.useState(false);
@@ -30,6 +31,7 @@ export default function EditProfilePayment() {
     const dispatch = useDispatch<AppDispatch>();
     const { profile, loading } = useAppSelector((state) => state.profile);
     const { nextStep } = useEditProfileForm();
+    const [bank, setBank] = useState<Bank>();
 
     // ✅ Define initial form values
     const initialValues = {
@@ -137,6 +139,7 @@ export default function EditProfilePayment() {
                 values,
                 errors,
                 touched,
+                setFieldValue
             }) => (
                 <SafeAreaView className="flex-1 bg-white">
                     {/* Header */}
@@ -172,6 +175,11 @@ export default function EditProfilePayment() {
                         </Text>
 
                         {/* Bank Name */}
+                        {/* <BankDropdown values={values} errors={errors} touched={touched} handleChange={ () => setFieldValue} handleBankChange={setBank} > 
+
+                        </BankDropdown> */}
+
+                        {/* Bank Name */}
                         <ThemedView>
                             <InputLabelText className="text-sm text-gray-700 mb-2">Bank Name</InputLabelText>
 
@@ -199,6 +207,7 @@ export default function EditProfilePayment() {
 
                             )}
                         </ThemedView>
+
 
                         {/* Account Name */}
                         <ThemedView>

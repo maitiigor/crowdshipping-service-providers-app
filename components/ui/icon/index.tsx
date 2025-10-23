@@ -2055,3 +2055,24 @@ const Apple = createIcon({
 
 Apple.displayName = 'Apple';
 export { Apple };
+
+
+const Inbox = createIcon({
+  Root: Svg,
+  viewBox: '0 0 24 24',
+  path: (
+    <>
+
+      <Path d="M5 9L9.5 12L14 9" stroke="#131927" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+      <Path d="M17 19H3C1.89543 19 1 18.1046 1 17V7C1 5.89543 1.89543 5 3 5H16C17.1046 5 18 5.89543 18 7V9" stroke="#131927" stroke-width="1.5" stroke-linecap="round" />
+      <Path d="M23 14H17M17 14L20 11M17 14L20 17" stroke="#131927" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+
+    </>
+  ),
+});
+
+Inbox.displayName = 'InboxIcon';
+export { Inbox };
+
+
+

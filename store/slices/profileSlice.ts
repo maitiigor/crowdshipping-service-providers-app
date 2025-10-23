@@ -89,11 +89,11 @@ const profileSlice = createSlice({
                 const { documentType, url } = action.payload;
 
                 // Update the correct field dynamically
-                state.profile = {
-                    ...state.profile,
-                    [documentType]: url,
-                };
-                console.log(state.profile, "profile datata jsjdjsj", documentType, url);
+                // state.profile = {
+                //     ...state.profile,
+                //     [documentType]: url,
+                // };
+                // console.log(state.profile, "profile datata jsjdjsj", documentType, url);
             })
             .addCase(uploadDocument.pending, (state) => {
                 state.loading = true;
@@ -104,14 +104,14 @@ const profileSlice = createSlice({
             }).addCase(getUserProfile.pending, (state, action) => {
                 state.loading = true;
                 state.error = null;
-                
+
             }).addCase(getUserProfile.fulfilled, (state, action) => {
                 state.loading = false;
                 state.error = null;
                 console.log("get user profile:", action.payload?.data);
-                if(action.payload?.data){
+                if (action.payload?.data) {
                     setUserProfile(action.payload.data);
-                }         
+                }
             }).addCase(getUserProfile.rejected, (state, action) => {
                 state.loading = false;
                 state.error = action.payload as ApiError;
@@ -132,7 +132,7 @@ const getFileType = (file: string) => {
 export const uploadDocument = createAsyncThunk(
     "profile/upload-document",
     async (
-        { documentType, file }: { documentType: "identificationPicture" | "proofOfAddress" | "insuranceResidenceProof" | "driverPassport"; file: string },
+        { documentType, file }: { documentType: string; file: string },
         { rejectWithValue }
     ) => {
         try {
