@@ -1,31 +1,28 @@
-import { router, useLocalSearchParams } from 'expo-router';
+import { router, useLocalSearchParams, useNavigation } from 'expo-router';
 import React, { useEffect, useState } from 'react';
 import {
-    ActivityIndicator,
     Modal,
     ScrollView,
     StatusBar,
     Text,
     TouchableOpacity,
-    View,
+    View
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import PackageList from '../../../components/Custom/PackageList';
+import NotificationIconComponent from '../../../components/NotificationIconComponent';
+import { ThemedText } from '../../../components/ThemedText';
+import { ThemedView } from '../../../components/ThemedView';
+import { Box } from '../../../components/ui/box';
 import { Button, ButtonText } from '../../../components/ui/button';
-import { ArrowLeftIcon, BellIcon, CheckCircleIcon, Icon, Location } from '../../../components/ui/icon';
+import { HStack } from '../../../components/ui/hstack';
+import { CheckCircleIcon, ChevronLeftIcon, Icon, Location } from '../../../components/ui/icon';
+import { Skeleton, SkeletonText } from '../../../components/ui/skeleton';
 import { BidDetail } from '../../../models';
 import { useAppDispatch, useAppSelector } from '../../../store';
 import { fetchAirTripById } from '../../../store/slices/airTripSlice';
-import { fetchMarineById } from '../../../store/slices/marineTripSlice';
 import { acceptBid } from '../../../store/slices/bidSlice';
-
-interface BidData {
-    id: string;
-    bidderName: string;
-    bidderImage: string;
-    route: string;
-    space: string;
-    amount: string;
-}
+import { fetchMarineById } from '../../../store/slices/marineTripSlice';
 
 interface BidCardProps {
     bid: BidDetail;
@@ -45,9 +42,6 @@ const BidCard: React.FC<BidCardProps> = ({ bid, onRenegotiate, onAccept }) => (
             <View className="flex-1">
                 <Text className="text-lg font-semibold text-gray-900 mb-1">
                     {bid.sender.fullName}
-
-
-
                 </Text>
                 <View className="flex-row items-center">
                     <Icon as={Location} size="sm" className="text-gray-500 mr-1" />
@@ -62,9 +56,22 @@ const BidCard: React.FC<BidCardProps> = ({ bid, onRenegotiate, onAccept }) => (
                 <Text className="font-medium">Space:</Text> N/A
             </Text>
             <Text className="text-gray-700">
-                <Text className="font-medium">Amount:</Text> {bid.finalPrice}
+                <Text className="font-medium">Amount:</Text> ${bid.finalPrice}
             </Text>
         </View>
+
+        {/* Packages Section */}
+        {bid.packages && bid.packages.length > 0 && (
+            <View className="mb-4">
+                <Text className="text-lg font-semibold text-gray-900 mb-3">
+                    Packages ({bid.packages.length})
+                </Text>
+                <PackageList
+                    packages={bid.packages}
+                    showTitle={false}
+                />
+            </View>
+        )}
 
         {/* Action Buttons */}
         <View className="flex-row space-x-3 gap-3">
@@ -137,6 +144,8 @@ export default function ReviewBidsScreen() {
     const dispatch = useAppDispatch();
 
 
+
+
     const reloadBidData = () => {
         setShowSuccessModal(false);
         if (type == 'Air' && tripId) {
@@ -147,7 +156,7 @@ export default function ReviewBidsScreen() {
     }
 
     if (type == 'Air' && tripId) {
-        console.log("Fetching air trip for ID:", tripId);
+     
         useEffect(() => {
             dispatch(fetchAirTripById(tripId));
         }, [dispatch]);
@@ -155,17 +164,75 @@ export default function ReviewBidsScreen() {
 
 
     if (type == 'Maritime' && tripId) {
-        console.log("Fetching marine trip for ID:", tripId);
         useEffect(() => {
             dispatch(fetchMarineById(tripId));
         }, [dispatch]);
     }
+    const navigation = useNavigation();
+
+    useEffect(() => {
+        navigation.setOptions({
+            headerShown: true,
+            headerTitle: () => {
+                return (
+                    <ThemedText type="s1_subtitle" className="text-center">
+                        Review Bids
+                    </ThemedText>
+                );
+            },
+            headerTitleAlign: "center",
+            headerTitleStyle: { fontSize: 20 }, // Increased font size
+            headerShadowVisible: false,
+            headerStyle: {
+                backgroundColor: "#FFFFFF",
+                elevation: 0, // Android
+                shadowOpacity: 0, // iOS
+                shadowColor: "transparent", // iOS
+                borderBottomWidth: 0,
+            },
+            headerLeft: () => (
+                <ThemedView
+                    style={{
+                        shadowColor: "#FDEFEB1A",
+                        shadowOffset: { width: 0, height: 1 },
+                        shadowOpacity: 0.102,
+                        shadowRadius: 3,
+                        elevation: 4,
+                    }}
+                >
+                    <ThemedView
+                        style={{
+                            shadowColor: "#0000001A",
+                            shadowOffset: { width: 0, height: 1 },
+                            shadowOpacity: 0.102,
+                            shadowRadius: 2,
+                            elevation: 2,
+                        }}
+                    >
+                        <TouchableOpacity
+                            onLongPress={() => router.push("/(tabs)")}
+                            onPress={() => navigation.goBack()}
+                            className="p-2 rounded   flex justify-center items-center"
+                        >
+                            <Icon
+                                as={ChevronLeftIcon}
+                                size="3xl"
+                                className="text-typography-900"
+                            />
+                        </TouchableOpacity>
+                    </ThemedView>
+                </ThemedView>
+            ),
+            headerRight: () => (
+                <NotificationIconComponent />
+            ),
+        });
+    }, [navigation, router]);
 
 
 
 
     const handleRenegotiate = (bidId: string) => {
-        console.log('Renegotiate bid:', bidId);
         router.push({
             pathname: '/screens/dashboard/negotiate-bid',
             params: {
@@ -180,9 +247,9 @@ export default function ReviewBidsScreen() {
 
         dispatch(acceptBid({ bidId }))
             .then((res) => {
-                console.log("Bid accepted:", res);
+             
                 setShowSuccessModal(true);
-               
+
             })
             .catch((err) => {
                 console.error("Error accepting bid:", err);
@@ -191,20 +258,31 @@ export default function ReviewBidsScreen() {
 
     const renderAirTripDetails = () => {
         if (airTripLoading) return (
-            <View className="flex h-full items-center justify-center">
-                <ActivityIndicator size="large" color="#E75B3B" />
-            </View>
+            Array.from({ length: 7 }).map((_: any, index: number) => (
+                <ThemedView key={index} className="w-full">
+                    <Box className="w-full gap-4 p-3 rounded-md ">
+                        <SkeletonText _lines={3} className="h-2" />
+                        <HStack className="gap-1 align-middle">
+                            <Skeleton
+                                variant="circular"
+                                className="h-[24px] w-[28px] mr-2"
+                            />
+                            <SkeletonText _lines={2} gap={1} className="h-2 w-2/5" />
+                        </HStack>
+                    </Box>
+                </ThemedView>
+            ))
         );
         const bids = airTrip.bids_recieved || [];
-        console.log("Received bids:", bids);
+      
         return (
 
             <ScrollView className="flex-1" showsVerticalScrollIndicator={false}>
                 {/* Trip Info Card */}
                 <View className="mx-4 mt-4 mb-6">
-                    <View className="bg-[#FEF7E6] rounded-lg p-4 border border-[#F5E6A3]">
+                    <View className="bg-[#FDEFEB] rounded-2xl my-3 p-5 shadow-sm border border-[#FDEFEB]">
                         <Text className="text-lg font-semibold text-gray-900 mb-1">
-                            {airTrip.departureCity} ({airTrip.departureAirport.iata}) → {airTrip.arrivalCity} ({airTrip.arrivalAirport.iata})
+                            {`${airTrip.departureAirport.city} (${airTrip.departureAirport.iata}) → ${airTrip.arrivalAirport.city} (${airTrip.arrivalAirport.iata})`}
                         </Text>
                         <Text className="text-gray-700">
                             Date: {new Date(airTrip.departureDate).toLocaleDateString()}
@@ -244,12 +322,25 @@ export default function ReviewBidsScreen() {
 
 
     const renderMarineTripDetails = () => {
-        if (marineTripLoading) return (<ActivityIndicator size="large" color="#E75B3B" />);
+        if (marineTripLoading) return (Array.from({ length: 7 }).map((_: any, index: number) => (
+            <ThemedView key={index} className="w-full">
+                <Box className="w-full gap-4 p-3 rounded-md ">
+                    <SkeletonText _lines={3} className="h-2" />
+                    <HStack className="gap-1 align-middle">
+                        <Skeleton
+                            variant="circular"
+                            className="h-[24px] w-[28px] mr-2"
+                        />
+                        <SkeletonText _lines={2} gap={1} className="h-2 w-2/5" />
+                    </HStack>
+                </Box>
+            </ThemedView>
+        )));
         const bids =
             typeof marineTrip.bids_recieved === 'number'
                 ? []
                 : marineTrip.bids_recieved || [];
-        console.log("Received bids:", bids);
+      
         return (
 
             <ScrollView className="flex-1" showsVerticalScrollIndicator={false}>
@@ -296,21 +387,6 @@ export default function ReviewBidsScreen() {
         <SafeAreaView className="flex-1 bg-gray-50">
             <StatusBar barStyle="dark-content" backgroundColor="white" />
 
-            {/* Header */}
-            <View className="bg-white h-16 px-4 flex-row items-center justify-between border-b border-gray-200">
-                <TouchableOpacity className="p-2" onPress={() => router.back()}>
-                    <Icon as={ArrowLeftIcon} size="lg" className="text-gray-700" />
-                </TouchableOpacity>
-
-                <Text className="text-lg font-semibold text-gray-900">Review Bids</Text>
-
-                <TouchableOpacity className="p-2">
-                    <View className="relative">
-                        <Icon as={BellIcon} size="lg" className="text-[#E75B3B]" />
-                        <View className="absolute -top-1 -right-1 w-2 h-2 bg-red-500 rounded-full" />
-                    </View>
-                </TouchableOpacity>
-            </View>
 
             {type === 'Air' ? renderAirTripDetails() : type === 'Maritime' ? renderMarineTripDetails() : (
                 <View className="flex-1 items-center justify-center px-4 py-20">

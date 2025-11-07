@@ -7,6 +7,9 @@ import profileReducer from "./slices/profileSlice";
 import airTripReducer from "./slices/airTripSlice";
 import marineTripReducer from "./slices/marineTripSlice";
 import vechileReducer from "./slices/vechileSlice";
+import groundTripReducer from "./slices/groundTripSlice"
+import notificationReducer from "./slices/notificationSlice";
+import conversationReducer from "./slices/conversationSlice";
 
 export const store = configureStore({
   reducer: {
@@ -15,6 +18,9 @@ export const store = configureStore({
     auth: authReducer,
     airTrip: airTripReducer,
     marineTrip: marineTripReducer,
+    groundTrip: groundTripReducer,
+    notification: notificationReducer,
+    conversation: conversationReducer,
     vechile: vechileReducer,
     forms: formsReducer,
   },

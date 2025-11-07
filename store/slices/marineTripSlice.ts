@@ -1,6 +1,6 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import apiClient from "../../lib/api/client";
-import { ApiError, ApiResponse, MarineTrip, MarineTripRequest, VesselOperator } from "../../models";
+import { ApiError, ApiResponse, Booking, MarineTrip, MarineTripRequest, VesselOperator } from "../../models";
 
 interface MarineTripState {
     marineTripForm: MarineTripRequest;
@@ -10,6 +10,8 @@ interface MarineTripState {
     loadingTrips: boolean;
     isLoadingVessels: boolean;
     vesselOperators: VesselOperator[];
+    loadingBookings: boolean;
+    marineBookings: Booking[];
     error: ApiError | null;
 }
 
@@ -54,7 +56,8 @@ const initialState: MarineTripState = {
         },
         bids_recieved: [],
     },
-
+    loadingBookings: false,
+    marineBookings: [],
     isLoadingVessels: false,
     vesselOperators: [],
     trips: [],
@@ -110,6 +113,7 @@ export const fetchMarineById = createAsyncThunk(
         try {
             const response = await apiClient.get<ApiResponse<MarineTrip>>(`/trip/maritime/${id}`);
             console.log("fetched marine trip by id response:", response.data);
+            console.log("fetched marine trip by id response. bbbbb:", response.data.data);
             return response.data;
         }
         catch (error: any) {
@@ -180,8 +184,41 @@ const marineTripSlice = createSlice({
                         code: 0,
                         message: "Unable to load marine trip",
                     };
+            }).addCase(fetchMarineBookings.pending, (state) => {
+                state.loadingBookings = true;
+                state.error = null;
+            })
+            .addCase(fetchMarineBookings.fulfilled, (state, action) => {
+                state.loadingBookings = false;
+                state.marineBookings = action.payload.data ?? [];
+
+            })
+            .addCase(fetchMarineBookings.rejected, (state, action) => {
+                state.loadingBookings = false;
+                state.error = action.payload as ApiError;
             });
     },
 });
+
+export const fetchMarineBookings = createAsyncThunk(
+    "marineTrip/fetchMarineBookings",
+    async (_, { rejectWithValue }) => {
+        try {
+            const response = await apiClient.get<ApiResponse<Booking[]>>(
+                "/trip/maritime/booking/history",
+            );
+
+            console.log("list of trips booked", response.data)
+
+            return response.data as ApiResponse<Booking[]>;
+        } catch (error: any) {
+            return rejectWithValue(
+                error.response?.data
+                    ? { code: error.response.status, message: error.response.data.message }
+                    : { code: 0, message: "Network error" } as ApiError
+            );
+        }
+    }
+);
 
 export default marineTripSlice.reducer;

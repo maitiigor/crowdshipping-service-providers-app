@@ -1,6 +1,6 @@
 import { router } from 'expo-router';
 import { Formik } from 'formik';
-import { CircleCheckIcon, HelpCircleIcon, LucideIcon, Plus } from 'lucide-react-native';
+import { CircleCheckIcon, HelpCircleIcon, Plus } from 'lucide-react-native';
 import React, { useState } from 'react';
 import {
     ActivityIndicator,
@@ -14,14 +14,12 @@ import { TextInput } from 'react-native-gesture-handler';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import * as Yup from 'yup';
 import AirportSearch from '../../../components/Custom/AirportSearch';
-import CustomToast from '../../../components/Custom/CustomToast';
 import DateField from '../../../components/Custom/DateField';
 import InputLabelText from '../../../components/Custom/InputLabelText';
 import { ThemedText } from '../../../components/ThemedText';
 import { ThemedView } from '../../../components/ThemedView';
 import { Button, ButtonText } from '../../../components/ui/button';
 import { ArrowLeftIcon, BellIcon, Icon } from '../../../components/ui/icon';
-import { useToast } from '../../../components/ui/toast';
 import { Airport, ApiError } from '../../../models';
 import { useAppDispatch, useAppSelector } from '../../../store';
 import { saveAirTrip } from '../../../store/slices/airTripSlice';
@@ -109,41 +107,7 @@ export default function GroundTripScreen() {
     const updateFormData = (field: keyof FormData, value: string) => {
         setFormData(prev => ({ ...prev, [field]: value }));
     };
-    const toast = useToast();
-
-    const showNewToast = ({
-        title,
-        description,
-        icon,
-        action = "error",
-        variant = "solid",
-    }: {
-        title: string;
-        description: string;
-        icon: LucideIcon;
-        action: "error" | "success" | "info" | "muted" | "warning";
-        variant: "solid" | "outline";
-    }) => {
-        const newId = Math.random();
-        toast.show({
-            id: newId.toString(),
-            placement: "top",
-            duration: 3000,
-            render: ({ id }) => {
-                const uniqueToastId = "toast-" + id;
-                return (
-                    <CustomToast
-                        uniqueToastId={uniqueToastId}
-                        icon={icon}
-                        action={action}
-                        title={title}
-                        variant={variant}
-                        description={description}
-                    />
-                );
-            },
-        });
-    };
+    const showToast = useShowToast();
 
     const handlePostTrip = async (values: FormData) => {
 
@@ -173,32 +137,29 @@ export default function GroundTripScreen() {
 
             if (saveAirTrip.fulfilled.match(resultAction)) {
 
-                showNewToast({
+                showToast({
                     title: "Air Trip Saved",
                     description: "Your air trip has been saved",
                     icon: CircleCheckIcon,
                     action: "success",
-                    variant: "solid",
                 });
             }
             else {
                 const errorMessage =
                     (resultAction.payload as ApiError) || { code: 0, message: "Something went wrong" } as ApiError;
-                showNewToast({
+                showToast({
                     title: "Air Trip Save Failed",
                     description: errorMessage.message,
                     icon: HelpCircleIcon,
                     action: "error",
-                    variant: "solid",
                 });
             }
         } catch (error) {
-            showNewToast({
+            showToast({
                 title: "Air Trip Save Failed",
                 description: "Please try again later",
                 icon: HelpCircleIcon,
                 action: "error",
-                variant: "solid",
             });
 
             console.log("save air trip error:", error);

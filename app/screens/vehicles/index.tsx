@@ -1,6 +1,6 @@
 import { AntDesign, MaterialIcons } from "@expo/vector-icons";
-import { router } from "expo-router";
-import { CircleCheckIcon, Edit, HelpCircleIcon, LucideIcon, Plus, Trash2 } from "lucide-react-native";
+import { router, useNavigation } from "expo-router";
+import { ChevronLeft, CircleCheckIcon, Edit, HelpCircleIcon, Plus, Trash2 } from "lucide-react-native";
 import React, { useEffect } from "react";
 import {
     ActivityIndicator,
@@ -13,12 +13,18 @@ import {
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useDispatch } from "react-redux";
-import CustomToast from '../../../components/Custom/CustomToast';
 import { Button, ButtonText } from "../../../components/ui/button";
-import { useToast } from '../../../components/ui/toast';
+import { useShowToast } from '../../../hooks/useShowToast';
 import { Vehicle } from "../../../models";
 import { AppDispatch, useAppSelector } from "../../../store";
 import { deleteVehicle, fetchVehicles, setVehicle } from "../../../store/slices/vechileSlice";
+import { ThemedView } from "../../../components/ThemedView";
+import { ThemedText } from "../../../components/ThemedText";
+import { Icon } from "../../../components/ui/icon";
+import NotificationIconComponent from "../../../components/NotificationIconComponent";
+import { Box } from "../../../components/ui/box";
+import { Skeleton, SkeletonText } from "../../../components/ui/skeleton";
+import { HStack } from "../../../components/ui/hstack";
 
 interface VehicleCardProps {
     vehicle: Vehicle;
@@ -103,7 +109,7 @@ const VehicleCard: React.FC<VehicleCardProps> = ({ vehicle, onEdit, onDelete }) 
 
     return (
         <TouchableOpacity onPress={() => {
-          
+
             setVehicle(vehicle)
             router.push({
                 pathname: `/screens/vehicles/details`, params: { vehicleId: vehicle._id }
@@ -171,7 +177,7 @@ const VehicleCard: React.FC<VehicleCardProps> = ({ vehicle, onEdit, onDelete }) 
 export default function MyVehiclesScreen() {
     const dispatch = useDispatch<AppDispatch>();
     const { vehicles, loading } = useAppSelector((state) => state.vechile);
-    const toast = useToast();
+    const showToast: any = useShowToast();
 
     useEffect(() => {
         // For testing purposes, use mock data. In production, use fetchVehicles()
@@ -179,39 +185,7 @@ export default function MyVehiclesScreen() {
         // dispatch(fetchVehicles());
     }, [dispatch]);
 
-    const showNewToast = ({
-        title,
-        description,
-        icon,
-        action = "error",
-        variant = "solid",
-    }: {
-        title: string;
-        description: string;
-        icon: LucideIcon;
-        action: "error" | "success" | "info" | "muted" | "warning";
-        variant: "solid" | "outline";
-    }) => {
-        const newId = Math.random();
-        toast.show({
-            id: newId.toString(),
-            placement: "top",
-            duration: 3000,
-            render: ({ id }) => {
-                const uniqueToastId = "toast-" + id;
-                return (
-                    <CustomToast
-                        uniqueToastId={uniqueToastId}
-                        icon={icon}
-                        action={action}
-                        title={title}
-                        variant={variant}
-                        description={description}
-                    />
-                );
-            },
-        });
-    };
+
 
     const handleEditVehicle = (vehicle: Vehicle) => {
         // Navigate to edit vehicle screen with vehicle data
@@ -225,20 +199,18 @@ export default function MyVehiclesScreen() {
 
     const handleDeleteVehicle = (vehicleId: string) => {
         dispatch(deleteVehicle(vehicleId)).unwrap().then(() => {
-            showNewToast({
+            showToast({
                 title: "Success",
                 description: "Vehicle deleted successfully",
                 icon: CircleCheckIcon,
                 action: "success",
-                variant: "solid",
             });
         }).catch((error) => {
-            showNewToast({
+            showToast({
                 title: "Error",
                 description: error.message || "Failed to delete vehicle. Please try again.",
                 icon: HelpCircleIcon,
                 action: "error",
-                variant: "solid",
             });
         });
     };
@@ -251,30 +223,86 @@ export default function MyVehiclesScreen() {
         dispatch(fetchVehicles());
     };
 
+    const navigation = useNavigation();
+
+    useEffect(() => {
+            navigation.setOptions({
+                headerShown: true,
+                headerTitle: () => {
+                    return (
+                        <ThemedText type="s1_subtitle" className="text-center">
+                            My Vehicles
+                        </ThemedText>
+                    );
+                },
+                headerTitleAlign: "center",
+                headerTitleStyle: { fontSize: 20 }, // Increased font size
+                headerShadowVisible: false,
+                headerStyle: {
+                    backgroundColor: "#FFFFFF",
+                    elevation: 0, // Android
+                    shadowOpacity: 0, // iOS
+                    shadowColor: "transparent", // iOS
+                    borderBottomWidth: 0,
+                },
+                headerLeft: () => (
+                    <ThemedView
+                        style={{
+                            shadowColor: "#FDEFEB1A",
+                            shadowOffset: { width: 0, height: 1 },
+                            shadowOpacity: 0.102,
+                            shadowRadius: 3,
+                            elevation: 4,
+                        }}
+                    >
+                        <ThemedView
+                            style={{
+                                shadowColor: "#0000001A",
+                                shadowOffset: { width: 0, height: 1 },
+                                shadowOpacity: 0.102,
+                                shadowRadius: 2,
+                                elevation: 2,
+                            }}
+                        >
+                            <TouchableOpacity
+                                onPress={() => navigation.goBack()}
+                                className="p-2 rounded   flex justify-center items-center"
+                            >
+                                <Icon
+                                    as={ChevronLeft}
+                                    size="3xl"
+                                    className="text-typography-900"
+                                />
+                            </TouchableOpacity>
+                        </ThemedView>
+                    </ThemedView>
+                ),
+                headerRight: () => <NotificationIconComponent />,
+            });
+        }, [navigation, router]);
+
     return (
         <SafeAreaView className="flex-1 bg-gray-50">
-            {/* Header */}
-            <View className="flex-row items-center justify-between px-6 pt-10 py-4 bg-white">
-                <TouchableOpacity className="p-2" onPress={() => router.back()}>
-                    <AntDesign name="arrowleft" size={24} color="#000" />
-                </TouchableOpacity>
-
-                <Text className="text-lg font-semibold text-black">
-                    My Vehicle
-                </Text>
-
-                <TouchableOpacity className="p-2" onPress={handleRefresh}>
-                    <MaterialIcons name="notifications-none" size={24} color="#000" />
-                </TouchableOpacity>
-            </View>
+          
+            
 
             {/* Content */}
             <View className="flex-1 px-6 pt-4">
                 {loading ? (
-                    <View className="flex-1 justify-center items-center">
-                        <ActivityIndicator size="large" color="#E75B3B" />
-                        <Text className="mt-2 text-gray-600">Loading vehicles...</Text>
-                    </View>
+                    Array.from({ length: 7 }).map((_: any, index: number) => (
+                            <ThemedView key={index} className="w-full">
+                                <Box className="w-full gap-4 p-3 rounded-md ">
+                                    <SkeletonText _lines={3} className="h-2" />
+                                    <HStack className="gap-1 align-middle">
+                                        <Skeleton
+                                            variant="circular"
+                                            className="h-[24px] w-[28px] mr-2"
+                                        />
+                                        <SkeletonText _lines={2} gap={1} className="h-2 w-2/5" />
+                                    </HStack>
+                                </Box>
+                            </ThemedView>
+                        ))
                 ) : vehicles.length === 0 ? (
                     <View className="flex-1 justify-center items-center">
                         <MaterialIcons name="directions-car" size={64} color="#9CA3AF" />

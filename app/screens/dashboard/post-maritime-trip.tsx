@@ -1,7 +1,7 @@
 import { router } from 'expo-router';
 import { Formik } from 'formik';
-import { ChevronDownIcon, CircleCheckIcon, HelpCircleIcon, LucideIcon, Plus } from 'lucide-react-native';
-import React, { useEffect, useState } from 'react';
+import { CircleCheckIcon, HelpCircleIcon, Plus } from 'lucide-react-native';
+import React, { useState } from 'react';
 import {
     ActivityIndicator,
     ScrollView,
@@ -13,20 +13,18 @@ import {
 import { TextInput } from 'react-native-gesture-handler';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import * as Yup from 'yup';
-import CustomToast from '../../../components/Custom/CustomToast';
 import DateField from '../../../components/Custom/DateField';
 import InputLabelText from '../../../components/Custom/InputLabelText';
 import PortSearch from '../../../components/Custom/PortSearch';
+import VesselOperatorDropdown from '../../../components/Custom/VesselOperatorDropdown';
 import { ThemedText } from '../../../components/ThemedText';
 import { ThemedView } from '../../../components/ThemedView';
 import { Button, ButtonText } from '../../../components/ui/button';
 import { ArrowLeftIcon, BellIcon, Icon } from '../../../components/ui/icon';
-import { Select, SelectBackdrop, SelectContent, SelectDragIndicator, SelectDragIndicatorWrapper, SelectIcon, SelectInput, SelectItem, SelectPortal, SelectTrigger } from '../../../components/ui/select';
-import { useToast } from '../../../components/ui/toast';
+import { useShowToast } from '../../../hooks/useShowToast';
 import { ApiError, Port, VesselOperator, } from '../../../models';
 import { useAppDispatch, useAppSelector } from '../../../store';
 import { saveMarineTrip } from '../../../store/slices/marineTripSlice';
-import VesselOperatorDropdown from '../../../components/Custom/VesselOperatorDropdown';
 
 interface FormData {
     mmsiNumber: string;
@@ -56,7 +54,7 @@ export default function PostMarineTripScreen() {
         availableCapacityPounds: "",
         availableCapacityDimensions: "",
     });
-  
+
     const dispatch = useAppDispatch();
 
 
@@ -130,46 +128,12 @@ export default function PostMarineTripScreen() {
     const updateFormData = (field: keyof FormData, value: string) => {
         setFormData(prev => ({ ...prev, [field]: value }));
     };
-    const toast = useToast();
-
-    const showNewToast = ({
-        title,
-        description,
-        icon,
-        action = "error",
-        variant = "solid",
-    }: {
-        title: string;
-        description: string;
-        icon: LucideIcon;
-        action: "error" | "success" | "info" | "muted" | "warning";
-        variant: "solid" | "outline";
-    }) => {
-        const newId = Math.random();
-        toast.show({
-            id: newId.toString(),
-            placement: "top",
-            duration: 3000,
-            render: ({ id }) => {
-                const uniqueToastId = "toast-" + id;
-                return (
-                    <CustomToast
-                        uniqueToastId={uniqueToastId}
-                        icon={icon}
-                        action={action}
-                        title={title}
-                        variant={variant}
-                        description={description}
-                    />
-                );
-            },
-        });
-    };
+    const showToast: any = useShowToast();
 
     const handlePostTrip = async (values: FormData) => {
 
 
-   
+
 
         const payload = {
             mmsiNumber: values.mmsiNumber,
@@ -196,12 +160,11 @@ export default function PostMarineTripScreen() {
 
             if (saveMarineTrip.fulfilled.match(resultAction)) {
 
-                showNewToast({
+                showToast({
                     title: "Marine Trip Saved",
                     description: "Your air trip has been saved",
                     icon: CircleCheckIcon,
                     action: "success",
-                    variant: "solid",
                 });
 
                 router.push({
@@ -211,21 +174,19 @@ export default function PostMarineTripScreen() {
             else {
                 const errorMessage =
                     (resultAction.payload as ApiError) || { code: 0, message: "Something went wrong" } as ApiError;
-                showNewToast({
+                showToast({
                     title: "Marnine Trip Save Failed",
                     description: errorMessage.message,
                     icon: HelpCircleIcon,
                     action: "error",
-                    variant: "solid",
                 });
             }
         } catch (error) {
-            showNewToast({
+            showToast({
                 title: "Marine Trip Save Failed",
                 description: "Please try again later",
                 icon: HelpCircleIcon,
                 action: "error",
-                variant: "solid",
             });
 
             console.log("save air trip error:", error);
@@ -276,10 +237,10 @@ export default function PostMarineTripScreen() {
                             </ThemedView>
 
                             {/* Vessel Operator */}
-                                <VesselOperatorDropdown errors={errors} touched={touched} values={values} handleChange={handleChange('vesselOperator')} handleOperatorChange={setVesselOperator}>
+                            <VesselOperatorDropdown errors={errors} touched={touched} values={values} handleChange={handleChange('vesselOperator')} handleOperatorChange={setVesselOperator}>
 
-                                </VesselOperatorDropdown>
-                               
+                            </VesselOperatorDropdown>
+
                             {/* Vesseke Name */}
                             <ThemedView>
                                 <InputLabelText className="">MMSI Name</InputLabelText>

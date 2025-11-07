@@ -1,4 +1,4 @@
-import { router } from 'expo-router';
+import { router, useLocalSearchParams } from 'expo-router';
 import React, { useState } from 'react';
 import {
     Alert,
@@ -23,6 +23,7 @@ interface TollEntry {
 }
 
 export default function AddTollsExpensesScreen() {
+    const { tripId } = useLocalSearchParams<{ tripId: string }>();
     const [tollEntries, setTollEntries] = useState<TollEntry[]>([
         { id: '1', amount: '50.00' }
     ]);
@@ -69,11 +70,19 @@ export default function AddTollsExpensesScreen() {
     };
 
     const handleSkip = () => {
-        router.push('/screens/dashboard/complete-delivery-otp');
+        router.push({
+            pathname: '/screens/dashboard/complete-delivery-otp',
+            params: { tripId: tripId }
+        });
     };
 
     const handleSaveCharges = () => {
-        router.push('/screens/dashboard/complete-delivery-otp');
+        // In real app, save toll charges to backend first
+        console.log('Saving toll charges:', tollEntries);
+        router.push({
+            pathname: '/screens/dashboard/complete-delivery-otp',
+            params: { tripId: tripId }
+        });
     };
 
     return (

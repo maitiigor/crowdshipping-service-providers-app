@@ -6,36 +6,44 @@ import { cssInterop } from 'nativewind';
 import React from 'react';
 import { ClipPath, Defs, G, Path, Rect } from 'react-native-svg';
 
+
 export const UIIcon = createIcon({
   Root: PrimitiveIcon,
 }) as React.ForwardRefExoticComponent<
   React.ComponentPropsWithoutRef<typeof PrimitiveIcon> &
-  React.RefAttributes<React.ComponentRef<typeof Svg>>
+    React.RefAttributes<React.ComponentRef<typeof Svg>>
 >;
 
 const iconStyle = tva({
-  base: 'text-typography-950 fill-none pointer-events-none',
+  base: "text-typography-950 fill-none pointer-events-none",
   variants: {
     size: {
-      '2xs': 'h-3 w-3',
-      'xs': 'h-3.5 w-3.5',
-      'sm': 'h-4 w-4',
-      'md': 'h-[18px] w-[18px]',
-      'lg': 'h-5 w-5',
-      'xl': 'h-6 w-6',
-      '2xl': 'h-16 w-16'
+      "2xs": "h-3 w-3",
+      xs: "h-3.5 w-3.5",
+      sm: "h-4 w-4",
+      md: "h-[18px] w-[18px]",
+      lg: "h-5 w-5",
+      xl: "h-6 w-6",
+      "2xl": "h-7 w-7",
+      "3xl": "h-8 w-8",
+      "4xl": "h-9 w-9",
+      "5xl": "h-10 w-10",
+      "6xl": "h-11 w-11",
+      "7xl": "h-12 w-12",
+      "8xl": "h-14 w-14",
+      "9xl": "h-16 w-16",
     },
   },
 });
 
 cssInterop(UIIcon, {
   className: {
-    target: 'style',
+    target: "style",
     nativeStyleToProp: {
       height: true,
       width: true,
       fill: true,
-      color: 'classNameColor',
+      color: "classNameColor",
       stroke: true,
     },
   },
@@ -46,8 +54,8 @@ type IIConProps = IPrimitiveIcon &
   React.ComponentPropsWithoutRef<typeof UIIcon>;
 
 const Icon = React.forwardRef<React.ComponentRef<typeof UIIcon>, IIConProps>(
-  function Icon({ size = 'md', className, ...props }, ref) {
-    if (typeof size === 'number') {
+  function Icon({ size = "md", className, ...props }, ref) {
+    if (typeof size === "number") {
       return (
         <UIIcon
           ref={ref}
@@ -80,7 +88,7 @@ const Icon = React.forwardRef<React.ComponentRef<typeof UIIcon>, IIConProps>(
 
 export { Icon };
 
-type ParameterTypes = Omit<Parameters<typeof createIcon>[0], 'Root'>;
+type ParameterTypes = Omit<Parameters<typeof createIcon>[0], "Root">;
 
 const createIconUI = ({ ...props }: ParameterTypes) => {
   const UIIconCreateIcon = createIcon({
@@ -88,7 +96,7 @@ const createIconUI = ({ ...props }: ParameterTypes) => {
     ...props,
   }) as React.ForwardRefExoticComponent<
     React.ComponentPropsWithoutRef<typeof PrimitiveIcon> &
-    React.RefAttributes<React.ComponentRef<typeof Svg>>
+      React.RefAttributes<React.ComponentRef<typeof Svg>>
   >;
 
   return React.forwardRef<React.ComponentRef<typeof Svg>>(function UIIcon(
@@ -113,7 +121,7 @@ export { createIconUI as createIcon };
 // All Icons
 const AddIcon = createIcon({
   Root: Svg,
-  viewBox: '0 0 24 24',
+  viewBox: "0 0 24 24",
   path: (
     <>
       <Path
@@ -132,12 +140,12 @@ const AddIcon = createIcon({
   ),
 });
 
-AddIcon.displayName = 'AddIcon';
+AddIcon.displayName = "AddIcon";
 export { AddIcon };
 
 const AlertCircleIcon = createIcon({
   Root: Svg,
-  viewBox: '0 0 24 24',
+  viewBox: "0 0 24 24",
   path: (
     <>
       <Path
@@ -162,12 +170,12 @@ const AlertCircleIcon = createIcon({
   ),
 });
 
-AlertCircleIcon.displayName = 'AlertCircleIcon';
+AlertCircleIcon.displayName = "AlertCircleIcon";
 export { AlertCircleIcon };
 
 const ArrowUpIcon = createIcon({
   Root: Svg,
-  viewBox: '0 0 24 24',
+  viewBox: "0 0 24 24",
   path: (
     <>
       <Path
@@ -189,7 +197,7 @@ const ArrowUpIcon = createIcon({
 const ArrowDownIcon = createIcon({
   Root: Svg,
 
-  viewBox: '0 0 24 24',
+  viewBox: "0 0 24 24",
   path: (
     <>
       <Path
@@ -211,7 +219,7 @@ const ArrowDownIcon = createIcon({
 const ArrowRightIcon = createIcon({
   Root: Svg,
 
-  viewBox: '0 0 24 24',
+  viewBox: "0 0 24 24",
   path: (
     <>
       <Path
@@ -232,7 +240,7 @@ const ArrowRightIcon = createIcon({
 
 const ArrowLeftIcon = createIcon({
   Root: Svg,
-  viewBox: '0 0 24 24',
+  viewBox: "0 0 24 24",
   path: (
     <>
       <Path
@@ -251,16 +259,16 @@ const ArrowLeftIcon = createIcon({
   ),
 });
 
-ArrowUpIcon.displayName = 'ArrowUpIcon';
-ArrowDownIcon.displayName = 'ArrowDownIcon';
-ArrowRightIcon.displayName = 'ArrowRightIcon';
-ArrowLeftIcon.displayName = 'ArrowLeftIcon';
+ArrowUpIcon.displayName = "ArrowUpIcon";
+ArrowDownIcon.displayName = "ArrowDownIcon";
+ArrowRightIcon.displayName = "ArrowRightIcon";
+ArrowLeftIcon.displayName = "ArrowLeftIcon";
 
 export { ArrowDownIcon, ArrowLeftIcon, ArrowRightIcon, ArrowUpIcon };
 
 const AtSignIcon = createIcon({
   Root: Svg,
-  viewBox: '0 0 24 24',
+  viewBox: "0 0 24 24",
   path: (
     <>
       <>
@@ -281,13 +289,13 @@ const AtSignIcon = createIcon({
   ),
 });
 
-AtSignIcon.displayName = 'AtSignIcon';
+AtSignIcon.displayName = "AtSignIcon";
 
 export { AtSignIcon };
 
 const BellIcon = createIcon({
   Root: Svg,
-  viewBox: '0 0 24 24',
+  viewBox: "0 0 24 24",
   path: (
     <>
       <Path
@@ -306,13 +314,13 @@ const BellIcon = createIcon({
   ),
 });
 
-BellIcon.displayName = 'BellIcon';
+BellIcon.displayName = "BellIcon";
 
 export { BellIcon };
 
 const CalendarDaysIcon = createIcon({
   Root: Svg,
-  viewBox: '0 0 24 24',
+  viewBox: "0 0 24 24",
   path: (
     <>
       <Path
@@ -379,13 +387,13 @@ const CalendarDaysIcon = createIcon({
   ),
 });
 
-CalendarDaysIcon.displayName = 'CalendarDaysIcon';
+CalendarDaysIcon.displayName = "CalendarDaysIcon";
 
 export { CalendarDaysIcon };
 
 const CheckIcon = createIcon({
   Root: Svg,
-  viewBox: '0 0 24 24',
+  viewBox: "0 0 24 24",
   path: (
     <>
       <Path
@@ -400,7 +408,7 @@ const CheckIcon = createIcon({
 
 const CheckCircleIcon = createIcon({
   Root: Svg,
-  viewBox: '0 0 24 24',
+  viewBox: "0 0 24 24",
   path: (
     <>
       <Path
@@ -419,15 +427,15 @@ const CheckCircleIcon = createIcon({
   ),
 });
 
-CheckIcon.displayName = 'CheckIcon';
-CheckCircleIcon.displayName = 'CheckCircleIcon';
+CheckIcon.displayName = "CheckIcon";
+CheckCircleIcon.displayName = "CheckCircleIcon";
 
 export { CheckCircleIcon, CheckIcon };
 
 const ChevronUpIcon = createIcon({
   Root: Svg,
-  viewBox: '0 0 24 24',
-  d: 'M12 10L8 6L4 10',
+  viewBox: "0 0 24 24",
+  d: "M12 10L8 6L4 10",
   path: (
     <>
       <Path
@@ -442,7 +450,7 @@ const ChevronUpIcon = createIcon({
 
 const ChevronDownIcon = createIcon({
   Root: Svg,
-  viewBox: '0 0 24 24',
+  viewBox: "0 0 24 24",
   path: (
     <>
       <Path
@@ -457,7 +465,7 @@ const ChevronDownIcon = createIcon({
 
 const ChevronLeftIcon = createIcon({
   Root: Svg,
-  viewBox: '0 0 24 24',
+  viewBox: "0 0 24 24",
   path: (
     <>
       <Path
@@ -473,7 +481,7 @@ const ChevronLeftIcon = createIcon({
 const ChevronRightIcon = createIcon({
   Root: Svg,
 
-  viewBox: '0 0 24 24',
+  viewBox: "0 0 24 24",
   path: (
     <>
       <Path
@@ -489,7 +497,7 @@ const ChevronRightIcon = createIcon({
 const ChevronsLeftIcon = createIcon({
   Root: Svg,
 
-  viewBox: '0 0 24 24',
+  viewBox: "0 0 24 24",
   path: (
     <>
       <Path
@@ -511,7 +519,7 @@ const ChevronsLeftIcon = createIcon({
 const ChevronsRightIcon = createIcon({
   Root: Svg,
 
-  viewBox: '0 0 24 24',
+  viewBox: "0 0 24 24",
   path: (
     <>
       <Path
@@ -533,7 +541,7 @@ const ChevronsRightIcon = createIcon({
 const ChevronsUpDownIcon = createIcon({
   Root: Svg,
 
-  viewBox: '0 0 24 24',
+  viewBox: "0 0 24 24",
   path: (
     <>
       <Path
@@ -552,13 +560,13 @@ const ChevronsUpDownIcon = createIcon({
   ),
 });
 
-ChevronUpIcon.displayName = 'ChevronUpIcon';
-ChevronDownIcon.displayName = 'ChevronDownIcon';
-ChevronLeftIcon.displayName = 'ChevronLeftIcon';
-ChevronRightIcon.displayName = 'ChevronRightIcon';
-ChevronsLeftIcon.displayName = 'ChevronsLeftIcon';
-ChevronsRightIcon.displayName = 'ChevronsRightIcon';
-ChevronsUpDownIcon.displayName = 'ChevronsUpDownIcon';
+ChevronUpIcon.displayName = "ChevronUpIcon";
+ChevronDownIcon.displayName = "ChevronDownIcon";
+ChevronLeftIcon.displayName = "ChevronLeftIcon";
+ChevronRightIcon.displayName = "ChevronRightIcon";
+ChevronsLeftIcon.displayName = "ChevronsLeftIcon";
+ChevronsRightIcon.displayName = "ChevronsRightIcon";
+ChevronsUpDownIcon.displayName = "ChevronsUpDownIcon";
 
 export {
   ChevronDownIcon,
@@ -566,12 +574,13 @@ export {
   ChevronRightIcon,
   ChevronsLeftIcon,
   ChevronsRightIcon,
-  ChevronsUpDownIcon, ChevronUpIcon
+  ChevronsUpDownIcon,
+  ChevronUpIcon,
 };
 
 const CircleIcon = createIcon({
   Root: Svg,
-  viewBox: '0 0 24 24',
+  viewBox: "0 0 24 24",
   path: (
     <>
       <Path
@@ -584,13 +593,13 @@ const CircleIcon = createIcon({
   ),
 });
 
-CircleIcon.displayName = 'CircleIcon';
+CircleIcon.displayName = "CircleIcon";
 
 export { CircleIcon };
 
 const ClockIcon = createIcon({
   Root: Svg,
-  viewBox: '0 0 24 24',
+  viewBox: "0 0 24 24",
   path: (
     <>
       <Path
@@ -609,13 +618,13 @@ const ClockIcon = createIcon({
   ),
 });
 
-ClockIcon.displayName = 'ClockIcon';
+ClockIcon.displayName = "ClockIcon";
 
 export { ClockIcon };
 
 const CloseIcon = createIcon({
   Root: Svg,
-  viewBox: '0 0 24 24',
+  viewBox: "0 0 24 24",
   path: (
     <>
       <Path
@@ -636,7 +645,7 @@ const CloseIcon = createIcon({
 
 const CloseCircleIcon = createIcon({
   Root: Svg,
-  viewBox: '0 0 24 24',
+  viewBox: "0 0 24 24",
   path: (
     <>
       <Path
@@ -661,14 +670,14 @@ const CloseCircleIcon = createIcon({
   ),
 });
 
-CloseIcon.displayName = 'CloseIcon';
-CloseCircleIcon.displayName = 'CloseCircleIcon';
+CloseIcon.displayName = "CloseIcon";
+CloseCircleIcon.displayName = "CloseCircleIcon";
 
 export { CloseCircleIcon, CloseIcon };
 
 const CopyIcon = createIcon({
   Root: Svg,
-  viewBox: '0 0 24 24',
+  viewBox: "0 0 24 24",
   path: (
     <>
       <Path
@@ -687,13 +696,13 @@ const CopyIcon = createIcon({
   ),
 });
 
-CopyIcon.displayName = 'CopyIcon';
+CopyIcon.displayName = "CopyIcon";
 
 export { CopyIcon };
 
 const DownloadIcon = createIcon({
   Root: Svg,
-  viewBox: '0 0 24 24',
+  viewBox: "0 0 24 24",
   path: (
     <>
       <Path
@@ -718,12 +727,12 @@ const DownloadIcon = createIcon({
   ),
 });
 
-DownloadIcon.displayName = 'DownloadIcon';
+DownloadIcon.displayName = "DownloadIcon";
 export { DownloadIcon };
 
 const EditIcon = createIcon({
   Root: Svg,
-  viewBox: '0 0 24 24',
+  viewBox: "0 0 24 24",
   path: (
     <>
       <Path
@@ -742,12 +751,12 @@ const EditIcon = createIcon({
   ),
 });
 
-EditIcon.displayName = 'EditIcon';
+EditIcon.displayName = "EditIcon";
 export { EditIcon };
 
 const EyeIcon = createIcon({
   Root: Svg,
-  viewBox: '0 0 24 24',
+  viewBox: "0 0 24 24",
   path: (
     <>
       <Path
@@ -766,11 +775,11 @@ const EyeIcon = createIcon({
   ),
 });
 
-EyeIcon.displayName = 'EyeIcon';
+EyeIcon.displayName = "EyeIcon";
 
 const EyeOffIcon = createIcon({
   Root: Svg,
-  viewBox: '0 0 24 24',
+  viewBox: "0 0 24 24",
   path: (
     <>
       <Path
@@ -801,12 +810,12 @@ const EyeOffIcon = createIcon({
   ),
 });
 
-EyeOffIcon.displayName = 'EyeOffIcon';
+EyeOffIcon.displayName = "EyeOffIcon";
 export { EyeIcon, EyeOffIcon };
 
 const FavouriteIcon = createIcon({
   Root: Svg,
-  viewBox: '0 0 24 24',
+  viewBox: "0 0 24 24",
   path: (
     <>
       <Path
@@ -819,12 +828,12 @@ const FavouriteIcon = createIcon({
   ),
 });
 
-FavouriteIcon.displayName = 'FavouriteIcon';
+FavouriteIcon.displayName = "FavouriteIcon";
 export { FavouriteIcon };
 
 const GlobeIcon = createIcon({
   Root: Svg,
-  viewBox: '0 0 24 24',
+  viewBox: "0 0 24 24",
   path: (
     <>
       <Path
@@ -849,12 +858,12 @@ const GlobeIcon = createIcon({
   ),
 });
 
-GlobeIcon.displayName = 'GlobeIcon';
+GlobeIcon.displayName = "GlobeIcon";
 export { GlobeIcon };
 
 const GripVerticalIcon = createIcon({
   Root: Svg,
-  viewBox: '0 0 24 24',
+  viewBox: "0 0 24 24",
   path: (
     <>
       <Path
@@ -897,12 +906,12 @@ const GripVerticalIcon = createIcon({
   ),
 });
 
-GripVerticalIcon.displayName = 'GripVerticalIcon';
+GripVerticalIcon.displayName = "GripVerticalIcon";
 export { GripVerticalIcon };
 
 const HelpCircleIcon = createIcon({
   Root: Svg,
-  viewBox: '0 0 24 24',
+  viewBox: "0 0 24 24",
   path: (
     <>
       <Path
@@ -927,12 +936,12 @@ const HelpCircleIcon = createIcon({
   ),
 });
 
-HelpCircleIcon.displayName = 'HelpCircleIcon';
+HelpCircleIcon.displayName = "HelpCircleIcon";
 export { HelpCircleIcon };
 
 const InfoIcon = createIcon({
   Root: Svg,
-  viewBox: '0 0 24 24',
+  viewBox: "0 0 24 24",
   path: (
     <>
       <Path
@@ -957,12 +966,12 @@ const InfoIcon = createIcon({
   ),
 });
 
-InfoIcon.displayName = 'InfoIcon';
+InfoIcon.displayName = "InfoIcon";
 export { InfoIcon };
 
 const LinkIcon = createIcon({
   Root: Svg,
-  viewBox: '0 0 24 24',
+  viewBox: "0 0 24 24",
   path: (
     <>
       <Path
@@ -981,11 +990,11 @@ const LinkIcon = createIcon({
   ),
 });
 
-LinkIcon.displayName = 'LinkIcon';
+LinkIcon.displayName = "LinkIcon";
 
 const ExternalLinkIcon = createIcon({
   Root: Svg,
-  viewBox: '0 0 24 24',
+  viewBox: "0 0 24 24",
   path: (
     <>
       <Path
@@ -1010,12 +1019,12 @@ const ExternalLinkIcon = createIcon({
   ),
 });
 
-ExternalLinkIcon.displayName = 'ExternalLinkIcon';
+ExternalLinkIcon.displayName = "ExternalLinkIcon";
 export { ExternalLinkIcon, LinkIcon };
 
 const LoaderIcon = createIcon({
   Root: Svg,
-  viewBox: '0 0 24 24',
+  viewBox: "0 0 24 24",
   path: (
     <>
       <Path
@@ -1028,12 +1037,12 @@ const LoaderIcon = createIcon({
   ),
 });
 
-LoaderIcon.displayName = 'LoaderIcon';
+LoaderIcon.displayName = "LoaderIcon";
 export { LoaderIcon };
 
 const LockIcon = createIcon({
   Root: Svg,
-  viewBox: '0 0 24 24',
+  viewBox: "0 0 24 24",
   path: (
     <>
       <Path
@@ -1052,12 +1061,12 @@ const LockIcon = createIcon({
   ),
 });
 
-LockIcon.displayName = 'LockIcon';
+LockIcon.displayName = "LockIcon";
 export { LockIcon };
 
 const MailIcon = createIcon({
   Root: Svg,
-  viewBox: '0 0 24 24',
+  viewBox: "0 0 24 24",
   path: (
     <>
       <Path
@@ -1076,12 +1085,12 @@ const MailIcon = createIcon({
   ),
 });
 
-MailIcon.displayName = 'MailIcon';
+MailIcon.displayName = "MailIcon";
 export { MailIcon };
 
 const MenuIcon = createIcon({
   Root: Svg,
-  viewBox: '0 0 24 24',
+  viewBox: "0 0 24 24",
   path: (
     <>
       <Path
@@ -1106,12 +1115,12 @@ const MenuIcon = createIcon({
   ),
 });
 
-MenuIcon.displayName = 'MenuIcon';
+MenuIcon.displayName = "MenuIcon";
 export { MenuIcon };
 
 const MessageCircleIcon = createIcon({
   Root: Svg,
-  viewBox: '0 0 24 24',
+  viewBox: "0 0 24 24",
   path: (
     <>
       <Path
@@ -1124,13 +1133,13 @@ const MessageCircleIcon = createIcon({
   ),
 });
 
-MessageCircleIcon.displayName = 'MessageCircleIcon';
+MessageCircleIcon.displayName = "MessageCircleIcon";
 
 export { MessageCircleIcon };
 
 const MoonIcon = createIcon({
   Root: Svg,
-  viewBox: '0 0 24 24',
+  viewBox: "0 0 24 24",
   path: (
     <>
       <Path
@@ -1143,12 +1152,12 @@ const MoonIcon = createIcon({
   ),
 });
 
-MoonIcon.displayName = 'MoonIcon';
+MoonIcon.displayName = "MoonIcon";
 export { MoonIcon };
 
 const PaperclipIcon = createIcon({
   Root: Svg,
-  viewBox: '0 0 24 24',
+  viewBox: "0 0 24 24",
   path: (
     <>
       <Path
@@ -1161,13 +1170,30 @@ const PaperclipIcon = createIcon({
   ),
 });
 
-PaperclipIcon.displayName = 'PaperclipIcon';
+PaperclipIcon.displayName = "PaperclipIcon";
 export { PaperclipIcon };
 
+const PhoneIcon = createIcon({
+  Root: Svg,
+  viewBox: "0 0 24 24",
+  path: (
+    <>
+      <Path
+        d="M22 16.92V19.92C22.0011 20.1985 21.9441 20.4742 21.8325 20.7294C21.7209 20.9845 21.5573 21.2136 21.3521 21.4019C21.1469 21.5901 20.9046 21.7335 20.6408 21.8227C20.3769 21.9119 20.0974 21.9451 19.82 21.92C16.7428 21.5856 13.787 20.5342 11.19 18.85C8.77383 17.3147 6.72534 15.2662 5.19 12.85C3.49998 10.2412 2.44824 7.271 2.12 4.18001C2.09501 3.90347 2.12788 3.62477 2.2165 3.36163C2.30513 3.09849 2.44757 2.85669 2.63477 2.65163C2.82196 2.44656 3.04981 2.28271 3.30379 2.17053C3.55778 2.05834 3.83234 2.00027 4.11 2.00001H7.11C7.59531 1.99523 8.06579 2.16708 8.43376 2.48354C8.80173 2.79999 9.04208 3.23945 9.11 3.72001C9.23662 4.68007 9.47145 5.62273 9.81 6.53001C9.94455 6.88793 9.97366 7.27692 9.89391 7.65089C9.81415 8.02485 9.62886 8.36812 9.36 8.64001L8.09 9.91001C9.51356 12.4136 11.5865 14.4865 14.09 15.91L15.36 14.64C15.6319 14.3711 15.9752 14.1859 16.3491 14.1061C16.7231 14.0263 17.1121 14.0555 17.47 14.19C18.3773 14.5286 19.3199 14.7634 20.28 14.89C20.7658 14.9585 21.2094 15.2032 21.5265 15.5775C21.8437 15.9518 22.0122 16.4296 22 16.92Z"
+        strokeWidth="2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </>
+  ),
+});
+
+PhoneIcon.displayName = "PhoneIcon";
+export { PhoneIcon };
 
 const PlayIcon = createIcon({
   Root: Svg,
-  viewBox: '0 0 24 24',
+  viewBox: "0 0 24 24",
   path: (
     <>
       <Path
@@ -1186,12 +1212,12 @@ const PlayIcon = createIcon({
   ),
 });
 
-PlayIcon.displayName = 'PlayIcon';
+PlayIcon.displayName = "PlayIcon";
 export { PlayIcon };
 
 const RemoveIcon = createIcon({
   Root: Svg,
-  viewBox: '0 0 24 24',
+  viewBox: "0 0 24 24",
   path: (
     <>
       <Path
@@ -1204,12 +1230,12 @@ const RemoveIcon = createIcon({
   ),
 });
 
-RemoveIcon.displayName = 'RemoveIcon';
+RemoveIcon.displayName = "RemoveIcon";
 export { RemoveIcon };
 
 const RepeatIcon = createIcon({
   Root: Svg,
-  viewBox: '0 0 24 24',
+  viewBox: "0 0 24 24",
   path: (
     <>
       <Path
@@ -1240,11 +1266,11 @@ const RepeatIcon = createIcon({
   ),
 });
 
-RepeatIcon.displayName = 'RepeatIcon';
+RepeatIcon.displayName = "RepeatIcon";
 
 const Repeat1Icon = createIcon({
   Root: Svg,
-  viewBox: '0 0 24 24',
+  viewBox: "0 0 24 24",
   path: (
     <>
       <Path
@@ -1281,14 +1307,13 @@ const Repeat1Icon = createIcon({
   ),
 });
 
-Repeat1Icon.displayName = 'Repeat1Icon';
+Repeat1Icon.displayName = "Repeat1Icon";
 export { Repeat1Icon, RepeatIcon };
-
 
 
 const SettingsIcon = createIcon({
   Root: Svg,
-  viewBox: '0 0 24 24',
+  viewBox: "0 0 24 24",
   path: (
     <>
       <Path
@@ -1307,12 +1332,12 @@ const SettingsIcon = createIcon({
   ),
 });
 
-SettingsIcon.displayName = 'SettingsIcon';
+SettingsIcon.displayName = "SettingsIcon";
 export { SettingsIcon };
 
 const ShareIcon = createIcon({
   Root: Svg,
-  viewBox: '0 0 24 24',
+  viewBox: "0 0 24 24",
   path: (
     <>
       <Path
@@ -1349,12 +1374,12 @@ const ShareIcon = createIcon({
   ),
 });
 
-ShareIcon.displayName = 'ShareIcon';
+ShareIcon.displayName = "ShareIcon";
 export { ShareIcon };
 
 const SlashIcon = createIcon({
   Root: Svg,
-  viewBox: '0 0 24 24',
+  viewBox: "0 0 24 24",
   path: (
     <>
       <Path
@@ -1373,12 +1398,13 @@ const SlashIcon = createIcon({
   ),
 });
 
-SlashIcon.displayName = 'SlashIcon';
+SlashIcon.displayName = "SlashIcon";
 export { SlashIcon };
+
 
 const SunIcon = createIcon({
   Root: Svg,
-  viewBox: '0 0 24 24',
+  viewBox: "0 0 24 24",
   path: (
     <>
       <Path
@@ -1439,12 +1465,12 @@ const SunIcon = createIcon({
   ),
 });
 
-SunIcon.displayName = 'SunIcon';
+SunIcon.displayName = "SunIcon";
 export { SunIcon };
 
 const ThreeDotsIcon = createIcon({
   Root: Svg,
-  viewBox: '0 0 24 24',
+  viewBox: "0 0 24 24",
   path: (
     <>
       <Path
@@ -1469,12 +1495,12 @@ const ThreeDotsIcon = createIcon({
   ),
 });
 
-ThreeDotsIcon.displayName = 'ThreeDotsIcon';
+ThreeDotsIcon.displayName = "ThreeDotsIcon";
 export { ThreeDotsIcon };
 
 const TrashIcon = createIcon({
   Root: Svg,
-  viewBox: '0 0 24 24',
+  viewBox: "0 0 24 24",
   path: (
     <>
       <Path
@@ -1499,12 +1525,12 @@ const TrashIcon = createIcon({
   ),
 });
 
-TrashIcon.displayName = 'TrashIcon';
+TrashIcon.displayName = "TrashIcon";
 export { TrashIcon };
 
 const UnlockIcon = createIcon({
   Root: Svg,
-  viewBox: '0 0 24 24',
+  viewBox: "0 0 24 24",
   path: (
     <>
       <Path
@@ -1523,8 +1549,9 @@ const UnlockIcon = createIcon({
   ),
 });
 
-UnlockIcon.displayName = 'UnlockIcon';
+UnlockIcon.displayName = "UnlockIcon";
 export { UnlockIcon };
+
 
 const HomeAlt = createIcon({
   Root: Svg,
@@ -1754,23 +1781,6 @@ const MicIcon = createIcon({
 MicIcon.displayName = 'MicIcon';
 export { MicIcon };
 
-const PhoneIcon = createIcon({
-  Root: Svg,
-  viewBox: '0 0 24 24',
-  path: (
-    <>
-      <Path
-        d="M22 16.92V19.92C22.0011 20.1985 21.9441 20.4742 21.8325 20.7293C21.7209 20.9845 21.5573 21.2136 21.3521 21.4019C21.1468 21.5901 20.9046 21.7335 20.6407 21.8227C20.3769 21.9119 20.0974 21.9451 19.82 21.92C16.7428 21.5856 13.787 20.5341 11.19 18.85C8.77382 17.3147 6.72533 15.2662 5.18999 12.85C3.49997 10.2412 2.44824 7.27099 2.11999 4.18C2.095 3.90347 2.12787 3.62476 2.21649 3.36162C2.30512 3.09849 2.44756 2.85669 2.63476 2.65162C2.82196 2.44655 3.0498 2.28271 3.30379 2.17052C3.55777 2.05833 3.83233 2.00026 4.10999 2H7.10999C7.59531 1.99522 8.06579 2.16708 8.43376 2.48353C8.80173 2.79999 9.04207 3.23945 9.10999 3.72C9.23662 4.68007 9.47144 5.62273 9.80999 6.53C9.94454 6.88792 9.97366 7.27691 9.8939 7.65088C9.81415 8.02485 9.62886 8.36811 9.35999 8.64L8.08999 9.91C9.51355 12.4135 11.5865 14.4864 14.09 15.91L15.36 14.64C15.6319 14.3711 15.9751 14.1858 16.3491 14.1061C16.7231 14.0263 17.1121 14.0555 17.47 14.19C18.3773 14.5286 19.3199 14.7634 20.28 14.89C20.7658 14.9585 21.2094 15.2032 21.5265 15.5775C21.8437 15.9518 22.0122 16.4296 22 16.92Z"
-        strokeWidth="2"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-    </>
-  ),
-});
-
-PhoneIcon.displayName = 'PhoneIcon';
-export { PhoneIcon };
 
 const PhoneOffIcon = createIcon({
   Root: Svg,
@@ -2073,6 +2083,23 @@ const Inbox = createIcon({
 
 Inbox.displayName = 'InboxIcon';
 export { Inbox };
+
+
+
+const VehicleTruck = createIcon({
+  Root: Svg,
+  viewBox: '0 0 24 24',
+  path: (
+    <>
+     <Path d="M4.79922 1.2002C5.23602 1.2002 5.64642 1.3166 5.99922 1.5218C6.36406 1.31115 6.77792 1.20026 7.1992 1.20026C7.62049 1.20025 8.03435 1.31114 8.39919 1.52178C8.76404 1.73242 9.06701 2.03538 9.27766 2.40022C9.48831 2.76505 9.59921 3.17891 9.59922 3.6002V4.8002H10.1992C10.3583 4.8002 10.511 4.86341 10.6235 4.97593C10.736 5.08845 10.7992 5.24107 10.7992 5.4002V10.8002C10.7992 11.4367 10.5464 12.0472 10.0963 12.4973C9.64619 12.9473 9.03574 13.2002 8.39922 13.2002H3.59922C2.9627 13.2002 2.35225 12.9473 1.90216 12.4973C1.45208 12.0472 1.19922 11.4367 1.19922 10.8002V5.4002C1.19922 5.24107 1.26243 5.08845 1.37495 4.97593C1.48748 4.86341 1.64009 4.8002 1.79922 4.8002H2.39922V3.6002C2.39922 2.96368 2.65208 2.35323 3.10216 1.90314C3.55225 1.45305 4.1627 1.2002 4.79922 1.2002ZM3.59922 4.8002H5.99922V3.6002C5.99922 3.28194 5.87279 2.97671 5.64775 2.75167C5.4227 2.52662 5.11748 2.4002 4.79922 2.4002C4.48096 2.4002 4.17573 2.52662 3.95069 2.75167C3.72565 2.97671 3.59922 3.28194 3.59922 3.6002V4.8002ZM7.19922 3.6002V4.8002H8.39922V3.6002C8.39936 3.41698 8.35754 3.23616 8.27697 3.07161C8.19641 2.90706 8.07923 2.76314 7.93442 2.65088C7.78962 2.53863 7.62103 2.46103 7.44159 2.42402C7.26215 2.38702 7.07662 2.39159 6.89922 2.4374C7.09122 2.7818 7.19922 3.179 7.19922 3.6002ZM10.7992 3.7022V3.6002H14.6992C15.8596 3.6002 16.7992 4.541 16.7992 5.7002V7.2002H17.8576C18.1921 7.20021 18.5199 7.2934 18.8044 7.46933C19.0888 7.64526 19.3186 7.89696 19.468 8.1962L21.4096 12.0782C21.5347 12.3278 21.6 12.603 21.6004 12.8822V17.4002C21.6004 17.8776 21.4108 18.3354 21.0732 18.673C20.7356 19.0106 20.2778 19.2002 19.8004 19.2002H17.9404C17.8027 19.8784 17.4348 20.4881 16.899 20.926C16.3632 21.364 15.6924 21.6032 15.0004 21.6032C14.3084 21.6032 13.6377 21.364 13.1019 20.926C12.5661 20.4881 12.1981 19.8784 12.0604 19.2002H10.7404C10.6027 19.8784 10.2348 20.4881 9.69897 20.926C9.16317 21.364 8.49243 21.6032 7.80042 21.6032C7.10841 21.6032 6.43767 21.364 5.90186 20.926C5.36606 20.4881 4.99813 19.8784 4.86042 19.2002H4.54962C3.99266 19.2002 3.45852 18.9789 3.06469 18.5851C2.67087 18.1913 2.44962 17.6572 2.44962 17.1002V14.213C2.81082 14.3342 3.19722 14.4002 3.59922 14.4002H3.64962V17.1002C3.64962 17.597 4.05282 18.0002 4.54962 18.0002H4.86042C4.99813 17.322 5.36606 16.7123 5.90186 16.2744C6.43767 15.8364 7.10841 15.5972 7.80042 15.5972C8.49243 15.5972 9.16317 15.8364 9.69897 16.2744C10.2348 16.7123 10.6027 17.322 10.7404 18.0002H12.0604C12.2194 17.2206 12.6816 16.5362 13.3452 16.0973C14.0089 15.6585 14.8196 15.5013 15.5992 15.6602V5.7002C15.5992 5.4615 15.5044 5.23258 15.3356 5.0638C15.1668 4.89502 14.9379 4.8002 14.6992 4.8002H11.8972C11.8078 4.54683 11.6627 4.3167 11.4727 4.12671C11.2827 3.93671 11.0526 3.79166 10.7992 3.7022ZM16.7992 16.2002C17.3752 16.6322 17.7916 17.2682 17.9392 18.0002H19.7992C19.9583 18.0002 20.111 17.937 20.2235 17.8245C20.336 17.7119 20.3992 17.5593 20.3992 17.4002V13.2002H16.7992V16.2002ZM16.7992 12.0002H20.0296L18.3952 8.7314C18.3453 8.63186 18.2688 8.54816 18.174 8.48967C18.0793 8.43118 17.9702 8.4002 17.8588 8.4002H16.7992V12.0002ZM7.79922 16.8002C7.32183 16.8002 6.86399 16.9898 6.52643 17.3274C6.18886 17.665 5.99922 18.1228 5.99922 18.6002C5.99922 19.0776 6.18886 19.5354 6.52643 19.873C6.86399 20.2106 7.32183 20.4002 7.79922 20.4002C8.27661 20.4002 8.73445 20.2106 9.07201 19.873C9.40958 19.5354 9.59922 19.0776 9.59922 18.6002C9.59922 18.1228 9.40958 17.665 9.07201 17.3274C8.73445 16.9898 8.27661 16.8002 7.79922 16.8002ZM13.1992 18.6002C13.1992 18.8366 13.2458 19.0706 13.3362 19.289C13.4267 19.5074 13.5593 19.7058 13.7264 19.873C13.8936 20.0401 14.092 20.1727 14.3104 20.2632C14.5288 20.3536 14.7628 20.4002 14.9992 20.4002C15.2356 20.4002 15.4697 20.3536 15.688 20.2632C15.9064 20.1727 16.1049 20.0401 16.272 19.873C16.4392 19.7058 16.5717 19.5074 16.6622 19.289C16.7527 19.0706 16.7992 18.8366 16.7992 18.6002C16.7992 18.1228 16.6096 17.665 16.272 17.3274C15.9344 16.9898 15.4766 16.8002 14.9992 16.8002C14.5218 16.8002 14.064 16.9898 13.7264 17.3274C13.3889 17.665 13.1992 18.1228 13.1992 18.6002Z" fill="#131927" stroke="black" stroke-width="0.1"/>
+
+    </>
+  ),
+});
+
+VehicleTruck.displayName = 'VehicleTruck';
+export { VehicleTruck };
+
 
 
 

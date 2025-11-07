@@ -1,6 +1,8 @@
-import { router } from 'expo-router';
+import * as ImagePicker from 'expo-image-picker';
+import { router, useLocalSearchParams } from 'expo-router';
 import React, { useState } from 'react';
 import {
+    Alert,
     Dimensions,
     Image,
     ScrollView,
@@ -11,39 +13,218 @@ import {
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Button, ButtonText } from '../../../components/ui/button';
-import { ArrowLeftIcon, Icon, UploadIcon } from '../../../components/ui/icon';
+import { ArrowLeftIcon, CheckCircleIcon, Icon, UploadIcon } from '../../../components/ui/icon';
+import { useShowToast } from '../../../hooks/useShowToast';
+import { useAppDispatch, useAppSelector } from '../../../store';
+import { updateTripStatus } from '../../../store/slices/groundTripSlice';
+import { uploadDocument } from '../../../store/slices/profileSlice';
 
 const { width, height } = Dimensions.get('window');
 
 export default function ConfirmDeliveryScreen() {
-    const [uploadedImage, setUploadedImage] = useState<string | null>(null);
+    const { tripId } = useLocalSearchParams<{ tripId: string }>();
+    const [uploadedImage, setUploadedImage] = useState<string | null>(null); // Local image URI
+    const [deliveryImageUrl, setDeliveryImageUrl] = useState<string | null>(null); // Uploaded URL
+    const [isUpdating, setIsUpdating] = useState(false);
+    const [isUploading, setIsUploading] = useState(false);
 
-    // Mock data - in real app this would come from props or API
+    const dispatch = useAppDispatch();
+    const showToast = useShowToast();
+    const { groundTrip } = useAppSelector((state) => state.groundTrip);
+
+    // Use actual trip data or fallback
     const bookingData = {
-        id: 'ID2350847391',
-        date: 'June 12, 2025 | 10:00 am',
-        departureAirport: 'Tangerang City, Banten 138',
-        arrivalAirport: 'Tangerang City, Banten 15138',
-        airline: 'SkyCargo',
-        flight: 'F1315',
-        parcel: 'Sensitive Documents',
-        fare: '₦13,500',
-        status: 'Delivering'
+        id: groundTrip?.trackingId || 'ID2350847391',
+        date: groundTrip?.dateOfBooking || 'June 12, 2025 | 10:00 am',
+        departureAirport: groundTrip?.pickUpLocation || 'Tangerang City, Banten 138',
+        arrivalAirport: groundTrip?.dropOffLocation || 'Tangerang City, Banten 15138',
+        airline: 'Ground Transport', // For ground trips, this would be transport type
+        flight: groundTrip?.trackingId || 'GT1315', // Use tracking ID as reference
+        parcel: groundTrip?.packages?.[0]?.productType || 'Sensitive Documents',
+        fare: `₦${groundTrip?.price?.toLocaleString() || '13,500'}`,
+        status: groundTrip?.status || 'Delivering'
     };
 
-    const handleImageUpload = () => {
-        // In a real app, this would open image picker
-        console.log('Open image picker');
-        // For demo purposes, set a placeholder
-        setUploadedImage('placeholder');
+    const handleImageUpload = async () => {
+        // Show action sheet to choose between camera and gallery
+        Alert.alert(
+            'Select Photo',
+            'Choose how you want to add the delivery photo',
+            [
+                { text: 'Camera', onPress: () => takePhoto() },
+                { text: 'Gallery', onPress: () => pickFromGallery() },
+                { text: 'Cancel', style: 'cancel' }
+            ]
+        );
     };
 
-    const handleProceedToTollBills = () => {
-        router.push('/screens/dashboard/add-tolls-expenses');
+    const takePhoto = async () => {
+        try {
+            const permissionResult = await ImagePicker.requestCameraPermissionsAsync();
+            if (permissionResult.status !== 'granted') {
+                Alert.alert('Permission Required', 'Please allow camera access to take delivery photos');
+                return;
+            }
+
+            const result = await ImagePicker.launchCameraAsync({
+                allowsEditing: true,
+                aspect: [4, 3],
+                quality: 0.8,
+            });
+
+            if (!result.canceled) {
+                await uploadImage(result.assets[0]);
+            }
+        } catch (error) {
+            console.log('Camera error:', error);
+            Alert.alert('Error', 'Failed to open camera');
+        }
     };
 
-    const handleContinue = () => {
-        router.push('/screens/dashboard/arrived-location');
+    const pickFromGallery = async () => {
+        try {
+            const permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync();
+            if (permissionResult.status !== 'granted') {
+                Alert.alert('Permission Required', 'Please allow access to your photo library to upload delivery photos');
+                return;
+            }
+
+            const result = await ImagePicker.launchImageLibraryAsync({
+                mediaTypes: ['images'],
+                allowsEditing: true,
+                aspect: [4, 3],
+                quality: 0.8,
+            });
+
+            if (!result.canceled) {
+                await uploadImage(result.assets[0]);
+            }
+        } catch (error) {
+            console.log('Gallery error:', error);
+            Alert.alert('Error', 'Failed to open gallery');
+        }
+    };
+
+    const uploadImage = async (asset: ImagePicker.ImagePickerAsset) => {
+        setUploadedImage(asset.uri);
+
+        // Upload image to server
+        setIsUploading(true);
+        try {
+            const uploadResult = await dispatch(uploadDocument({
+                documentType: 'Delivery Photo',
+                file: asset.uri
+            })).unwrap();
+
+            setDeliveryImageUrl(uploadResult.url);
+            showToast({
+                title: "Image Uploaded",
+                description: "Delivery photo uploaded successfully",
+                icon: CheckCircleIcon,
+                action: "success"
+            });
+        } catch (uploadError: any) {
+            showToast({
+                title: "Upload Failed",
+                description: uploadError.message || "Failed to upload delivery photo",
+                icon: ArrowLeftIcon,
+                action: "error"
+            });
+            // Reset the image if upload failed
+            setUploadedImage(null);
+        } finally {
+            setIsUploading(false);
+        }
+    };
+
+    const handleProceedToTollBills = async () => {
+        if (!deliveryImageUrl) {
+            Alert.alert('Image Required', 'Please upload a delivery photo before proceeding');
+            return;
+        }
+
+        if (!tripId) {
+            Alert.alert('Error', 'Trip ID is missing');
+            return;
+        }
+
+        try {
+            setIsUpdating(true);
+
+            // Update trip status to DELIVERED with delivery image URL
+            await dispatch(updateTripStatus({
+                id: tripId,
+                status: 'DELIVERED',
+                deliveryImage: deliveryImageUrl
+            })).unwrap();
+
+            showToast({
+                title: "Status Updated",
+                description: "Trip marked as delivered successfully",
+                icon: CheckCircleIcon,
+                action: "success"
+            });
+
+            // Navigate to toll expenses screen
+            router.push({
+                pathname: '/screens/dashboard/add-tolls-expenses',
+                params: { tripId: tripId }
+            });
+        } catch (error: any) {
+            showToast({
+                title: "Update Failed",
+                description: error.message || "Failed to update delivery status",
+                icon: ArrowLeftIcon,
+                action: "error"
+            });
+        } finally {
+            setIsUpdating(false);
+        }
+    };
+
+    const handleContinue = async () => {
+        if (!deliveryImageUrl) {
+            Alert.alert('Image Required', 'Please upload a delivery photo before proceeding');
+            return;
+        }
+
+        if (!tripId) {
+            Alert.alert('Error', 'Trip ID is missing');
+            return;
+        }
+
+        try {
+            setIsUpdating(true);
+
+            // Update trip status to DELIVERED with delivery image URL
+            await dispatch(updateTripStatus({
+                id: tripId,
+                status: 'DELIVERED',
+                deliveryImage: deliveryImageUrl
+            })).unwrap();
+
+            showToast({
+                title: "Delivery Confirmed",
+                description: "Trip marked as delivered successfully",
+                icon: CheckCircleIcon,
+                action: "success"
+            });
+
+            // Skip toll expenses and go directly to OTP
+            router.push({
+                pathname: '/screens/dashboard/complete-delivery-otp',
+                params: { tripId: tripId }
+            });
+        } catch (error: any) {
+            showToast({
+                title: "Update Failed",
+                description: error.message || "Failed to confirm delivery",
+                icon: ArrowLeftIcon,
+                action: "error"
+            });
+        } finally {
+            setIsUpdating(false);
+        }
     };
 
     return (
@@ -133,13 +314,29 @@ export default function ConfirmDeliveryScreen() {
                     <TouchableOpacity
                         className="border-2 border-dashed border-gray-300 rounded-lg p-6 items-center justify-center min-h-[120px]"
                         onPress={handleImageUpload}
+                        disabled={isUploading}
                     >
-                        {uploadedImage ? (
+                        {isUploading ? (
                             <View className="items-center">
-                                <View className="w-16 h-16 bg-gray-200 rounded-lg mb-4 items-center justify-center">
-                                    <Text className="text-gray-500 text-xs">Photo</Text>
+                                <View className="w-12 h-12 bg-blue-100 rounded-full items-center justify-center mb-4">
+                                    <Text className="text-blue-600 text-xs">...</Text>
                                 </View>
-                                <Text className="text-gray-700 text-sm">Photo uploaded</Text>
+                                <Text className="text-blue-600 font-medium mb-1">
+                                    Uploading Photo...
+                                </Text>
+                                <Text className="text-gray-500 text-sm">
+                                    Please wait
+                                </Text>
+                            </View>
+                        ) : uploadedImage && deliveryImageUrl ? (
+                            <View className="items-center">
+                                <Image
+                                    source={{ uri: uploadedImage }}
+                                    className="w-16 h-16 rounded-lg mb-4"
+                                    resizeMode="cover"
+                                />
+                                <Text className="text-green-700 text-sm font-medium">✓ Photo uploaded successfully</Text>
+                                <Text className="text-gray-500 text-xs mt-1">Tap to change photo</Text>
                             </View>
                         ) : (
                             <View className="items-center">
@@ -148,6 +345,9 @@ export default function ConfirmDeliveryScreen() {
                                 </View>
                                 <Text className="text-gray-700 font-medium mb-1">
                                     Upload Photo of Delivered Parcel
+                                </Text>
+                                <Text className="text-gray-500 text-sm">
+                                    Take a photo or select from gallery
                                 </Text>
                             </View>
                         )}
@@ -179,9 +379,10 @@ export default function ConfirmDeliveryScreen() {
                         size="xl"
                         className="bg-[#E75B3B] rounded-xl w-full h-[47px]"
                         onPress={handleProceedToTollBills}
+                        disabled={isUpdating || isUploading || !deliveryImageUrl}
                     >
                         <ButtonText className="text-white font-semibold text-lg">
-                            Proceed to Toll Bills
+                            {isUpdating ? 'Updating...' : isUploading ? 'Uploading...' : 'Proceed to Toll Bills'}
                         </ButtonText>
                     </Button>
 
@@ -190,9 +391,10 @@ export default function ConfirmDeliveryScreen() {
                         variant="outline"
                         className="border-[#E75B3B] rounded-xl w-full h-[47px]"
                         onPress={handleContinue}
+                        disabled={isUpdating || isUploading || !deliveryImageUrl}
                     >
                         <ButtonText className="text-[#E75B3B] font-semibold text-lg">
-                            Continue
+                            {isUpdating ? 'Updating...' : isUploading ? 'Uploading...' : 'Continue'}
                         </ButtonText>
                     </Button>
                 </View>

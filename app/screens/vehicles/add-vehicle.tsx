@@ -1,7 +1,7 @@
 import { AntDesign, MaterialIcons } from "@expo/vector-icons";
 import { router } from "expo-router";
 import { Formik } from "formik";
-import { ChevronDownIcon, CircleCheckIcon, HelpCircleIcon, LucideIcon } from "lucide-react-native";
+import { ChevronDownIcon, CircleCheckIcon, HelpCircleIcon } from "lucide-react-native";
 import React, { useEffect } from "react";
 import {
     ActivityIndicator,
@@ -14,7 +14,6 @@ import { TextInput } from "react-native-gesture-handler";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useDispatch } from "react-redux";
 import * as Yup from "yup";
-import CustomToast from '../../../components/Custom/CustomToast';
 import ImageUploader from "../../../components/Custom/ImageUploader";
 import InputLabelText from "../../../components/Custom/InputLabelText";
 import { ThemedText } from "../../../components/ThemedText";
@@ -31,8 +30,8 @@ import {
     ActionsheetItemText,
     ActionsheetScrollView,
 } from "../../../components/ui/select/select-actionsheet";
-import { useToast } from '../../../components/ui/toast';
 import { useEditProfileForm } from "../../../hooks/useRedux";
+import { useShowToast } from '../../../hooks/useShowToast';
 import { AppDispatch, useAppSelector } from "../../../store";
 import { uploadDocument } from "../../../store/slices/profileSlice";
 import { addVehicle, fetchVehicleCategories } from "../../../store/slices/vechileSlice";
@@ -50,41 +49,7 @@ export default function AddvehicleScreen() {
         dispatch(fetchVehicleCategories()).unwrap();
     }, [vehicleCategories.length]);
 
-    const toast = useToast();
-
-    const showNewToast = ({
-        title,
-        description,
-        icon,
-        action = "error",
-        variant = "solid",
-    }: {
-        title: string;
-        description: string;
-        icon: LucideIcon;
-        action: "error" | "success" | "info" | "muted" | "warning";
-        variant: "solid" | "outline";
-    }) => {
-        const newId = Math.random();
-        toast.show({
-            id: newId.toString(),
-            placement: "top",
-            duration: 3000,
-            render: ({ id }) => {
-                const uniqueToastId = "toast-" + id;
-                return (
-                    <CustomToast
-                        uniqueToastId={uniqueToastId}
-                        icon={icon}
-                        action={action}
-                        title={title}
-                        variant={variant}
-                        description={description}
-                    />
-                );
-            },
-        });
-    };
+    const showToast: any = useShowToast();
 
 
     const initialValues = {
@@ -118,22 +83,20 @@ export default function AddvehicleScreen() {
 
 
         dispatch(addVehicle(formData)).unwrap().then(() => {
-            showNewToast({
+            showToast({
                 title: "Success",
                 description: "Vehicle added successfully",
                 icon: CircleCheckIcon,
                 action: "success",
-                variant: "solid",
             });
             router.back();
 
         }).catch((error) => {
-            showNewToast({
+            showToast({
                 title: "Error",
                 description: error.message || "Failed to add vehicle. Please try again.",
                 icon: HelpCircleIcon,
                 action: "error",
-                variant: "solid",
             });
         });
 

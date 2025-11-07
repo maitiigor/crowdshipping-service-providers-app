@@ -1,6 +1,6 @@
 import { LogoutModal } from '@/components/ui/logout-modal';
 import { Href, router } from 'expo-router';
-import { Car, Plus, Search } from 'lucide-react-native';
+import { Car, Plus, Search, VectorSquare } from 'lucide-react-native';
 import React, { useEffect, useState } from 'react';
 import {
   ActivityIndicator,
@@ -13,6 +13,8 @@ import {
   View,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+
+import GroundTripCard from '../../../components/Custom/GroundTripCard';
 import {
   Aeroplane,
   BellNotification,
@@ -31,16 +33,22 @@ import {
   VechileCar,
   Wallet
 } from '../../../components/ui/icon';
+
+import { useShowToast } from '../../../hooks/useShowToast';
 import { AirTrip, MarineTrip } from '../../../models';
 import { useAppDispatch, useAppSelector } from '../../../store';
 import { fetchAirTrips } from '../../../store/slices/airTripSlice';
 import { logout } from '../../../store/slices/authSlice';
+import { acceptBooking, fetchDeliveryBookings, rejectBooking } from '../../../store/slices/groundTripSlice';
 import { fetchMarineTrips } from '../../../store/slices/marineTripSlice';
+import { fetchNotifications } from '../../../store/slices/notificationSlice';
+import NotificationIconComponent from '../../../components/NotificationIconComponent';
+
 
 // UI Components
 
 // Icons (using simple text/emoji for now, can be replaced with proper icons)
-const MenuIcon = () => <Icon as={MenuScale} size="2xl" />;
+const MenuIcon = () => <Icon as={MenuScale} size="5xl" />;
 const NotificationIcon = () => <Icon as={Location} size="xl" className="#E75B3B" />;
 const SearchIcon = () => <Search className='text-[#9EA2AE]' />;
 const LocationIcon = () => <Icon as={Location} size="xl" className="text-[#E75B3B]" />;
@@ -55,14 +63,15 @@ const TermsIcon = () => <Icon as={Notes} size="xl" />;
 const PrivacyIcon = () => <Icon as={PrivacyPolicy} size="xl" />;
 const SettingsIcon = () => <Icon as={Settings} size="xl" />;
 const LogoutIcon = () => <Icon as={Logout} size="xl" className="text-red-500" />;
-const AirIcon = ({ isActive }: { isActive?: boolean }) => (
-  <Icon as={Aeroplane} size="2xl" fill="red" className={isActive ? 'text-white' : 'text-black'} />
+
+export const AirIcon = ({ isActive }: { isActive?: boolean }) => (
+  <Icon as={Aeroplane} size="5xl" fill="red" className={isActive ? 'text-white' : 'text-black'} />
 );
-const GroundIcon = ({ isActive }: { isActive?: boolean }) => (
-  <Icon as={VechileCar} size="2xl" className={isActive ? 'text-white' : 'text-black'} />
+export const GroundIcon = ({ isActive }: { isActive?: boolean }) => (
+  <Icon as={VechileCar} size="5xl" className={isActive ? 'text-white' : 'text-black'} />
 );
-const MaritimeIcon = ({ isActive }: { isActive?: boolean }) => (
-  <Icon as={Sharpship} size="2xl" className={isActive ? 'text-white' : 'text-black'} />
+export const MaritimeIcon = ({ isActive }: { isActive?: boolean }) => (
+  <Icon as={Sharpship} size="5xl" className={isActive ? 'text-white' : 'text-black'} />
 );
 
 interface SidebarProps {
@@ -75,7 +84,7 @@ interface SidebarProps {
 interface TripCardProps {
   title: string;
   location: string;
-  weight: string;
+  weight: number;
   postedBy: string;
   timeAgo: string;
   onPlaceBid: () => void;
@@ -102,7 +111,11 @@ const Sidebar: React.FC<SidebarProps> = ({ isVisible, onClose, onEditProfile, on
   const menuItems = [
     { icon: <HomeIcon />, label: 'Home', active: true, onPress: () => { } },
     { icon: <Car />, label: 'My Vehicles', onPress: () => router.push('/screens/vehicles') },
+
     { icon: <BookingIcon />, label: 'Booking History', onPress: () => router.push('/screens/bookings') },
+
+    { icon: <VectorSquare />, label: 'Trips/Jobs', onPress: () => router.push('/screens/trips') },
+
     { icon: <InboxIcon />, label: 'Inbox', onPress: () => router.push('/screens/chats') },
     { icon: <PaymentIcon />, label: 'Payment logs', onPress: () => router.push('/screens/payments') },
     { icon: <ComplaintsIcon />, label: 'Complaints', onPress: () => { router.push('/screens/reports'); } },
@@ -192,54 +205,10 @@ const Sidebar: React.FC<SidebarProps> = ({ isVisible, onClose, onEditProfile, on
   );
 };
 
-// const TripCard: React.FC<TripCardProps> = ({ title, location, weight, postedBy, timeAgo, onPlaceBid }) => (
-//   <View className="bg-white  rounded-lg p-4 mb-3 shadow-sm">
-//     <Text className="text-lg font-semibold text-gray-900 mb-2">{title}</Text>
 
-//     <View className="flex-row items-center mb-2">
-//       <LocationIcon />
-//       <Text className="text-gray-600 ml-1 flex-1">{location}</Text>
-//     </View>
 
-//     <Text className="text-gray-600 mb-3">
-//       <Text className="font-medium">Weight</Text> {weight}
-//     </Text>
 
-//     <View className="flex-row items-center justify-between">
-//       <View>
-//         <Text className="text-gray-500 text-sm">Posted by {postedBy}</Text>
-//         <Text className="text-gray-500 text-sm">• {timeAgo}</Text>
-//       </View>
-
-//       <TouchableOpacity
-//         onPress={onPlaceBid}
-//         className="bg-[#E75B3B] px-6 py-2 rounded-lg shadow-sm"
-//       >
-//         <Text className="text-white font-medium">Place Bid</Text>
-//       </TouchableOpacity>
-//     </View>
-//   </View>
-// );
-
-const formatDate = (value: string) => {
-  if (!value) {
-    return 'Date not available';
-  }
-
-  const date = new Date(value);
-
-  if (Number.isNaN(date.getTime())) {
-    return 'Date not available';
-  }
-
-  return date.toLocaleDateString(undefined, {
-    year: 'numeric',
-    month: 'short',
-    day: 'numeric',
-  });
-};
-
-const formatRelativeToToday = (value: string) => {
+export const formatRelativeToToday = (value: string) => {
   if (!value) {
     return 'Date not available';
   }
@@ -273,7 +242,7 @@ const formatRelativeToToday = (value: string) => {
   return `${Math.abs(diffDays)} days ago`;
 };
 
-const getMarineRoute = (trip: MarineTrip) => {
+export const getMarineRoute = (trip: MarineTrip) => {
   const via = trip.route?.via ?? [];
 
   if (via.length >= 2) {
@@ -284,21 +253,13 @@ const getMarineRoute = (trip: MarineTrip) => {
     return via[0];
   }
 
-  return trip.tripId || 'Marine trip';
+  return `${trip.containerNumber}  ${trip.departurePort} → ${trip.arrivalPort}`;
 };
 
-const getAirRoute = (trip: AirTrip) => {
-  const via = trip.route?.via ?? [];
+export const getAirRoute = (trip: AirTrip) => {
 
-  if (via.length >= 2) {
-    return `${via[0]} → ${via[via.length - 1]}`;
-  }
 
-  if (via.length === 1) {
-    return via[0];
-  }
-
-  return trip.tripId || 'Marine trip';
+  return `${trip.departureAirport.city} (${trip.departureAirport.iata}) → ${trip.arrivalAirport.city} (${trip.arrivalAirport.iata})` || 'Marine trip';
 };
 
 const formatCapacity = (trip: MarineTrip) => {
@@ -320,7 +281,7 @@ const formatCapacity = (trip: MarineTrip) => {
   return `${pounds} lbs • ${dimension}`;
 };
 
-const MaritimeSummaryCard: React.FC<{ trip?: MarineTrip }> = ({ trip }) => {
+export const MaritimeSummaryCard: React.FC<{ trip?: MarineTrip }> = ({ trip }) => {
   if (!trip) {
     return (
       <View className="bg-[#FDEFEB] h-[130px] rounded-xl p-5 shadow-sm border border-[#FDEFEB]">
@@ -357,7 +318,7 @@ const MaritimeSummaryCard: React.FC<{ trip?: MarineTrip }> = ({ trip }) => {
 };
 
 
-const AirTripSummaryCard: React.FC<{ trip?: AirTrip }> = ({ trip }) => {
+export const AirTripSummaryCard: React.FC<{ trip?: AirTrip }> = ({ trip }) => {
   if (!trip) {
     return (
       <View className="bg-[#FDEFEB] h-[130px] rounded-xl p-5 shadow-sm border border-[#FDEFEB]">
@@ -394,7 +355,7 @@ const AirTripSummaryCard: React.FC<{ trip?: AirTrip }> = ({ trip }) => {
 };
 export default function DashboardScreen() {
   const [sidebarVisible, setSidebarVisible] = useState(false);
-  const [selectedTransportType, setSelectedTransportType] = useState('Air');
+  const [selectedTransportType, setSelectedTransportType] = useState('Ground');
   const [showLogoutModal, setShowLogoutModal] = useState(false);
   const dispatch = useAppDispatch();
 
@@ -404,12 +365,41 @@ export default function DashboardScreen() {
 
   const { airTrips, error: airTripsError, loading: airTripsLoading } = useAppSelector((state) => state.airTrip);
 
+  const { groundTrips, error: groundTripError, loading: groundTripLoading } = useAppSelector((state) => state.groundTrip)
+
   const firstName = user.fullName.split(' ')[0];
   const transportTypes = [
     { type: 'Ground', IconComponent: GroundIcon },
     { type: 'Maritime', IconComponent: MaritimeIcon },
     { type: 'Air', IconComponent: AirIcon },
   ];
+
+
+  const showToast = useShowToast();
+
+  const handleAcceptBooking = async (bookingId: string) => {
+    try {
+      await dispatch(acceptBooking(bookingId)).unwrap();
+      // Refresh the ground trips list
+      dispatch(fetchDeliveryBookings());
+      router.push({
+        pathname: '/screens/dashboard/trip-status-management',
+        params: { tripId: bookingId }
+      });
+    } catch (error: any) {
+      throw error;
+    }
+  };
+
+  const handleRejectBooking = async (bookingId: string) => {
+    try {
+      await dispatch(rejectBooking(bookingId)).unwrap();
+      // Refresh the ground trips list
+      dispatch(fetchDeliveryBookings());
+    } catch (error: any) {
+      throw error;
+    }
+  };
 
   type TransportType = (typeof transportTypes)[number]['type'];
 
@@ -424,6 +414,8 @@ export default function DashboardScreen() {
   useEffect(() => {
     dispatch(fetchMarineTrips());
     dispatch(fetchAirTrips());
+    dispatch(fetchDeliveryBookings())
+    dispatch(fetchNotifications())
   }, [dispatch]);
 
   const handlePlaceBid = () => {
@@ -451,14 +443,16 @@ export default function DashboardScreen() {
     if (type == 'Maritime') {
       dispatch(fetchMarineTrips());
     }
+
+    if (type == "Ground") {
+      dispatch(fetchDeliveryBookings())
+    }
+    if (type == "Air") {
+      dispatch(fetchAirTrips());
+    }
   };
 
   const renderMyPostedTripContent = () => {
-    if (selectedTransportType === 'Air') {
-      return airTrips.map((trip, index) => (
-        <AirTripSummaryCard key={trip._id} trip={trip} />
-      ));
-    }
 
     if (selectedTransportType === 'Maritime') {
       if (loadingTrips) {
@@ -516,7 +510,7 @@ export default function DashboardScreen() {
       if (airTripsError) {
         return (
           <View className="bg-red-50 border border-red-100 rounded-2xl p-5">
-            <Text className="text-red-600 font-medium mb-2">Unable to load maritime trips</Text>
+            <Text className="text-red-600 font-medium mb-2">Unable to load air trips</Text>
             <Text className="text-red-600 mb-3">{airTripsError.message}</Text>
             <TouchableOpacity
               onPress={() => retryFetchTrips('Maritime')}
@@ -538,8 +532,53 @@ export default function DashboardScreen() {
         );
       }
 
-      return marineTrips.filter((trip) => trip.status == 'open').map((trip) => (
-        <MaritimeSummaryCard key={trip._id} trip={trip} />
+      return airTrips.filter((trip) => trip.status == 'open').map((trip) => (
+        <AirTripSummaryCard key={trip._id} trip={trip} />
+      ));
+    }
+
+    if (selectedTransportType === 'Ground') {
+      if (groundTripLoading) {
+        return (
+          <View className="items-center py-6">
+            <ActivityIndicator size="small" color="#E75B3B" />
+            <Text className="text-gray-500 mt-2">Loading your ground trips..</Text>
+          </View>
+        );
+      }
+
+      if (groundTripError) {
+        return (
+          <View className="bg-red-50 border border-red-100 rounded-2xl p-5">
+            <Text className="text-red-600 font-medium mb-2">Unable to load ground trips</Text>
+            <Text className="text-red-600 mb-3">{groundTripError.message}</Text>
+            <TouchableOpacity
+              onPress={() => retryFetchTrips('Ground')}
+              className="self-start bg-[#E75B3B] px-5 py-2 rounded-lg"
+            >
+              <Text className="text-white font-medium">Try again</Text>
+            </TouchableOpacity>
+          </View>
+        );
+      }
+
+      if (groundTrips.filter((trip) => trip.status == 'PENDING').length === 0) {
+        return (
+          <View className="bg-white border border-dashed border-gray-300 rounded-2xl p-6 items-center">
+            <Text className="text-gray-600 text-center">
+              No ground trips near you yet. Check back soon.
+            </Text>
+          </View>
+        );
+      }
+
+      return groundTrips.filter((trip) => trip.status == 'PENDING').map((trip) => (
+        <GroundTripCard
+          key={trip.id}
+          trip={trip}
+          onAccept={handleAcceptBooking}
+          onReject={handleRejectBooking}
+        />
       ));
     }
 
@@ -575,14 +614,7 @@ export default function DashboardScreen() {
           </View>
         </View>
 
-        <TouchableOpacity onPress={() => router.push('/screens/notifications')}>
-          <View className="relative">
-            <NotificationIcon />
-            <View className="absolute -top-1 -right-1 w-4 h-4 bg-red-500 rounded-full items-center justify-center">
-              <Text className="text-white text-xs">0</Text>
-            </View>
-          </View>
-        </TouchableOpacity>
+        <NotificationIconComponent />
       </View>
 
       <ScrollView className="flex-1" showsVerticalScrollIndicator={false}>
@@ -600,32 +632,16 @@ export default function DashboardScreen() {
 
 
 
-        {/* Active Trip */}
-        {/* <View className="px-4 mb-6">
-          <Text className="text-xl font-bold text-gray-900 mb-4">Active Trip</Text>
 
-          <TouchableOpacity
-            className="bg-[#E75B3B] rounded-lg p-4"
-            onPress={() => router.push('/screens/dashboard/depart-port')}
-          >
-            <Text className="text-lg font-semibold text-white mb-2">
-              Driving To Drop Package
-            </Text>
-            <Text className="text-white/80 mb-2">On the way • June 24</Text>
-            <View className="bg-white/20 px-3 py-1 rounded-full self-start">
-              <Text className="text-white text-sm font-medium">₦13,500</Text>
-            </View>
-          </TouchableOpacity>
-        </View> */}
 
         {/* My Posted Trips */}
-        <View className="px-4 mb-6">
+        <View className="px-4 mb-3">
           {/* <Text className="text-xl font-bold text-gray-900 mb-4">My Posted Trips</Text> */}
 
           {/* <MaritimeSummaryCard trip={marineTrips[0]} /> */}
 
           {/* Transport Tabs */}
-          <View className="flex-row gap-3 mt-6">
+          <View className="flex-row gap-3 mt-4">
             {transportTypes.map((transport) => {
               const isActive = selectedTransportType === transport.type;
               const IconComponent = transport.IconComponent;
@@ -653,15 +669,15 @@ export default function DashboardScreen() {
         </View>
 
         {/* Posted Trips Content */}
-        <View className="mt-6">
+        <View className="">
           {transportTypes.map((transport) => {
 
             return (
               <View className={`px-4 mb-6 ${transport.type === selectedTransportType ? '' : 'hidden'}`} key={transport.type}>
                 {transport.type === 'Ground' ? (
-                  <View className="mb-6 mt-4">
+                  <View className="mb-2 ">
                     <Text className="text-xl font-bold text-gray-900 mb-4">
-                      My Posted {`${selectedTransportType} Trips`}
+                      Ground Trips Near You
                     </Text>
 
                     {renderMyPostedTripContent()}

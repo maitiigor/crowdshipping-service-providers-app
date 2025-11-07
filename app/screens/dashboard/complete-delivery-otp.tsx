@@ -1,4 +1,4 @@
-import { router } from 'expo-router';
+import { router, useLocalSearchParams } from 'expo-router';
 import React, { useState } from 'react';
 import {
     Alert,
@@ -11,42 +11,84 @@ import {
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Button, ButtonText } from '../../../components/ui/button';
 import DeliveryCompleteModal from '../../../components/ui/delivery-complete-modal';
-import { ArrowLeftIcon, Icon } from '../../../components/ui/icon';
+import { ArrowLeftIcon, CheckCircleIcon, Icon } from '../../../components/ui/icon';
 import { Input, InputField } from '../../../components/ui/input';
+import { useShowToast } from '../../../hooks/useShowToast';
+import { useAppDispatch, useAppSelector } from '../../../store';
+import { updateTripStatus } from '../../../store/slices/groundTripSlice';
 
 const { width, height } = Dimensions.get('window');
 
 export default function CompleteDeliveryOTPScreen() {
+    const { tripId } = useLocalSearchParams<{ tripId: string }>();
     const [otp, setOtp] = useState('');
     const [showSuccess, setShowSuccess] = useState(false);
     const [rating, setRating] = useState(0);
+    const [isVerifying, setIsVerifying] = useState(false);
 
-    // Mock data - in real app this would come from props or API
-    const bookingId = 'ID2350847391';
+    const dispatch = useAppDispatch();
+    const showToast = useShowToast();
+    const { groundTrip } = useAppSelector((state) => state.groundTrip);
+
+    // Use actual booking ID from trip data or fallback
+    const bookingId = groundTrip?.trackingId || groundTrip?.bookingRef || 'ID2350847391';
 
     const handleResendOTP = () => {
         Alert.alert('OTP Sent', 'A new OTP has been sent to the recipient');
     };
 
-    const handleSubmitOTP = () => {
+    const handleSubmitOTP = async () => {
         if (otp.length < 4) {
             Alert.alert('Invalid OTP', 'Please enter a valid 4-digit OTP');
             return;
         }
 
-        // In a real app, this would verify the OTP with the backend
-        console.log('Submitting OTP:', otp);
-        // Show success modal for rating + review
-        setShowSuccess(true);
+        if (!tripId) {
+            Alert.alert('Error', 'Trip ID is missing');
+            return;
+        }
+
+        try {
+            setIsVerifying(true);
+
+            // In a real app, this would verify the OTP with the backend first
+            console.log('Verifying OTP:', otp);
+
+            // For now, we'll assume OTP is valid and complete the trip
+            await dispatch(updateTripStatus({ id: tripId, status: 'COMPLETED' })).unwrap();
+
+            showToast({
+                title: "Trip Completed!",
+                description: "Delivery has been completed successfully",
+                icon: CheckCircleIcon,
+                action: "success"
+            });
+
+            // Show success modal for rating + review
+            setShowSuccess(true);
+        } catch (error: any) {
+            showToast({
+                title: "Completion Failed",
+                description: error.message || "Failed to complete trip",
+                icon: ArrowLeftIcon,
+                action: "error"
+            });
+        } finally {
+            setIsVerifying(false);
+        }
     };
 
     const handleWriteReview = (selectedRating: number) => {
         setRating(selectedRating);
         setShowSuccess(false);
-        router.push({
-            pathname: '/screens/dashboard/driver-feedback',
-            params: { rating: String(selectedRating) }
-        });
+        // Navigate to feedback screen or back to dashboard
+        router.push('/screens/dashboard');
+    };
+
+    const handleSkipReview = () => {
+        setShowSuccess(false);
+        // Navigate back to dashboard
+        router.push('/screens/dashboard');
     };
 
     return (
@@ -116,9 +158,10 @@ export default function CompleteDeliveryOTPScreen() {
                         size="xl"
                         className="bg-[#E75B3B] rounded-xl h-[47px] w-1/2"
                         onPress={handleSubmitOTP}
+                        disabled={isVerifying || otp.length < 4}
                     >
                         <ButtonText className="text-white font-semibold text-lg">
-                            Submit OTP
+                            {isVerifying ? 'Verifying...' : 'Submit OTP'}
                         </ButtonText>
                     </Button>
                 </View>
@@ -131,8 +174,8 @@ export default function CompleteDeliveryOTPScreen() {
             <DeliveryCompleteModal
                 isVisible={showSuccess}
                 onPrimaryPress={handleWriteReview}
-                onSecondaryPress={() => setShowSuccess(false)}
-                onClose={() => setShowSuccess(false)}
+                onSecondaryPress={handleSkipReview}
+                onClose={handleSkipReview}
                 onRatingChange={(r) => setRating(r)}
             />
         </SafeAreaView>

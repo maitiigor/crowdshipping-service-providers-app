@@ -370,13 +370,21 @@ export interface AirTrip {
 }
 
 
+export interface Package {
+    _id: string;
+    productType: string
+    productWeight: number;
+    productUnit: string;
+    productImage: string;
+}
+
 export interface BidDetail {
     _id: string;
     dropOffLocation: {
         address: string;
     };
     finalPrice: number;
-    packages: Array<any>;
+    packages: Array<Package>;
     pickUpLocation: {
         address: string;
     };
@@ -461,3 +469,150 @@ export interface Vehicle {
     createdAt: string;
     updatedAt: string;
 }
+
+
+export interface GroundTrip {
+    id: string;
+    trackingId: string;
+    weight: number;
+    customer: string;
+    price: Float
+    pickUpLocation: string;
+    dropOffLocation: string;
+    bookingRef: string;
+    dateOfBooking: string;
+    status: string;
+    receiver: {
+        name: string;
+        phone: number | string;
+        alternativePhone: number | string;
+    }
+    sender: {
+        name: string;
+        phoneNumber: number | string;
+        email: string
+    }
+}
+
+
+export interface GroundTripDetail {
+    id: string;
+    trackingId: string;
+    weight: number;
+    customer: string;
+    price: Float
+    pickUpLocation: string;
+    dropOffLocation: string;
+    bookingRef: string;
+    dateOfBooking: string;
+    status: string;
+    receiver: {
+        name: string;
+        phone: number | string;
+        alternativePhone: number | string;
+    }
+    sender: {
+        name: string;
+        phoneNumber: number | string;
+        email: string
+    }
+    packages: Array<Package>;
+}
+
+
+export interface Notification {
+    __v: number;
+    _id: string;
+    channel: string;
+    createdAt: string;
+    data: Array<object>;
+    delivered: boolean;
+    id: string;
+    isRead: boolean;
+    message: string;
+    title: string;
+    triggeredById: string;
+    type: string;
+    updatedAt: string;
+    userId: string;
+}
+
+
+export interface Conversation {
+    conversationId: string;
+    lastMessage: string;
+    lastMessageType: string;
+    lastMessageAt: string;
+    unreadCount: number;
+    participant: IConversationsParticipant;
+}
+
+
+
+export interface IConversationsDatum {
+    conversationId: string;
+    lastMessage: string;
+    lastMessageType: string;
+    lastMessageAt: string;
+    unreadCount: number;
+    participant: IConversationsParticipant;
+}
+
+export interface IConversationsParticipant {
+    _id: string;
+    fullName: string;
+    profileImage: string;
+    userType: string;
+}
+
+// Single chat details
+export interface ISingleChatResponse {
+    code: number;
+    message: string;
+    data: ISingleChatData;
+}
+
+export interface ISingleChatData {
+    conversationId: string;
+    participant: ISingleChatParticipant;
+    messages: ISingleChatMessage[];
+}
+
+export interface ISingleChatMessage {
+    messageId: string;
+    message: string;
+    type: string;
+    attachments: string[];
+    isSender: boolean;
+    sender: ISingleChatSender;
+    sentAt: Date;
+}
+
+export interface ISingleChatSender {
+    _id: string;
+    fullName: string;
+    userType: string;
+    profileImage: string;
+}
+
+export interface ISingleChatParticipant {
+    _id: string;
+    fullName: string;
+    profileId: string;
+    profile: ISingleChatProfile;
+}
+
+export interface ISingleChatProfile {
+    _id: string;
+    profilePicUrl: string;
+}
+
+export interface Booking{
+    _id: string;
+    bookingRef: string;
+    status: string;
+    paymentStatus: string;
+    createdAt: string;
+    updatedAt: string;
+}
+        

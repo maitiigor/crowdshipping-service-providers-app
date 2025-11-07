@@ -23,7 +23,7 @@ export default function CustomToast({
   description,
   uniqueToastId,
   action,
-  variant="solid",
+  variant="solid"
 }: {
   icon: LucideIcon;
   title: string;

@@ -1,6 +1,6 @@
 import { router, useLocalSearchParams } from 'expo-router';
 import { Formik } from 'formik';
-import { HelpCircleIcon, LucideIcon } from 'lucide-react-native';
+import { HelpCircleIcon } from 'lucide-react-native';
 import React, { useState } from 'react';
 import {
     Modal,
@@ -13,19 +13,19 @@ import {
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import * as Yup from "yup";
-import CustomToast from "../../../components/Custom/CustomToast";
 import InputLabelText from '../../../components/Custom/InputLabelText';
+import PackageList from '../../../components/Custom/PackageList';
 import { ThemedView } from '../../../components/ThemedView';
 import { Button, ButtonText } from '../../../components/ui/button';
 import { ArrowLeftIcon, BellIcon, CheckCircleIcon, Icon } from '../../../components/ui/icon';
-import { useToast } from "../../../components/ui/toast";
+import { useShowToast } from '../../../hooks/useShowToast';
 import { ApiError } from '../../../models';
 import { useAppDispatch, useAppSelector } from '../../../store';
 import { negotiateBid } from '../../../store/slices/bidSlice';
 
 interface SuccessModalProps {
     visible: boolean;
-    onClose: () => void;
+    onClose: ()  => void;
 }
 
 const SuccessModal: React.FC<SuccessModalProps> = ({ visible, onClose }) => (
@@ -79,8 +79,6 @@ export default function NegotiateBidScreen() {
         type: string;
     }>();
 
-    const [bidAmount, setBidAmount] = useState('5000');
-    const [estimatedTime, setEstimatedTime] = useState('2 hours');
     const [showSuccessModal, setShowSuccessModal] = useState(false);
     const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -89,20 +87,7 @@ export default function NegotiateBidScreen() {
     const { marineTrip } = useAppSelector((state) => state.marineTrip);
 
 
-    if (type === 'Air') {
-        const bids =
-            typeof airTrip.bids_recieved === 'number'
-                ? []
-                : airTrip.bids_recieved || [];
-    }
 
-
-    if (type === 'Marine') {
-        const bids =
-            typeof marineTrip.bids_recieved === 'number'
-                ? []
-                : marineTrip.bids_recieved || [];
-    }
 
 
     const renderAirTripDetailsCard = () => {
@@ -117,48 +102,68 @@ export default function NegotiateBidScreen() {
             <Text className="text-lg font-semibold text-gray-900 mb-3">Bid Summary</Text>
 
             <View className="flex-row space-between items-center mb-3">
-                <Text className="text-gray-600 text-lg flex-1">Trip ID</Text>
-                <Text className="text-gray-600 font-bold ml-1 text-lg ">{airTrip.tripId}</Text>
+                <Text className="text-gray-600 text-lg flex-1 w-1/3" >Trip ID</Text>
+                <Text className="text-gray-600 font-bold ml-1 text-lg w-2/3 text-right ">{airTrip.tripId}</Text>
             </View>
 
 
             <View className="flex-row space-between items-center mb-3">
-                <Text className="text-gray-500 text-lg flex-1">Date of Trip</Text>
-                <Text className="text-gray-700 font-bold ml-1 text-lg ">{airTrip.departureDate}</Text>
+                <Text className="text-gray-500 text-lg w-1/3">Date of Trip</Text>
+                <Text className="text-gray-700 font-bold ml-1 text-lg w-2/3 text-right ">{airTrip.departureDate}</Text>
             </View>
 
 
             <View className="flex-row space-between items-center mb-3">
-                <Text className="text-gray-500 text-lg flex-1">Pickup Location</Text>
-                <Text className="text-gray-700 font-bold ml-1 text-lg ">{bid?.pickUpLocation.address}</Text>
+                <Text className="text-gray-500 text-lg w-1/3">Pickup Location</Text>
+                <Text className="text-gray-700 font-bold ml-1 text-lg  w-2/3 text-right">{bid?.pickUpLocation.address}</Text>
             </View>
 
             <View className="flex-row space-between items-center mb-3">
-                <Text className="text-gray-500 text-lg flex-1">Drop-off Location</Text>
-                <Text className="text-gray-700 font-bold ml-1 text-lg ">{bid?.dropOffLocation.address}</Text>
+                <Text className="text-gray-500 text-lg w-1/3">Drop-off Location</Text>
+                <Text className="text-gray-700 font-bold ml-1 text-lg w-2/3 text-right ">{bid?.dropOffLocation.address}</Text>
             </View>
 
             <View className="flex-row space-between items-center mb-3">
-                <Text className="text-gray-500 text-lg flex-1">Aiport</Text>
-                <Text className="text-gray-700 font-bold ml-1 text-lg ">{airTrip.arrivalAirport.city}</Text>
+                <Text className="text-gray-500 text-lg w-1/3">Aiport</Text>
+                <Text className="text-gray-700 font-bold ml-1 text-lg w-2/3 text-right ">{airTrip.arrivalAirport.city}</Text>
             </View>
 
             <View className="flex-row space-between items-center mb-3">
-                <Text className="text-gray-500 text-lg flex-1">Container</Text>
-                <Text className="text-gray-700 font-bold ml-1 text-lg ">{marineTrip.containerNumber}</Text>
+                <Text className="text-gray-500 text-lg flex-1 w-1/3">Flight Number</Text>
+                <Text className="text-gray-700 font-bold ml-1 text-lg w-2/3 text-right ">{airTrip.flightNumber}</Text>
             </View>
 
             <View className="flex-row space-between items-center mb-3">
-                <Text className="text-gray-500 text-lg flex-1">Weight</Text>
-                <Text className="text-gray-700 font-bold ml-1 text-lg ">{marineTrip.capacity.dimension}</Text>
+                <Text className="text-gray-500 text-lg w-1/3">Weight</Text>
+                <Text className="text-gray-700 font-bold ml-1 text-lg w-2/3 text-right ">{marineTrip.capacity.dimension}</Text>
             </View>
 
             <View className="flex-row space-between items-center mb-3">
-                <Text className="text-gray-500 text-lg flex-1">Fare</Text>
-                <Text className="text-gray-700 font-bold ml-1 text-lg ">{bid?.finalPrice}</Text>
+                <Text className="text-gray-500 text-lg w-1/3">Fare</Text>
+                <Text className="text-gray-700 font-bold ml-1 text-lg w-2/3 text-right ">${bid?.finalPrice}</Text>
             </View>
 
         </View>);
+    }
+
+    const renderAirTripPackages = () => {
+        const bids =
+            typeof airTrip.bids_recieved === 'number'
+                ? []
+                : airTrip.bids_recieved || [];
+        const bid = bids.find(b => b._id === bidId);
+
+        if (!bid || !bid.packages || bid.packages.length === 0) {
+            return null;
+        }
+
+        return (
+            <PackageList
+                packages={bid.packages}
+                title="Packages in this Bid"
+                showTitle={true}
+            />
+        );
     }
 
     const renderMarineTripDetailsCard = () => {
@@ -211,23 +216,34 @@ export default function NegotiateBidScreen() {
 
             <View className="flex-row space-between items-center mb-3">
                 <Text className="text-gray-500 text-lg flex-1">Fare</Text>
-                <Text className="text-gray-700 font-bold ml-1 text-lg ">{bid?.finalPrice}</Text>
+                <Text className="text-gray-700 font-bold ml-1 text-lg ">${bid?.finalPrice}</Text>
             </View>
 
         </View>);
     }
 
+    const renderMarineTripPackages = () => {
+        const bids =
+            typeof marineTrip.bids_recieved === 'number'
+                ? []
+                : marineTrip.bids_recieved || [];
+        const bid = bids.find(b => b._id === bidId);
 
-    // Mock trip data based on the screenshot
-    const mockTripData = {
-        title: "Urgent Documents to VI",
-        location: "Lagos - Canada",
-        weight: "0.5kg",
-        dimension: "30x20x2cm",
-        sender: "John Doe",
-        postedBy: "Amina Bello",
-        timeAgo: "35m ago"
-    };
+        if (!bid || !bid.packages || bid.packages.length === 0) {
+            return null;
+        }
+
+        return (
+            <PackageList
+                packages={bid.packages}
+                title="Packages in this Bid"
+                showTitle={true}
+            />
+        );
+    }
+
+
+
 
     const handleGoBack = () => {
         router.back();
@@ -239,46 +255,20 @@ export default function NegotiateBidScreen() {
     };
 
 
-    const handleSuccessModalClose = () => {
+    const handleSuccessModalClose = (type: string, tripId: string) => {
         setShowSuccessModal(false);
         // Navigate back to review bids screen
+       
         router.push({
             pathname: '/screens/dashboard/review-bids',
-            params: { tripId: tripId }
+            params: {
+                tripId: tripId ,
+                type: type
+            }
         })
     };
 
-    const toast = useToast();
-
-    const showNewToast = ({
-        title,
-        description,
-        icon,
-        action = "error",
-        variant = "solid",
-    }: {
-        title: string;
-        description: string;
-        icon: LucideIcon;
-        action: "error" | "success" | "info" | "muted" | "warning";
-        variant: "solid" | "outline";
-    }) => {
-        toast.show({
-            id: Math.random().toString(),
-            placement: "top",
-            duration: 3000,
-            render: ({ id }) => (
-                <CustomToast
-                    uniqueToastId={"toast-" + id}
-                    icon={icon}
-                    action={action}
-                    title={title}
-                    variant={variant}
-                    description={description}
-                />
-            ),
-        });
-    };
+    const showToast: any = useShowToast();
 
     const initialValues = {
         bidId,
@@ -313,12 +303,11 @@ export default function NegotiateBidScreen() {
             })
             .catch((error: ApiError) => {
                 console.log("bid negotiation error:", error);
-                showNewToast({
+                showToast({
                     title: "Bid Negotiation Failed",
                     description: error.message || "An error occurred while negotiating the bid.",
                     icon: HelpCircleIcon,
                     action: "error",
-                    variant: "solid",
                 });
             })
             .finally(() => {
@@ -350,6 +339,9 @@ export default function NegotiateBidScreen() {
             <ScrollView className="flex-1 px-4 bg-white " showsVerticalScrollIndicator={false}>
                 {/* Trip Details Card */}
                 {type === 'Air' ? renderAirTripDetailsCard() : renderMarineTripDetailsCard()}
+
+                {/* Packages Section */}
+                {type === 'Air' ? renderAirTripPackages() : renderMarineTripPackages()}
 
                 <Formik initialValues={initialValues} validationSchema={validationSchema} onSubmit={subbmitBid}>
                     {({ handleChange, handleSubmit, values, errors, touched }) => (
@@ -413,7 +405,7 @@ export default function NegotiateBidScreen() {
             {/* Success Modal */}
             < SuccessModal
                 visible={showSuccessModal}
-                onClose={handleSuccessModalClose}
+                onClose={() =>handleSuccessModalClose(type, tripId)}
             />
         </SafeAreaView >
     );
