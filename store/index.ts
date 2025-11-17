@@ -1,15 +1,20 @@
 import { configureStore } from "@reduxjs/toolkit";
 import { TypedUseSelectorHook, useDispatch, useSelector } from "react-redux";
+import airTripReducer from "./slices/airTripSlice";
 import appReducer from "./slices/appSlice";
 import authReducer from "./slices/authSlice";
-import formsReducer from "./slices/formsSlice";
-import profileReducer from "./slices/profileSlice";
-import airTripReducer from "./slices/airTripSlice";
-import marineTripReducer from "./slices/marineTripSlice";
-import vechileReducer from "./slices/vechileSlice";
-import groundTripReducer from "./slices/groundTripSlice"
-import notificationReducer from "./slices/notificationSlice";
 import conversationReducer from "./slices/conversationSlice";
+import countryReducer from "./slices/countrySlice";
+import formsReducer from "./slices/formsSlice";
+import groundTripReducer from "./slices/groundTripSlice";
+import marineTripReducer from "./slices/marineTripSlice";
+import notificationReducer from "./slices/notificationSlice";
+import paymentReducer from "./slices/paymentSlice";
+import profileReducer from "./slices/profileSlice";
+import tripManagementReducer from "./slices/tripManagementSlice";
+import vechileReducer from "./slices/vechileSlice";
+import walletReducer from "./slices/walletSlice";
+import settingReducer from "./slices/settingSlice";
 
 export const store = configureStore({
   reducer: {
@@ -18,9 +23,14 @@ export const store = configureStore({
     auth: authReducer,
     airTrip: airTripReducer,
     marineTrip: marineTripReducer,
+    payment: paymentReducer,
+    wallet: walletReducer,
+    setting: settingReducer,
     groundTrip: groundTripReducer,
+    country: countryReducer,
     notification: notificationReducer,
     conversation: conversationReducer,
+    tripManagement: tripManagementReducer,
     vechile: vechileReducer,
     forms: formsReducer,
   },

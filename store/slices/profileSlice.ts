@@ -2,7 +2,7 @@
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import apiClient from "../../lib/api/client";
 import { ApiError, ApiResponse, CompleteProfilePayload } from "../../models";
-import { setUserProfile } from "./authSlice";
+import { setUserKycStatus, setUserProfile } from "./authSlice";
 
 
 interface EditProfileForm {
@@ -111,6 +111,7 @@ const profileSlice = createSlice({
                 console.log("get user profile:", action.payload?.data);
                 if (action.payload?.data) {
                     setUserProfile(action.payload.data);
+                    setUserKycStatus("verified");
                 }
             }).addCase(getUserProfile.rejected, (state, action) => {
                 state.loading = false;

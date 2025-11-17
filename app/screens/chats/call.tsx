@@ -2,7 +2,7 @@
 import { ArrowLeftIcon, Icon, MicIcon, PhoneOffIcon, SpeakerIcon } from '@/components/ui/icon';
 import { router, useLocalSearchParams } from 'expo-router';
 import React, { useEffect, useState } from 'react';
-import { Dimensions, Image, Text, TouchableOpacity, View } from 'react-native';
+import { Dimensions, Image, TouchableOpacity } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 const { width, height } = Dimensions.get('window');
 
@@ -34,22 +34,22 @@ export default function CallScreen() {
 
     return (
         <SafeAreaView className="flex-1">
-            <View className="flex-1 bg-gray-900">
+            <ThemedView className="flex-1 bg-gray-900">
                 {/* Header */}
-                <View className="flex-row items-center justify-between px-4 py-3">
+                <ThemedView className="flex-row items-center justify-between px-4 py-3">
                     <TouchableOpacity onPress={() => router.back()}>
                         <Icon as={ArrowLeftIcon} size="md" className="text-white" />
                     </TouchableOpacity>
 
-                    <Text className="text-lg font-medium text-white">In Chats</Text>
+                    <ThemedText className="text-lg font-medium text-white">In Chats</ThemedText>
 
-                    <View className="w-6" />
-                </View>
+                    <ThemedView className="w-6" />
+                </ThemedView>
 
                 {/* Call Info */}
-                <View className="flex-1 items-center justify-center px-8">
+                <ThemedView className="flex-1 items-center justify-center px-8">
                     {/* Profile Image */}
-                    <View className="items-center mb-8">
+                    <ThemedView className="items-center mb-8">
                         <Image
                             source={{
                                 uri: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=200&h=200&fit=crop&crop=face'
@@ -57,19 +57,19 @@ export default function CallScreen() {
                             className="w-48 h-48 rounded-full mb-6"
                         />
 
-                        <Text className="text-3xl font-semibold text-white mb-2">
+                        <ThemedText className="text-3xl font-semibold text-white mb-2">
                             {name || 'Segun Johnson'}
-                        </Text>
+                        </ThemedText>
 
-                        <Text className="text-lg text-gray-300">
+                        <ThemedText className="text-lg text-gray-300">
                             {formatDuration(callDuration)}
-                        </Text>
-                    </View>
-                </View>
+                        </ThemedText>
+                    </ThemedView>
+                </ThemedView>
 
                 {/* Call Controls */}
-                <View className="px-8 pb-12">
-                    <View className="flex-row justify-center items-center space-x-8">
+                <ThemedView className="px-8 pb-12">
+                    <ThemedView className="flex-row justify-center items-center space-x-8">
                         {/* Speaker Button */}
                         <TouchableOpacity className="w-16 h-16 bg-gray-600 rounded-full items-center justify-center">
                             <Icon as={SpeakerIcon} size="lg" className="text-white" />
@@ -87,9 +87,9 @@ export default function CallScreen() {
                         >
                             <Icon as={PhoneOffIcon} size="lg" className="text-white" />
                         </TouchableOpacity>
-                    </View>
-                </View>
-            </View>
+                    </ThemedView>
+                </ThemedView>
+            </ThemedView>
         </SafeAreaView>
     );
 }

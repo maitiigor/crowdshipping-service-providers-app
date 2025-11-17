@@ -2,7 +2,7 @@
 import { ArrowLeftIcon, BellIcon, ChevronDownIcon, Icon } from '@/components/ui/icon';
 import { router } from 'expo-router';
 import React, { useState } from 'react';
-import { ScrollView, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import { ScrollView, TextInput, TouchableOpacity } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 interface BankData {
@@ -56,8 +56,8 @@ export default function AddPayoutAccountScreen() {
         onChangeText: (text: string) => void,
         placeholder?: string
     ) => (
-        <View className="mb-4">
-            <Text className="text-sm font-medium text-gray-700 mb-2">{label}</Text>
+        <ThemedView className="mb-4">
+            <ThemedText className="text-sm font-medium text-gray-700 mb-2">{label}</ThemedText>
             <TextInput
                 value={value}
                 onChangeText={onChangeText}
@@ -65,7 +65,7 @@ export default function AddPayoutAccountScreen() {
                 className="w-full px-4 py-4 bg-gray-50 rounded-lg text-base text-gray-900 border border-gray-200"
                 placeholderTextColor="#9CA3AF"
             />
-        </View>
+        </ThemedView>
     );
 
     const renderPickerField = (
@@ -74,38 +74,38 @@ export default function AddPayoutAccountScreen() {
         onPress: () => void,
         placeholder?: string
     ) => (
-        <View className="mb-4">
-            <Text className="text-sm font-medium text-gray-700 mb-2">{label}</Text>
+        <ThemedView className="mb-4">
+            <ThemedText className="text-sm font-medium text-gray-700 mb-2">{label}</ThemedText>
             <TouchableOpacity
                 className="w-full px-4 py-4 bg-gray-50 rounded-lg border border-gray-200 flex-row items-center justify-between"
                 onPress={onPress}
             >
-                <Text className={`text-base ${value ? 'text-gray-900' : 'text-gray-400'}`}>
+                <ThemedText className={`text-base ${value ? 'text-gray-900' : 'text-gray-400'}`}>
                     {value || placeholder || label}
-                </Text>
+                </ThemedText>
                 <Icon as={ChevronDownIcon} size="sm" className="text-gray-500" />
             </TouchableOpacity>
-        </View>
+        </ThemedView>
     );
 
     return (
         <SafeAreaView className="flex-1 bg-white">
             {/* Header */}
-            <View className="flex-row items-center justify-between px-4 py-3 border-b border-gray-100">
+            <ThemedView className="flex-row items-center justify-between px-4 py-3 border-b border-gray-100">
                 <TouchableOpacity onPress={() => router.back()}>
                     <Icon as={ArrowLeftIcon} size="md" className="text-gray-700" />
                 </TouchableOpacity>
 
-                <Text className="text-xl font-semibold text-gray-900">Payout Account</Text>
+                <ThemedText className="text-xl font-semibold text-gray-900">Payout Account</ThemedText>
 
                 <TouchableOpacity>
                     <Icon as={BellIcon} size="md" className="text-gray-700" />
                 </TouchableOpacity>
-            </View>
+            </ThemedView>
 
             <ScrollView className="flex-1 px-4 py-6">
                 {/* Form Title */}
-                <Text className="text-lg font-semibold text-gray-900 mb-6">Manage Payout Account</Text>
+                <ThemedText className="text-lg font-semibold text-gray-900 mb-6">Manage Payout Account</ThemedText>
 
                 {/* Bank Name */}
                 {renderPickerField(
@@ -116,7 +116,7 @@ export default function AddPayoutAccountScreen() {
                 )}
 
                 {showBankPicker && (
-                    <View className="mb-4 bg-gray-50 rounded-lg border border-gray-200 max-h-48">
+                    <ThemedView className="mb-4 bg-gray-50 rounded-lg border border-gray-200 max-h-48">
                         <ScrollView>
                             {banks.map((bank) => (
                                 <TouchableOpacity
@@ -127,11 +127,11 @@ export default function AddPayoutAccountScreen() {
                                         setShowBankPicker(false);
                                     }}
                                 >
-                                    <Text className="text-base text-gray-900">{bank}</Text>
+                                    <ThemedText className="text-base text-gray-900">{bank}</ThemedText>
                                 </TouchableOpacity>
                             ))}
                         </ScrollView>
-                    </View>
+                    </ThemedView>
                 )}
 
                 {/* Account Holder Name */}
@@ -152,15 +152,15 @@ export default function AddPayoutAccountScreen() {
             </ScrollView>
 
             {/* Action Buttons */}
-            <View className="px-4 pb-4 gap-y-3">
+            <ThemedView className="px-4 pb-4 gap-y-3">
                 {/* Delete Account Button (only show if editing) */}
                 <TouchableOpacity
                     className="bg-red-500 py-4 rounded-xl"
                     onPress={handleDeleteAccount}
                 >
-                    <Text className="text-white font-semibold text-center text-base">
+                    <ThemedText className="text-white font-semibold text-center text-base">
                         Delete Account
-                    </Text>
+                    </ThemedText>
                 </TouchableOpacity>
 
                 {/* Save Button */}
@@ -168,11 +168,11 @@ export default function AddPayoutAccountScreen() {
                     className="bg-blue-500 py-4 rounded-xl"
                     onPress={handleSaveAccount}
                 >
-                    <Text className="text-white font-semibold text-center text-base">
+                    <ThemedText className="text-white font-semibold text-center text-base">
                         Save Payout Account
-                    </Text>
+                    </ThemedText>
                 </TouchableOpacity>
-            </View>
+            </ThemedView>
         </SafeAreaView>
     );
 }

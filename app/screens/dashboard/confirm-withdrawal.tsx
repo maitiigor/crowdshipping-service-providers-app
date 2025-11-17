@@ -2,7 +2,7 @@
 import { ArrowLeftIcon, BellIcon, EyeIcon, Icon } from '@/components/ui/icon';
 import { router, useLocalSearchParams } from 'expo-router';
 import React, { useState } from 'react';
-import { ScrollView, Text, TouchableOpacity, View } from 'react-native';
+import { ScrollView, TouchableOpacity } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 export default function ConfirmWithdrawalScreen() {
@@ -34,119 +34,119 @@ export default function ConfirmWithdrawalScreen() {
     return (
         <SafeAreaView className="flex-1 bg-white">
             {/* Header */}
-            <View className="flex-row items-center justify-between px-4 py-3 border-b border-gray-100">
+            <ThemedView className="flex-row items-center justify-between px-4 py-3 border-b border-gray-100">
                 <TouchableOpacity onPress={() => router.back()}>
                     <Icon as={ArrowLeftIcon} size="md" className="text-gray-700" />
                 </TouchableOpacity>
 
-                <Text className="text-xl font-semibold text-gray-900">Withdraw Funds</Text>
+                <ThemedText className="text-xl font-semibold text-gray-900">Withdraw Funds</ThemedText>
 
                 <TouchableOpacity>
                     <Icon as={BellIcon} size="md" className="text-gray-700" />
                 </TouchableOpacity>
-            </View>
+            </ThemedView>
 
             <ScrollView className="flex-1 px-4 py-6">
                 {/* Available Balance */}
-                <View className="mb-6">
-                    <Text className="text-sm text-gray-600 mb-2">Available for withdrawal</Text>
-                    <View className="flex-row items-center">
-                        <Text className="text-3xl font-bold text-orange-500 mr-2">
+                <ThemedView className="mb-6">
+                    <ThemedText className="text-sm text-gray-600 mb-2">Available for withdrawal</ThemedText>
+                    <ThemedView className="flex-row items-center">
+                        <ThemedText className="text-3xl font-bold text-orange-500 mr-2">
                             {showBalance ? `₦${availableBalance.toLocaleString()}` : '****'}
-                        </Text>
+                        </ThemedText>
                         <TouchableOpacity onPress={() => setShowBalance(!showBalance)}>
                             <Icon as={EyeIcon} size="sm" className="text-gray-500" />
                         </TouchableOpacity>
-                    </View>
-                </View>
+                    </ThemedView>
+                </ThemedView>
 
                 {/* Bank Details Card */}
-                <View className="bg-gray-50 rounded-xl p-4 mb-6">
-                    <View className="flex-row items-center justify-between mb-4">
-                        <Text className="text-lg font-semibold text-gray-900">Bank Details</Text>
+                <ThemedView className="bg-gray-50 rounded-xl p-4 mb-6">
+                    <ThemedView className="flex-row items-center justify-between mb-4">
+                        <ThemedText className="text-lg font-semibold text-gray-900">Bank Details</ThemedText>
                         <TouchableOpacity onPress={handleBankSelection}>
-                            <Text className="text-orange-500 font-medium">Change</Text>
+                            <ThemedText className="text-orange-500 font-medium">Change</ThemedText>
                         </TouchableOpacity>
-                    </View>
+                    </ThemedView>
 
-                    <View className="space-y-3">
-                        <View>
-                            <Text className="text-sm text-gray-500 mb-1">Bank</Text>
-                            <Text className="text-base text-gray-900 font-medium">{bank}</Text>
-                        </View>
+                    <ThemedView className="space-y-3">
+                        <ThemedView>
+                            <ThemedText className="text-sm text-gray-500 mb-1">Bank</ThemedText>
+                            <ThemedText className="text-base text-gray-900 font-medium">{bank}</ThemedText>
+                        </ThemedView>
 
-                        <View>
-                            <Text className="text-sm text-gray-500 mb-1">Bank Account</Text>
-                            <Text className="text-base text-gray-900 font-medium">{accountNumber}</Text>
-                        </View>
+                        <ThemedView>
+                            <ThemedText className="text-sm text-gray-500 mb-1">Bank Account</ThemedText>
+                            <ThemedText className="text-base text-gray-900 font-medium">{accountNumber}</ThemedText>
+                        </ThemedView>
 
-                        <View>
-                            <Text className="text-sm text-gray-500 mb-1">Account Holder Name</Text>
-                            <Text className="text-base text-gray-900 font-medium">{accountHolderName}</Text>
-                        </View>
+                        <ThemedView>
+                            <ThemedText className="text-sm text-gray-500 mb-1">Account Holder Name</ThemedText>
+                            <ThemedText className="text-base text-gray-900 font-medium">{accountHolderName}</ThemedText>
+                        </ThemedView>
 
-                        <View>
-                            <Text className="text-sm text-gray-500 mb-1">Amount</Text>
-                            <Text className="text-xl text-orange-500 font-bold">{amount}</Text>
-                        </View>
-                    </View>
-                </View>
+                        <ThemedView>
+                            <ThemedText className="text-sm text-gray-500 mb-1">Amount</ThemedText>
+                            <ThemedText className="text-xl text-orange-500 font-bold">{amount}</ThemedText>
+                        </ThemedView>
+                    </ThemedView>
+                </ThemedView>
 
                 {/* Transaction Summary */}
-                <View className="bg-white border border-gray-200 rounded-xl p-4 mb-6">
-                    <Text className="text-lg font-semibold text-gray-900 mb-4">Transaction Summary</Text>
+                <ThemedView className="bg-white border border-gray-200 rounded-xl p-4 mb-6">
+                    <ThemedText className="text-lg font-semibold text-gray-900 mb-4">Transaction Summary</ThemedText>
 
-                    <View className="space-y-3">
-                        <View className="flex-row justify-between">
-                            <Text className="text-gray-600">Withdrawal Amount</Text>
-                            <Text className="text-gray-900 font-medium">{amount}</Text>
-                        </View>
+                    <ThemedView className="space-y-3">
+                        <ThemedView className="flex-row justify-between">
+                            <ThemedText className="text-gray-600">Withdrawal Amount</ThemedText>
+                            <ThemedText className="text-gray-900 font-medium">{amount}</ThemedText>
+                        </ThemedView>
 
-                        <View className="flex-row justify-between">
-                            <Text className="text-gray-600">Processing Fee</Text>
-                            <Text className="text-green-600 font-medium">Free</Text>
-                        </View>
+                        <ThemedView className="flex-row justify-between">
+                            <ThemedText className="text-gray-600">Processing Fee</ThemedText>
+                            <ThemedText className="text-green-600 font-medium">Free</ThemedText>
+                        </ThemedView>
 
-                        <View className="border-t border-gray-200 pt-3">
-                            <View className="flex-row justify-between">
-                                <Text className="text-gray-900 font-semibold">Total Amount</Text>
-                                <Text className="text-orange-500 font-bold text-lg">{amount}</Text>
-                            </View>
-                        </View>
-                    </View>
-                </View>
+                        <ThemedView className="border-t border-gray-200 pt-3">
+                            <ThemedView className="flex-row justify-between">
+                                <ThemedText className="text-gray-900 font-semibold">Total Amount</ThemedText>
+                                <ThemedText className="text-orange-500 font-bold text-lg">{amount}</ThemedText>
+                            </ThemedView>
+                        </ThemedView>
+                    </ThemedView>
+                </ThemedView>
 
                 {/* Important Notice */}
-                <View className="bg-yellow-50 border border-yellow-200 rounded-xl p-4 mb-6">
-                    <Text className="text-yellow-800 font-medium mb-2">⚠️ Important Notice</Text>
-                    <Text className="text-yellow-700 text-sm leading-5">
+                <ThemedView className="bg-yellow-50 border border-yellow-200 rounded-xl p-4 mb-6">
+                    <ThemedText className="text-yellow-800 font-medium mb-2">⚠️ Important Notice</ThemedText>
+                    <ThemedText className="text-yellow-700 text-sm leading-5">
                         Please ensure your bank account details are correct. Withdrawals cannot be reversed once processed. Processing time is 1-3 business days.
-                    </Text>
-                </View>
-            </ScrollView>
+                    </ThemedText>
+                </ThemedView>
+            </ScrollView >
 
             {/* Action Buttons */}
-            <View className="px-4 pb-4 flex-row gap-x-3">
+            < ThemedView className="px-4 pb-4 flex-row gap-x-3" >
                 {/* Bank Button */}
-                <TouchableOpacity
+                < TouchableOpacity
                     className="flex-1 py-4 border border-orange-500 rounded-xl"
                     onPress={handleBankSelection}
                 >
-                    <Text className="text-orange-500 font-semibold text-center text-base">
+                    <ThemedText className="text-orange-500 font-semibold text-center text-base">
                         Bank
-                    </Text>
-                </TouchableOpacity>
+                    </ThemedText>
+                </TouchableOpacity >
 
                 {/* Confirm Button */}
-                <TouchableOpacity
+                < TouchableOpacity
                     className="flex-1 py-4 bg-orange-500 rounded-xl"
                     onPress={handleConfirm}
                 >
-                    <Text className="text-white font-semibold text-center text-base">
+                    <ThemedText className="text-white font-semibold text-center text-base">
                         Confirm
-                    </Text>
-                </TouchableOpacity>
-            </View>
-        </SafeAreaView>
+                    </ThemedText>
+                </TouchableOpacity >
+            </ThemedView >
+        </SafeAreaView >
     );
 }

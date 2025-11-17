@@ -2,7 +2,7 @@
 import { ArrowLeftIcon, BellIcon, Icon } from '@/components/ui/icon';
 import { router, useLocalSearchParams } from 'expo-router';
 import React from 'react';
-import { Alert, Image, ScrollView, Text, TouchableOpacity, View } from 'react-native';
+import { Alert, Image, ScrollView, TouchableOpacity } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 export default function BookingDetailsScreen() {
@@ -72,77 +72,77 @@ export default function BookingDetailsScreen() {
     };
 
     const renderDetailRow = (label: string, value: string, isStatus?: boolean) => (
-        <View className="flex-row justify-between items-center py-3 border-b border-gray-100">
-            <Text className="text-gray-600 text-base">{label}</Text>
-            <View className="flex-1 items-end">
+        <ThemedView className="flex-row justify-between items-center py-3 border-b border-gray-100">
+            <ThemedText className="text-gray-600 text-base">{label}</ThemedText>
+            <ThemedView className="flex-1 items-end">
                 {isStatus ? (
-                    <View className={`px-3 py-1 rounded-full ${getStatusColor(value)}`}>
-                        <Text className={`font-medium text-sm ${getStatusColor(value).split(' ')[0]}`}>
+                    <ThemedView className={`px-3 py-1 rounded-full ${getStatusColor(value)}`}>
+                        <ThemedText className={`font-medium text-sm ${getStatusColor(value).split(' ')[0]}`}>
                             {value}
-                        </Text>
-                    </View>
+                        </ThemedText>
+                    </ThemedView>
                 ) : (
-                    <Text className="text-gray-900 font-medium text-base text-right">
+                    <ThemedText className="text-gray-900 font-medium text-base text-right">
                         {value}
-                    </Text>
+                    </ThemedText>
                 )}
-            </View>
-        </View>
+            </ThemedView>
+        </ThemedView>
     );
 
     const renderActionButtons = () => {
         if (bookingData.status === 'Delivered') {
             return (
-                <View className="space-y-3">
+                <ThemedView className="space-y-3">
                     <TouchableOpacity
                         className="border border-orange-500 py-4 rounded-xl"
                         onPress={handleRateDriver}
                     >
-                        <Text className="text-orange-500 font-semibold text-center">
+                        <ThemedText className="text-orange-500 font-semibold text-center">
                             Rate Driver
-                        </Text>
+                        </ThemedText>
                     </TouchableOpacity>
 
                     <TouchableOpacity
                         className="border border-orange-500 py-4 rounded-xl"
                         onPress={handleReportDriver}
                     >
-                        <Text className="text-orange-500 font-semibold text-center">
+                        <ThemedText className="text-orange-500 font-semibold text-center">
                             Report Driver
-                        </Text>
+                        </ThemedText>
                     </TouchableOpacity>
 
                     <TouchableOpacity
                         className="border border-orange-500 py-4 rounded-xl"
                         onPress={handleFileReport}
                     >
-                        <Text className="text-orange-500 font-semibold text-center">
+                        <ThemedText className="text-orange-500 font-semibold text-center">
                             File a Report
-                        </Text>
+                        </ThemedText>
                     </TouchableOpacity>
-                </View>
+                </ThemedView>
             );
         } else if (bookingData.status === 'Pending') {
             return (
-                <View className="flex-row gap-3">
+                <ThemedView className="flex-row gap-3">
                     <TouchableOpacity
                         className="flex-1 border border-gray-300 py-4 rounded-xl"
                         onPress={() => router.back()}
                     >
-                        <Text className="text-gray-700 font-semibold text-center">
+                        <ThemedText className="text-gray-700 font-semibold text-center">
                             Back
-                        </Text>
+                        </ThemedText>
                     </TouchableOpacity>
 
                     <TouchableOpacity
                         className="flex-1 bg-red-500 py-4 rounded-xl"
                         onPress={handleCancelBooking}
                     >
-                        <Text className="text-white font-semibold text-center">
+                        <ThemedText className="text-white font-semibold text-center">
                             Cancel Booking
-                        </Text>
+                        </ThemedText>
                     </TouchableOpacity>
-                </View>
+                </ThemedView>
             );
         } else {
             // In Progress - no action buttons needed
@@ -151,8 +151,8 @@ export default function BookingDetailsScreen() {
     };
 
     const renderPackageImage = () => (
-        <View className="items-center mb-6">
-            <View className="w-full h-64 bg-white rounded-2xl items-center justify-center border-2 border-orange-200">
+        <ThemedView className="items-center mb-6">
+            <ThemedView className="w-full h-64 bg-white rounded-2xl items-center justify-center border-2 border-orange-200">
                 <Image
                     source={require('../../../assets/images/package-sample.png')}
                     style={{
@@ -162,82 +162,82 @@ export default function BookingDetailsScreen() {
                     }}
                     resizeMode="cover"
                 />
-            </View>
-        </View>
+            </ThemedView>
+        </ThemedView>
     );
 
     return (
         <SafeAreaView className="flex-1 bg-gray-50">
             {/* Header */}
-            <View className="flex-row items-center justify-between px-4 py-3 bg-white border-b border-gray-100">
+            <ThemedView className="flex-row items-center justify-between px-4 py-3 bg-white border-b border-gray-100">
                 <TouchableOpacity onPress={() => router.back()}>
                     <Icon as={ArrowLeftIcon} size="md" className="text-gray-700" />
                 </TouchableOpacity>
 
-                <Text className="text-xl font-semibold text-gray-900">Booking Details</Text>
+                <ThemedText className="text-xl font-semibold text-gray-900">Booking Details</ThemedText>
 
                 <TouchableOpacity>
                     <Icon as={BellIcon} size="md" className="text-gray-700" />
                 </TouchableOpacity>
-            </View>
+            </ThemedView>
 
             <ScrollView className="flex-1 px-4 py-6">
                 {/* Package Image */}
-                <View className="bg-white rounded-2xl p-6 mb-6 shadow-sm">
+                <ThemedView className="bg-white rounded-2xl p-6 mb-6 shadow-sm">
                     {renderPackageImage()}
 
                     {/* Booking Summary */}
-                    <View className="mb-6">
-                        <Text className="text-lg font-semibold text-gray-900 mb-4">
+                    <ThemedView className="mb-6">
+                        <ThemedText className="text-lg font-semibold text-gray-900 mb-4">
                             Booking Summary:
-                        </Text>
+                        </ThemedText>
 
-                        <View className="space-y-0">
+                        <ThemedView className="space-y-0">
                             {renderDetailRow('Booking ID', bookingData.id)}
                             {renderDetailRow('Date of Booking', bookingData.bookingDate)}
                             {renderDetailRow('Pickup Location', bookingData.pickupLocation)}
                             {renderDetailRow('Drop-off Location', bookingData.dropoffLocation)}
                             {renderDetailRow('Weight', bookingData.weight)}
                             {renderDetailRow('Current Status', bookingData.status, true)}
-                        </View>
-                    </View>
+                        </ThemedView>
+                    </ThemedView>
 
                     {/* Receiver Information */}
-                    <View className="mb-6">
-                        <Text className="text-lg font-semibold text-gray-900 mb-4">
+                    <ThemedView className="mb-6">
+                        <ThemedText className="text-lg font-semibold text-gray-900 mb-4">
                             Receiver Information:
-                        </Text>
+                        </ThemedText>
 
-                        <View className="space-y-0">
+                        <ThemedView className="space-y-0">
                             {renderDetailRow('Name', bookingData.receiverName)}
                             {renderDetailRow('Phone Number', bookingData.receiverPhone)}
-                        </View>
-                    </View>
+                        </ThemedView>
+                    </ThemedView>
 
                     {/* Expected Arrival Time - Only show for In Progress and Pending */}
                     {(bookingData.status === 'In Progress' || bookingData.status === 'Pending') && (
-                        <View className="mb-6">
-                            <Text className="text-lg font-semibold text-gray-900 mb-4">
+                        <ThemedView className="mb-6">
+                            <ThemedText className="text-lg font-semibold text-gray-900 mb-4">
                                 Expected Arrival Time
-                            </Text>
+                            </ThemedText>
 
-                            <View className="flex-row items-center justify-center bg-gray-50 rounded-xl p-4">
-                                <View className="w-8 h-8 bg-orange-500 rounded-full items-center justify-center mr-3">
-                                    <Text className="text-white text-sm">⏰</Text>
-                                </View>
-                                <Text className="text-lg font-semibold text-gray-900">
+                            <ThemedView className="flex-row items-center justify-center bg-gray-50 rounded-xl p-4">
+                                <ThemedView className="w-8 h-8 bg-orange-500 rounded-full items-center justify-center mr-3">
+                                    <ThemedText className="text-white text-sm">⏰</ThemedText>
+                                </ThemedView>
+                                <ThemedText className="text-lg font-semibold text-gray-900">
                                     {bookingData.expectedArrival}
-                                </Text>
-                            </View>
-                        </View>
+                                </ThemedText>
+                            </ThemedView>
+                        </ThemedView>
                     )}
-                </View>
+                </ThemedView>
 
                 {/* Action Buttons */}
                 {renderActionButtons() && (
-                    <View className="mb-6">
+                    <ThemedView className="mb-6">
                         {renderActionButtons()}
-                    </View>
+                    </ThemedView>
                 )}
             </ScrollView>
         </SafeAreaView>

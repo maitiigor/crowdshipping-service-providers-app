@@ -1,224 +1,510 @@
+// WithdrawalScreen.tsx
 'use client';
-import { ArrowLeftIcon, BellIcon, ChevronDownIcon, EyeIcon, Icon } from '@/components/ui/icon';
-import { router } from 'expo-router';
-import React, { useState } from 'react';
-import { ScrollView, Text, TextInput, TouchableOpacity, View } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
 
-interface WithdrawalData {
-    bank: string;
-    accountNumber: string;
-    amount: string;
-}
+import BankDropdown from "@/components/Custom/BankDropdown";
+import { CustomModal } from "@/components/Custom/CustomModal";
+import CustomToast from "@/components/Custom/CustomToast";
+import InputLabelText from "@/components/Custom/InputLabelText";
+import { ThemedText } from "@/components/ThemedText";
+import { ThemedView } from "@/components/ThemedView";
+import { Button } from "@/components/ui/button";
+import { Icon } from "@/components/ui/icon";
+import { Input, InputField } from "@/components/ui/input";
+import { useToast } from "@/components/ui/toast";
+import { useThemeColor } from "@/hooks/useThemeColor";
+import { useAppDispatch, useAppSelector } from "@/store";
+import { formatCurrency } from "@/utils/helper";
+import { useNavigation, useRouter } from "expo-router";
+import { Formik } from "formik";
+import {
+    ChevronLeft,
+    CircleCheckIcon,
+    HelpCircleIcon,
+    LucideIcon,
+} from "lucide-react-native";
+import React, { useEffect, useState } from "react";
+import {
+    ActivityIndicator,
+    KeyboardAvoidingView,
+    TouchableOpacity,
+} from "react-native";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
+import * as Yup from "yup";
+import { useCountry } from "../../../hooks/useCountry";
 
-export default function WithdrawFundsScreen() {
-    const [withdrawalData, setWithdrawalData] = useState<WithdrawalData>({
-        bank: '',
-        accountNumber: '',
-        amount: '',
-    });
+// --- REDUX THUNKS / ACTIONS (make sure these exist in your store) ---
+import {
+    fetchBankList,
+    initiateWithdrawal,
+    // verifyBankAccount thunk (per your specified payload shape)
+    verifyBankAccount,
+} from "@/store/slices/paymentSlice";
+import { ScrollView } from "react-native-gesture-handler";
+import NotificationIconComponent from "../../../components/NotificationIconComponent";
+import { fetchWallet } from "../../../store/slices/walletSlice";
 
-    const [showBankPicker, setShowBankPicker] = useState(false);
-    const [showBalance, setShowBalance] = useState(true);
+export default function WithdrawalScreen() {
+    const dispatch = useAppDispatch();
+    const navigation = useNavigation();
+    const router = useRouter();
+    const toast = useToast();
+    const insets = useSafeAreaInsets();
+    const backroundTopNav = useThemeColor({}, "background");
 
-    const availableBalance = 913500;
-    const banks = ['Access Bank', 'First Bank Nigeria', 'GTBank', 'Zenith Bank', 'UBA'];
+    const [bankValues, setBankValues] = useState({ bankCode: "", bankName: "" });
+    console.log("🚀 ~ WithdrawalScreen ~ bankValues:", bankValues);
 
-    const handleConfirm = () => {
-        // Validate form
-        if (!withdrawalData.bank || !withdrawalData.accountNumber || !withdrawalData.amount) {
-            alert('Please fill in all fields');
-            return;
-        }
+    // SELECTOR - wallet slice
+    // Expected shape in store: state.wallet = { wallet, loadingWallet, loadingResolve, loadingWithdrawal, resolveData, error }
+    const {
+        wallet,
+        loadingWallet,
+        error: walletError,
+    } = useAppSelector((state: any) => state.wallet);
 
-        const amount = parseFloat(withdrawalData.amount.replace(/[₦,]/g, ''));
-        if (amount > availableBalance) {
-            alert('Insufficient balance');
-            return;
-        }
+    const { loadingResolve, loadingWithdrawal, resolveData } =
+        useAppSelector((state: any) => state.payment);
 
-        // Navigate to confirmation screen
-        router.push({
-            pathname: '/screens/dashboard/confirm-withdrawal',
-            params: {
-                bank: withdrawalData.bank,
-                accountNumber: withdrawalData.accountNumber,
-                amount: withdrawalData.amount
-            }
+    // existing country selector and helpers
+    const { countryCode } = useCountry();
+    const selectedCountry = useAppSelector((state: any) => state.country.selectedCountry);
+    const currency = selectedCountry?.currencies?.[0];
+    const selectedCurrency = currency?.code || "NGN";
+
+    const [showModal, setShowModal] = useState(false);
+
+    useEffect(() => {
+        navigation.setOptions({
+            headerShown: true,
+            headerTitle: () => {
+                return (
+                    <ThemedText type="s1_subtitle" className="text-center">
+                        Withdraw to bank
+                    </ThemedText>
+                );
+            },
+            headerTitleAlign: "center",
+            headerTitleStyle: { fontSize: 20 },
+            headerShadowVisible: false,
+            headerStyle: {
+                backgroundColor: backroundTopNav,
+                elevation: 0, // Android
+                shadowOpacity: 0, // iOS
+                shadowColor: "transparent", // iOS
+                borderBottomWidth: 0,
+            },
+            headerLeft: () => (
+                <ThemedView
+                    style={{
+                        shadowColor: "#FDEFEB1A",
+                        shadowOffset: { width: 0, height: 1 },
+                        shadowOpacity: 0.102,
+                        shadowRadius: 3,
+                        elevation: 4,
+                    }}
+                >
+                    <ThemedView
+                        style={{
+                            shadowColor: "#0000001A",
+                            shadowOffset: { width: 0, height: 1 },
+                            shadowOpacity: 0.102,
+                            shadowRadius: 2,
+                            elevation: 2,
+                        }}
+                    >
+                        <TouchableOpacity
+                            onLongPress={() => router.push("/(tabs)")}
+                            onPress={() => navigation.goBack()}
+                            className="p-2 rounded   flex justify-center items-center"
+                        >
+                            <Icon as={ChevronLeft} size="3xl" className="text-typography-900" />
+                        </TouchableOpacity>
+                    </ThemedView>
+                </ThemedView>
+            ),
+            headerRight: () => <NotificationIconComponent />,
+        });
+    }, [navigation, backroundTopNav]);
+
+    // fetch wallet on mount via Redux
+    useEffect(() => {
+        dispatch(fetchWallet());
+        console.log("🚀 ~ WithdrawalScreen ~ useEffect ~ fetchWallet");
+        dispatch(fetchBankList());
+    }, [dispatch]);
+
+    const showNewToast = ({
+        title,
+        description,
+        icon,
+        action = "error",
+        variant = "solid",
+    }: {
+        title: string;
+        description: string;
+        icon: LucideIcon;
+        action: "error" | "success" | "info" | "muted" | "warning";
+        variant: "solid" | "outline";
+    }) => {
+        const newId = Math.random();
+        toast.show({
+            id: newId.toString(),
+            placement: "top",
+            duration: 3000,
+            render: ({ id }) => {
+                const uniqueToastId = "toast-" + id;
+                return (
+                    <CustomToast
+                        uniqueToastId={uniqueToastId}
+                        icon={icon}
+                        action={action}
+                        title={title}
+                        variant={variant}
+                        description={description}
+                    />
+                );
+            },
         });
     };
 
-    const formatAmount = (text: string) => {
-        // Remove all non-numeric characters
-        const numericValue = text.replace(/[^0-9]/g, '');
+    // Form validation schema (preserved)
+    const validationSchema = Yup.object().shape({
+        amount: Yup.number()
+            .typeError("Amount must be a number")
+            .required("Amount is required")
+            .min(100, "Minimum withdrawal is 100")
+            .max(wallet?.availableBalance || 0, "Amount exceeds available balance"),
+        bankCode: Yup.string().required("Bank is required"),
+        accountNumber: Yup.string()
+            .required("Account Number is required")
+            .matches(/^\d+$/, "Account Number must be digits only")
+            .min(10, "Account Number must be at least 10 digits"),
+        accountName: Yup.string().required("Account Name is required"),
+    });
 
-        if (numericValue === '') return '';
+    // Resolve account using Redux thunk (verifyBankAccount({ accountNumber, bankCode }))
+    const resolveAccountWithRedux = async (bankCode: string, accountNumber: string) => {
+        try {
+            // dispatch the thunk and unwrap to get payload or throw on reject
+            const res: any = await dispatch(
+                verifyBankAccount({ accountNumber, bankCode })
+            ).unwrap();
 
-        // Format with commas
-        const formatted = parseInt(numericValue).toLocaleString();
-        return `₦${formatted}`;
+            // backend response path may contain data.account_name or similar
+            const resolvedName = res?.data?.account_name || res?.data?.accountName || res?.account_name || "";
+            return resolvedName;
+        } catch (err: any) {
+            // bubble up error message
+            throw err;
+        }
     };
 
-    const handleAmountChange = (text: string) => {
-        const formatted = formatAmount(text);
-        setWithdrawalData({ ...withdrawalData, amount: formatted });
+    // Initiate withdrawal using Redux thunk
+    const handleInitiateWithdrawal = async (values: {
+        amount: number;
+        bankName: string;
+        bankCode: string;
+        accountNumber: string;
+        accountName: string;
+    }) => {
+        try {
+            const payload = {
+                amount: values.amount,
+                bankName: values.bankName,
+                bankCode: values.bankCode,
+                accountNumber: values.accountNumber,
+                accountName: values.accountName,
+            };
+
+            console.log("🚀 ~ handleInitiateWithdrawal ~ payload:", payload);
+
+            const res: any = await dispatch(initiateWithdrawal(payload)).unwrap();
+
+            console.log("🚀 ~ handleInitiateWithdrawal ~ response:", res);
+
+            showNewToast({
+                title: "Success",
+                description: "Withdrawal Request successfully!",
+                icon: CircleCheckIcon,
+                action: "success",
+                variant: "solid",
+            });
+
+            setShowModal(true);
+        } catch (e: any) {
+            const message =
+                e?.data?.message || e?.message || "Withdrawal Request failed";
+
+            showNewToast({
+                title: "Withdrawal Request Failed",
+                description: message,
+                icon: HelpCircleIcon,
+                action: "error",
+                variant: "solid",
+            });
+        }
     };
-
-    const renderPickerField = (
-        label: string,
-        value: string,
-        onPress: () => void,
-        placeholder?: string
-    ) => (
-        <View className="mb-4">
-            <Text className="text-sm font-medium text-gray-700 mb-2">{label}</Text>
-            <TouchableOpacity
-                className="w-full px-4 py-4 bg-gray-50 rounded-lg border border-gray-200 flex-row items-center justify-between"
-                onPress={onPress}
-            >
-                <Text className={`text-base ${value ? 'text-gray-900' : 'text-gray-400'}`}>
-                    {value || placeholder || label}
-                </Text>
-                <Icon as={ChevronDownIcon} size="sm" className="text-gray-500" />
-            </TouchableOpacity>
-        </View>
-    );
-
-    const renderInputField = (
-        label: string,
-        value: string,
-        onChangeText: (text: string) => void,
-        placeholder?: string,
-        keyboardType?: 'default' | 'numeric'
-    ) => (
-        <View className="mb-4">
-            <Text className="text-sm font-medium text-gray-700 mb-2">{label}</Text>
-            <TextInput
-                value={value}
-                onChangeText={onChangeText}
-                placeholder={placeholder || label}
-                keyboardType={keyboardType || 'default'}
-                className="w-full px-4 py-4 bg-gray-50 rounded-lg text-base text-gray-900 border border-gray-200"
-                placeholderTextColor="#9CA3AF"
-            />
-        </View>
-    );
 
     return (
-        <SafeAreaView className="flex-1 bg-white">
-            {/* Header */}
-            <View className="flex-row items-center justify-between px-4 py-3 border-b border-gray-100">
-                <TouchableOpacity onPress={() => router.back()}>
-                    <Icon as={ArrowLeftIcon} size="md" className="text-gray-700" />
-                </TouchableOpacity>
+        <KeyboardAvoidingView
+            className="flex-1 bg-white"
+            behavior={"padding"}
+            keyboardVerticalOffset={insets.top}
+        >
+            <ScrollView className="flex-1 px-3" showsVerticalScrollIndicator={false}>
+                <ThemedView className="flex-1">
+                    <ThemedView className="flex-1 gap-3 pb-20 mt-3">
+                        <Formik
+                            initialValues={{
+                                amount: "",
+                                bankName: "",
+                                bankCode: "",
+                                accountNumber: "",
+                                accountName: "",
+                            }}
+                            validationSchema={validationSchema}
+                            onSubmit={(values) => {
+                                const payload = {
+                                    ...values,
+                                    amount: parseInt(values.amount, 10),
+                                };
+                                console.log("Form submitted:", payload);
+                                handleInitiateWithdrawal(payload);
+                            }}
+                        >
+                            {({
+                                handleChange,
+                                handleBlur,
+                                handleSubmit,
+                                values,
+                                errors,
+                                touched,
+                                setFieldValue,
+                            }) => (
+                                <ThemedView className="flex gap-4 mt-5">
+                                    <ThemedView>
+                                        <InputLabelText className="">Amount</InputLabelText>
+                                        <Input
+                                            size="xl"
+                                            className="h-[55px] border-primary-100 rounded-lg mb-2 bg-primary-inputShade px-2"
+                                            variant="outline"
+                                            isInvalid={!!(errors.amount && touched.amount)}
+                                        >
+                                            <InputField
+                                                className=""
+                                                placeholder="Enter Amount"
+                                                value={values.amount}
+                                                onChangeText={handleChange("amount")}
+                                                onBlur={handleBlur("amount")}
+                                                keyboardType="numeric"
+                                                autoCapitalize="none"
+                                            />
+                                        </Input>
+                                        {errors.amount && touched.amount && (
+                                            <ThemedText type="b4_body" className="text-error-500 mb-4">
+                                                {errors.amount}
+                                            </ThemedText>
+                                        )}
 
-                <Text className="text-xl font-semibold text-gray-900">Withdraw Funds</Text>
+                                        <ThemedView className=" flex-row items-center justify-between">
+                                            <ThemedText className="text-typography-800">Wallet Balance</ThemedText>
+                                            <ThemedText type="default" className="text-primary-500">
+                                                {loadingWallet
+                                                    ? "Loading..."
+                                                    : formatCurrency(
+                                                        (wallet && wallet.availableBalance) || 0,
+                                                        selectedCurrency,
+                                                        `en-${countryCode}`
+                                                    )}
+                                            </ThemedText>
+                                        </ThemedView>
+                                    </ThemedView>
 
-                <TouchableOpacity>
-                    <Icon as={BellIcon} size="md" className="text-gray-700" />
-                </TouchableOpacity>
-            </View>
+                                    <ThemedView>
+                                        <BankDropdown
+                                            errors={errors.bankCode && touched.bankCode ? { bankCode: errors.bankCode } : {}}
+                                            touched={errors.bankCode && touched.bankCode ? { bankCode: true } : {}}
+                                            values={bankValues}
+                                            handleChange={async (code: string, name: string) => {
+                                                setFieldValue("bankCode", code);
+                                                setFieldValue("bankName", name);
 
-            <ScrollView className="flex-1 px-4 py-6">
-                {/* Available Balance */}
-                <View className="mb-6">
-                    <Text className="text-sm text-gray-600 mb-2">Available for withdrawal</Text>
-                    <View className="flex-row items-center">
-                        <Text className="text-3xl font-bold text-orange-500 mr-2">
-                            {showBalance ? `₦${availableBalance.toLocaleString()}` : '****'}
-                        </Text>
-                        <TouchableOpacity onPress={() => setShowBalance(!showBalance)}>
-                            <Icon as={EyeIcon} size="sm" className="text-gray-500" />
-                        </TouchableOpacity>
-                    </View>
-                </View>
+                                                // If account number is 10 digits, resolve
+                                                if (values.accountNumber?.length === 10) {
+                                                    const resolvedName = await dispatch(verifyBankAccount({
+                                                        accountNumber: values.accountNumber,
+                                                        bankCode: code,
+                                                    }
+                                                    )).unwrap();
+                                                    if (resolvedName) {
+                                                        setFieldValue("accountName", resolvedName.data?.account_name);
+                                                    }
 
-                {/* Bank Selection */}
-                {renderPickerField(
-                    'Bank',
-                    withdrawalData.bank,
-                    () => setShowBankPicker(!showBankPicker),
-                    'Select Bank'
+                                                }
+
+                                                // If user already entered a 10-digit account number, resolve immediately via Redux
+                                                if (values.accountNumber && values.accountNumber.length === 10) {
+                                                    try {
+                                                        const resolvedName = await dispatch(verifyBankAccount({
+                                                            accountNumber: values.accountNumber,
+                                                            bankCode: code,
+                                                        })).unwrap();
+
+                                                        console.log("🚀 ~ resolvedName:", resolvedName);
+                                                        if (resolvedName) {
+                                                            setFieldValue("accountName", resolvedName);
+                                                        }
+                                                    } catch (err: any) {
+                                                        console.error("Error resolving account:", err);
+                                                        showNewToast({
+                                                            title: "Account Resolution Failed",
+                                                            description: err?.data?.message || err?.message || "Unable to verify account. Please check details and try again.",
+                                                            icon: HelpCircleIcon,
+                                                            action: "error",
+                                                            variant: "solid",
+                                                        });
+                                                    }
+                                                }
+                                            }}
+                                        />
+                                    </ThemedView>
+
+                                    <ThemedView className="flex flex-1 gap-3 w-full">
+                                        <ThemedView className="flex-1 w-full">
+                                            <InputLabelText className="">Account Number</InputLabelText>
+                                            <Input
+                                                size="xl"
+                                                className="h-[55px] border-primary-100 rounded-lg mb-2 bg-primary-inputShade px-2"
+                                                variant="outline"
+                                                isInvalid={!!(errors.accountNumber && touched.accountNumber)}
+                                            >
+                                                <InputField
+                                                    className=""
+                                                    placeholder="Enter Account Number"
+                                                    value={values.accountNumber}
+                                                    onChangeText={async (text: string) => {
+                                                        // Keep only digits
+                                                        const digits = text.replace(/\D/g, "");
+                                                        console.log("🚀 ~ digits:", digits);
+                                                        setFieldValue("accountNumber", digits);
+
+                                                        // Clear account name while typing until we have a full number
+                                                        if (digits.length !== 10) {
+                                                            setFieldValue("accountName", "");
+                                                            return;
+                                                        }
+
+                                                        // Resolve when bank is selected and account number is 10 digits
+                                                        if (digits.length === 10) {
+                                                            try {
+                                                                const resolvedName = await dispatch(verifyBankAccount({
+                                                                    accountNumber: digits,
+                                                                    bankCode: values.bankCode,
+                                                                })).unwrap();
+                                                                if (resolvedName) {
+                                                                    setFieldValue("accountName", resolvedName.data?.account_name);
+                                                                }
+                                                            } catch (err: any) {
+                                                                console.error("Error resolving account:", err);
+                                                                showNewToast({
+                                                                    title: "Account Resolution Failed",
+                                                                    description:
+                                                                        err?.data?.message ||
+                                                                        err?.message ||
+                                                                        "Unable to verify account. Please check details and try again.",
+                                                                    icon: HelpCircleIcon,
+                                                                    action: "error",
+                                                                    variant: "solid",
+                                                                });
+                                                            }
+                                                        }
+                                                    }}
+                                                    onBlur={handleBlur("accountNumber")}
+                                                    keyboardType="numeric"
+                                                    autoCapitalize="none"
+                                                />
+                                                {loadingResolve && <ActivityIndicator />}
+                                            </Input>
+                                            {errors.accountNumber && touched.accountNumber && (
+                                                <ThemedText type="b4_body" className="text-error-500 mb-4">
+                                                    {errors.accountNumber}
+                                                </ThemedText>
+                                            )}
+                                        </ThemedView>
+                                    </ThemedView>
+
+                                    <ThemedView className="flex flex-1 gap-3 w-full">
+                                        <ThemedView className="flex-1 w-full">
+                                            <InputLabelText className="">Account Name</InputLabelText>
+                                            <Input
+                                                size="xl"
+                                                isDisabled={!!resolveData}
+                                                className="h-[55px] border-primary-100 rounded-lg mb-2 bg-primary-inputShade px-2"
+                                                variant="outline"
+                                                isInvalid={!!(errors.accountName && touched.accountName)}
+                                            >
+                                                <InputField
+                                                    className=""
+                                                    placeholder="Account name will auto-fill"
+                                                    value={values.accountName}
+                                                    onChangeText={handleChange("accountName")}
+                                                    onBlur={handleBlur("accountName")}
+                                                    autoCapitalize="none"
+                                                />
+                                            </Input>
+                                            {errors.accountName && touched.accountName && (
+                                                <ThemedText type="b4_body" className="text-error-500 mb-4">
+                                                    {errors.accountName}
+                                                </ThemedText>
+                                            )}
+                                            {/* <Link className="hidden" href={`/payment-logs/choose-beneficiary`} asChild>
+                        <ThemedText type="b2_body" className="text-primary-500 text-right">
+                          Choose Beneficiary
+                        </ThemedText>
+                      </Link> */}
+                                        </ThemedView>
+                                    </ThemedView>
+
+                                    <Button
+                                        variant="solid"
+                                        size="2xl"
+                                        disabled={loadingWithdrawal}
+                                        className="mt-5 rounded-[12px]"
+                                        onPress={() => handleSubmit()}
+                                    >
+                                        <ThemedText type="s1_subtitle" className="text-white">
+                                            {loadingWithdrawal ? <ActivityIndicator color="white" /> : "Continue"}
+                                        </ThemedText>
+                                    </Button>
+                                </ThemedView>
+                            )}
+                        </Formik>
+                    </ThemedView>
+                </ThemedView>
+                {/* </ParallaxScrollView> */}
+
+                {showModal && (
+                    <>
+                        <CustomModal
+                            description="Your withdrawal request has been submitted and is pending admin verification."
+                            title="Withdrawal Request Submitted"
+                            img={require("@/assets/images/onboarding/modal-success.png")}
+                            firstBtnLink={""}
+                            firstBtnText="Go Back"
+                            onFirstClick={() => {
+                                setShowModal(false);
+                                router.back();
+                            }}
+                            setShowModal={() => {
+                                setShowModal(false);
+                                router.back();
+                            }}
+                            showModal={showModal}
+                            size="lg"
+                        />
+                    </>
                 )}
-
-                {showBankPicker && (
-                    <View className="mb-4 bg-gray-50 rounded-lg border border-gray-200">
-                        {banks.map((bank) => (
-                            <TouchableOpacity
-                                key={bank}
-                                className="px-4 py-3 border-b border-gray-200 last:border-b-0"
-                                onPress={() => {
-                                    setWithdrawalData({ ...withdrawalData, bank });
-                                    setShowBankPicker(false);
-                                }}
-                            >
-                                <Text className="text-base text-gray-900">{bank}</Text>
-                            </TouchableOpacity>
-                        ))}
-                    </View>
-                )}
-
-                {/* Account Number */}
-                {renderInputField(
-                    'Account Number',
-                    withdrawalData.accountNumber,
-                    (text) => setWithdrawalData({ ...withdrawalData, accountNumber: text }),
-                    'eg 0123456789',
-                    'numeric'
-                )}
-
-                {/* Amount */}
-                {renderInputField(
-                    'Amount',
-                    withdrawalData.amount,
-                    handleAmountChange,
-                    'eg 200,000',
-                    'numeric'
-                )}
-
-                {/* Quick Amount Buttons */}
-                <View className="mb-6">
-                    <Text className="text-sm font-medium text-gray-700 mb-3">Quick amounts</Text>
-                    <View className="flex-row flex-wrap gap-2">
-                        {[50000, 100000, 200000, 500000].map((amount) => (
-                            <TouchableOpacity
-                                key={amount}
-                                className="bg-gray-100 px-4 py-2 rounded-lg"
-                                onPress={() => setWithdrawalData({
-                                    ...withdrawalData,
-                                    amount: `₦${amount.toLocaleString()}`
-                                })}
-                            >
-                                <Text className="text-gray-700 font-medium">
-                                    ₦{amount.toLocaleString()}
-                                </Text>
-                            </TouchableOpacity>
-                        ))}
-                    </View>
-                </View>
-
-                {/* Withdrawal Info */}
-                <View className="bg-blue-50 rounded-xl p-4 mb-6">
-                    <Text className="text-blue-800 font-medium mb-2">Withdrawal Information</Text>
-                    <Text className="text-blue-700 text-sm leading-5">
-                        • Minimum withdrawal amount: ₦1,000{'\n'}
-                        • Processing time: 1-3 business days{'\n'}
-                        • No withdrawal fees for amounts above ₦10,000
-                    </Text>
-                </View>
             </ScrollView>
-
-            {/* Confirm Button */}
-            <View className="px-4 pb-4">
-                <TouchableOpacity
-                    className="bg-orange-500 py-4 rounded-xl"
-                    onPress={handleConfirm}
-                >
-                    <Text className="text-white font-semibold text-center text-base">
-                        Confirm
-                    </Text>
-                </TouchableOpacity>
-            </View>
-        </SafeAreaView>
+        </KeyboardAvoidingView>
     );
 }

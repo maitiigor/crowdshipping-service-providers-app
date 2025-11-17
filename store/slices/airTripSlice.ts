@@ -1,7 +1,7 @@
 
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import apiClient from "../../lib/api/client";
-import { AirTrip, AirTripRequest, ApiError, ApiResponse, Booking } from "../../models";
+import { AirLocation, AirTrip, AirTripRequest, ApiError, ApiResponse, Booking, BookingDetail } from "../../models";
 
 
 interface AvailableFlightNumber {
@@ -45,6 +45,13 @@ interface AirTripState {
     error: ApiError | null;
     loadingBookings: boolean;
     airBookings: Booking[];
+    airBookingDetail: BookingDetail;
+    loadingOrderLocation: boolean;
+    orderLocations: AirLocation[];
+}
+
+interface AirLocationResponse {
+    locations: AirLocation[]
 }
 
 
@@ -92,11 +99,14 @@ const initialState: AirTripState = {
         },
     },
     airBookings: [],
+    airBookingDetail: {} as BookingDetail,
     loadingBookings: false,
     // ...
     availableFlightNumbers: [] as AvailableFlightNumber[],
     airTrips: [],
     loading: false,
+    loadingOrderLocation: false,
+    orderLocations: [],
     error: null,
 };
 
@@ -150,7 +160,7 @@ const airTripSlice = createSlice({
                 if (action.payload.data) {
 
                     state.airTrip = action.payload.data;
-               
+
                 }
 
             })
@@ -169,7 +179,33 @@ const airTripSlice = createSlice({
             .addCase(fetchAirBookings.rejected, (state, action) => {
                 state.loadingBookings = false;
                 state.error = action.payload as ApiError;
-            });
+            }).addCase(fetchAirBookingDetail.pending, (state) => {
+                state.loading = true;
+                state.error = null;
+            })
+            .addCase(fetchAirBookingDetail.fulfilled, (state, action) => {
+                state.loading = false;
+                state.airBookingDetail = action.payload.data as BookingDetail;
+            })
+            .addCase(fetchAirBookingDetail.rejected, (state, action) => {
+                state.loading = false;
+                state.error = action.payload as ApiError;
+            }).addCase(fetchAirOrderLocations.pending, (state) => {
+                state.loadingOrderLocation = true;
+                state.error = null;
+            })
+            .addCase(fetchAirOrderLocations.fulfilled, (state, action) => {
+                state.loadingOrderLocation = false;
+                state.orderLocations = action.payload.data?.locations ?? [];
+
+                console.log("order location state",state.orderLocations);
+
+            })
+            .addCase(fetchAirOrderLocations.rejected, (state, action) => {
+                ;
+                state.loadingOrderLocation = false;;
+                state.error = action.payload as ApiError;
+            })
     },
 });
 
@@ -186,7 +222,7 @@ export const saveAirTrip = createAsyncThunk(
 
             return response.data;
         } catch (error: any) {
-         
+
 
             return rejectWithValue(
                 error.response?.data
@@ -212,7 +248,7 @@ export const availableFlightNumbers = createAsyncThunk(
 
             return response.data;
         } catch (error: any) {
-     
+
 
             return rejectWithValue(
                 error.response?.data
@@ -232,10 +268,10 @@ export const fetchAirTrips = createAsyncThunk(
                 "/trip/flights",
             );
 
-     
+
             return response.data as ApiResponse<AirTrip[]>;
         } catch (error: any) {
-      
+
 
             return rejectWithValue(
                 error.response?.data
@@ -257,7 +293,7 @@ export const fetchAirTripById = createAsyncThunk(
 
             return response.data as ApiResponse<AirTrip>;
         } catch (error: any) {
-         
+
             return rejectWithValue(
                 error.response?.data
                     ? { code: error.response.status, message: error.response.data.message }
@@ -276,10 +312,45 @@ export const fetchAirBookings = createAsyncThunk(
                 "/trip/air/booking/history",
             );
 
-            console.log("list of trips booked", response.data)
 
             return response.data as ApiResponse<Booking[]>;
         } catch (error: any) {
+            return rejectWithValue(
+                error.response?.data
+                    ? { code: error.response.status, message: error.response.data.message }
+                    : { code: 0, message: "Network error" } as ApiError
+            );
+        }
+    }
+);
+
+export const fetchAirBookingDetail = createAsyncThunk(
+    "airTrip/fetchAirBookingDetail",
+    async (id: string, { rejectWithValue }) => {
+        try {
+            const response = await apiClient.get<ApiResponse<BookingDetail>>(
+                `/trip/booking/detail/${id}`,
+            );
+            return response.data;
+        } catch (error: any) {
+            return rejectWithValue(
+                error.response?.data
+                    ? { code: error.response.status, message: error.response.data.message }
+                    : { code: 0, message: "Network error" } as ApiError
+            );
+        }
+    }
+);
+
+export const fetchAirOrderLocations = createAsyncThunk(
+    "airTrip/fetchAirOrderLocations",
+    async (id: String, { rejectWithValue }) => {
+        try {
+            const response = await apiClient.get(`/orders/air/${id}/locations`);
+          
+            return response.data as ApiResponse<AirLocationResponse>;
+        }
+        catch (error: any) {
             return rejectWithValue(
                 error.response?.data
                     ? { code: error.response.status, message: error.response.data.message }

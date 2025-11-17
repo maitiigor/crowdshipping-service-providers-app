@@ -210,12 +210,12 @@ export function BottomDrawer({
         <GestureDetector gesture={pan}>
           <View style={styles.handleContainer}>
             <View style={styles.handle} />
-          </View>
+          </ThemedView>
         </GestureDetector>
         {/* Content (allows internal scrolling) */}
-        <View style={styles.content}>{children}</View>
+        <View style={styles.content}>{children}</ThemedView>
       </Animated.View>
-    </View>
+    </ThemedView>
   );
 }
 

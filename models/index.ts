@@ -477,8 +477,16 @@ export interface GroundTrip {
     weight: number;
     customer: string;
     price: Float
-    pickUpLocation: string;
-    dropOffLocation: string;
+    pickUpLocation: {
+        address: string;
+        coordinates: [number, number];
+        type: string;
+    };
+    dropOffLocation: {
+        address: string;
+        coordinates: [number, number];
+        type: string;
+    };
     bookingRef: string;
     dateOfBooking: string;
     status: string;
@@ -501,8 +509,16 @@ export interface GroundTripDetail {
     weight: number;
     customer: string;
     price: Float
-    pickUpLocation: string;
-    dropOffLocation: string;
+    pickUpLocation: {
+        address: string;
+        coordinates: [number, number];
+        type: string;
+    };
+    dropOffLocation: {
+        address: string;
+        coordinates: [number, number];
+        type: string;
+    };
     bookingRef: string;
     dateOfBooking: string;
     status: string;
@@ -607,7 +623,7 @@ export interface ISingleChatProfile {
     profilePicUrl: string;
 }
 
-export interface Booking{
+export interface Booking {
     _id: string;
     bookingRef: string;
     status: string;
@@ -615,4 +631,136 @@ export interface Booking{
     createdAt: string;
     updatedAt: string;
 }
-        
+
+export interface BookingDetail {
+    _id: string;
+    bookingRef: string;
+    tripId: string;
+    travellerId: string;
+    senderId: string;
+    parcelGroupId: string;
+    status: string;
+    paymentStatus: string;
+    trip: {
+        _id: string;
+        fleetType: string;
+        capacity: {
+            pounds: number;
+            dimension: string;
+        };
+        departureDate: string;
+        arrivalDate: string;
+    };
+    parcelGroup: {
+        _id: string;
+        trackingId: string;
+        tripOption: string;
+        pickUpLocation: {
+            address: string;
+        };
+        dropOffLocation: {
+            address: string;
+        };
+    };
+    traveller: {
+        _id: string;
+        userId: string;
+        fullName: string;
+        profileId: string;
+        profile: {
+            _id: string;
+            profilePicUrl: string;
+            country: string;
+            city: string;
+            state: string;
+            gender: string;
+        };
+    };
+    sender: {
+        _id: string;
+        userId: string;
+        fullName: string;
+        profileId: string;
+        profile: {
+            _id: string;
+            profilePicUrl: string;
+            country: string;
+            city: string;
+            state: string;
+        };
+    };
+    parcels: {
+        _id: string;
+        productType: string;
+        productWeight: number;
+        productUnit: string;
+        productImage: string;
+        receiverName: string;
+        receiverPhone: string;
+        alternativePhone: string;
+    }[];
+}
+
+export interface MarineLocation {
+    _id: string;
+    coords: {
+        type: string;
+        coordinates: [number, number];
+        address: string;
+    };
+    createdAt: string;
+}
+
+export interface AirLocation {
+    _id: string;
+    coords: {
+        type: string;
+        coordinates: [number, number];
+        address: string;
+    };
+    heading: number;
+    timestamp: string;
+    createdAt: string;
+}
+
+export interface Bank {
+    id: string;
+    name: string;
+    slug: string;
+    code: string;
+    longcode: string;
+    gateway: string;
+    pay_with_bank: boolean;
+    supports_transfer: boolean;
+    available_for_direct_debit: boolean;
+    active: boolean;
+    country: string;
+    currency: string;
+    type: string;
+    is_deleted: boolean;
+    createdAt: string;
+    updatedAt: string;
+}
+
+
+export interface PaymentWallet {
+    status: string;
+    availableBalance: number;
+    accountName: string;
+    accountNumber: number;
+    bankName: string;
+}
+
+
+export interface Transaction {
+    type: string;
+    title: string;
+    description: string;
+    status: string;
+    amount: number;
+    purpose: string;
+    referenceId: string;
+    previousBalance: number;
+    currentBalance: number;
+}
+

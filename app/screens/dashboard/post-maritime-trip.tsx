@@ -6,9 +6,7 @@ import {
     ActivityIndicator,
     ScrollView,
     StatusBar,
-    Text,
-    TouchableOpacity,
-    View,
+    TouchableOpacity
 } from 'react-native';
 import { TextInput } from 'react-native-gesture-handler';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -201,24 +199,24 @@ export default function PostMarineTripScreen() {
             <StatusBar barStyle="dark-content" backgroundColor="white" />
 
             {/* Header */}
-            <View className="bg-white h-16 px-4 flex-row items-center justify-between border-b border-gray-200">
+            <ThemedView className="bg-white h-16 px-4 flex-row items-center justify-between border-b border-gray-200">
                 <TouchableOpacity className="p-2" onPress={() => router.back()}>
                     <Icon as={ArrowLeftIcon} size="lg" className="text-gray-700" />
                 </TouchableOpacity>
 
-                <Text className="text-lg font-semibold text-gray-900">Post Your Trip</Text>
+                <ThemedText className="text-lg font-semibold text-gray-900">Post Your Trip</ThemedText>
 
                 <TouchableOpacity className="p-2">
-                    <View className="relative">
+                    <ThemedView className="relative">
                         <Icon as={BellIcon} size="lg" className="text-[#E75B3B]" />
-                        <View className="absolute -top-1 -right-1 w-2 h-2 bg-red-500 rounded-full" />
-                    </View>
+                        <ThemedView className="absolute -top-1 -right-1 w-2 h-2 bg-red-500 rounded-full" />
+                    </ThemedView>
                 </TouchableOpacity>
-            </View>
+            </ThemedView>
             <Formik initialValues={formData} validationSchema={validationSchema} onSubmit={handlePostTrip}>
                 {({ handleChange, handleSubmit, values, errors, touched, setFieldValue }) => (
                     <ScrollView className="flex-1" showsVerticalScrollIndicator={false}>
-                        <View className="px-4 py-6 space-y-6">
+                        <ThemedView className="px-4 py-6 space-y-6">
 
 
 
@@ -232,7 +230,7 @@ export default function PostMarineTripScreen() {
                                     className="bg-[#FDF2F0] rounded-lg h-[55px] mb-2 px-4 py-4 text-base"
                                 />
                                 {touched.vesselName && errors.vesselName && (
-                                    <Text style={{ color: "red", fontSize: 12 }}>{errors.vesselName}</Text>
+                                    <ThemedText style={{ color: "red", fontSize: 12 }}>{errors.vesselName}</ThemedText>
                                 )}
                             </ThemedView>
 
@@ -251,7 +249,7 @@ export default function PostMarineTripScreen() {
                                     className="bg-[#FDF2F0] rounded-lg h-[55px] mb-2 px-4 py-4 text-base"
                                 />
                                 {touched.mmsiNumber && errors.mmsiNumber && (
-                                    <Text style={{ color: "red", fontSize: 12 }}>{errors.mmsiNumber}</Text>
+                                    <ThemedText style={{ color: "red", fontSize: 12 }}>{errors.mmsiNumber}</ThemedText>
                                 )}
                             </ThemedView>
 
@@ -266,11 +264,11 @@ export default function PostMarineTripScreen() {
                                     className="bg-[#FDF2F0] rounded-lg h-[55px] mb-2 px-4 py-4 text-base"
                                 />
                                 {touched.containerNumber && errors.containerNumber && (
-                                    <Text style={{ color: "red", fontSize: 12 }}>{errors.containerNumber}</Text>
+                                    <ThemedText style={{ color: "red", fontSize: 12 }}>{errors.containerNumber}</ThemedText>
                                 )}
                             </ThemedView>
 
-                            <View>
+                            <ThemedView>
                                 <PortSearch
                                     type="departure"
                                     values={formData}
@@ -279,9 +277,9 @@ export default function PostMarineTripScreen() {
                                     handleChange={setFieldValue}
                                     setPort={setDeparturePort}
                                 />
-                            </View>
+                            </ThemedView>
 
-                            <View>
+                            <ThemedView>
                                 <PortSearch
                                     type="arrival"
                                     values={formData}
@@ -290,7 +288,7 @@ export default function PostMarineTripScreen() {
                                     handleChange={setFieldValue}
                                     setPort={setArrivalPort}
                                 />
-                            </View>
+                            </ThemedView>
 
 
                             {/* Flight Number */}
@@ -303,7 +301,7 @@ export default function PostMarineTripScreen() {
                                     className="bg-[#FDF2F0] mb-2 h-[55px] rounded-lg px-4 py-4 text-base"
                                 />
                                 {touched.voyageNumber && errors.voyageNumber && (
-                                    <Text style={{ color: "red", fontSize: 12 }}>{errors.voyageNumber}</Text>
+                                    <ThemedText style={{ color: "red", fontSize: 12 }}>{errors.voyageNumber}</ThemedText>
                                 )}
                             </ThemedView>
 
@@ -347,7 +345,7 @@ export default function PostMarineTripScreen() {
                             <InputLabelText className="mb-2 w-full">Available Capacity</InputLabelText>
                             <ThemedView className='flex flex-row gap-3'>
 
-                                <View className="mb-2 w-1/3">
+                                <ThemedView className="mb-2 w-1/3">
 
                                     <TextInput
                                         placeholder="Pounds (lbs)"
@@ -356,11 +354,11 @@ export default function PostMarineTripScreen() {
                                         className="bg-[#FDF2F0] rounded-lg mb-3 h-[55px] px-4 py-4 text-base mb-3"
                                     />
                                     {touched.availableCapacityPounds && errors.availableCapacityPounds && (
-                                        <Text style={{ color: "red", fontSize: 12 }}>{errors.availableCapacityPounds}</Text>
+                                        <ThemedText style={{ color: "red", fontSize: 12 }}>{errors.availableCapacityPounds}</ThemedText>
                                     )}
-                                </View>
+                                </ThemedView>
 
-                                <View className="w-2/3">
+                                <ThemedView className="w-2/3">
 
                                     <TextInput
                                         placeholder="Dimension (LxWxH)"
@@ -370,9 +368,9 @@ export default function PostMarineTripScreen() {
                                     />
 
                                     {touched.availableCapacityDimensions && errors.availableCapacityDimensions && (
-                                        <Text style={{ color: "red", fontSize: 12 }}>{errors.availableCapacityDimensions}</Text>
+                                        <ThemedText style={{ color: "red", fontSize: 12 }}>{errors.availableCapacityDimensions}</ThemedText>
                                     )}
-                                </View>
+                                </ThemedView>
                             </ThemedView>
                             {/* Post Trip Button */}
 
@@ -395,12 +393,12 @@ export default function PostMarineTripScreen() {
                             </Button>
 
 
-                        </View>
+                        </ThemedView>
                     </ScrollView>
                 )}
             </Formik>
 
 
-        </SafeAreaView>
+        </SafeAreaView >
     );
 }

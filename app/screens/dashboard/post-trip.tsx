@@ -6,9 +6,7 @@ import {
     ActivityIndicator,
     ScrollView,
     StatusBar,
-    Text,
-    TouchableOpacity,
-    View,
+    TouchableOpacity
 } from 'react-native';
 import { TextInput } from 'react-native-gesture-handler';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -175,26 +173,26 @@ export default function PostTripScreen() {
             <StatusBar barStyle="dark-content" backgroundColor="white" />
 
             {/* Header */}
-            <View className="bg-white h-16 px-4 flex-row items-center justify-between border-b border-gray-200">
+            <ThemedView className="bg-white h-16 px-4 flex-row items-center justify-between border-b border-gray-200">
                 <TouchableOpacity className="p-2" onPress={() => router.back()}>
                     <Icon as={ArrowLeftIcon} size="lg" className="text-gray-700" />
                 </TouchableOpacity>
 
-                <Text className="text-lg font-semibold text-gray-900">Post Your Trip</Text>
+                <ThemedText className="text-lg font-semibold text-gray-900">Post Your Trip</ThemedText>
 
                 <TouchableOpacity className="p-2">
-                    <View className="relative">
+                    <ThemedView className="relative">
                         <Icon as={BellIcon} size="lg" className="text-[#E75B3B]" />
-                        <View className="absolute -top-1 -right-1 w-2 h-2 bg-red-500 rounded-full" />
-                    </View>
+                        <ThemedView className="absolute -top-1 -right-1 w-2 h-2 bg-red-500 rounded-full" />
+                    </ThemedView>
                 </TouchableOpacity>
-            </View>
+            </ThemedView>
             <Formik initialValues={formData} validationSchema={validationSchema} onSubmit={handlePostTrip}>
                 {({ handleChange, handleSubmit, values, errors, touched, setFieldValue }) => (
                     <ScrollView className="flex-1" showsVerticalScrollIndicator={false}>
-                        <View className="px-4 py-6 space-y-6">
+                        <ThemedView className="px-4 py-6 space-y-6">
                             {/* Departure City */}
-                            <View>
+                            <ThemedView>
                                 <AirportSearch
                                     type="departure"
                                     values={formData}
@@ -203,9 +201,9 @@ export default function PostTripScreen() {
                                     handleChange={setFieldValue}
                                     setAirport={setDepartureAirport}
                                 />
-                            </View>
+                            </ThemedView>
 
-                            <View>
+                            <ThemedView>
                                 <AirportSearch
                                     type="arrival"
                                     values={formData}
@@ -214,7 +212,7 @@ export default function PostTripScreen() {
                                     handleChange={setFieldValue}
                                     setAirport={setArrivalAirport}
                                 />
-                            </View>
+                            </ThemedView>
 
                             {/* Airline Name */}
                             <ThemedView>
@@ -226,7 +224,7 @@ export default function PostTripScreen() {
                                     className="bg-[#FDF2F0] rounded-lg h-[55px] mb-2 px-4 py-4 text-base"
                                 />
                                 {touched.airlineName && errors.airlineName && (
-                                    <Text style={{ color: "red", fontSize: 12 }}>{errors.airlineName}</Text>
+                                    <ThemedText style={{ color: "red", fontSize: 12 }}>{errors.airlineName}</ThemedText>
                                 )}
                             </ThemedView>
 
@@ -240,7 +238,7 @@ export default function PostTripScreen() {
                                     className="bg-[#FDF2F0] mb-2 h-[55px] rounded-lg px-4 py-4 text-base"
                                 />
                                 {touched.airlineName && errors.airlineName && (
-                                    <Text style={{ color: "red", fontSize: 12 }}>{errors.airlineName}</Text>
+                                    <ThemedText style={{ color: "red", fontSize: 12 }}>{errors.airlineName}</ThemedText>
                                 )}
                             </ThemedView>
 
@@ -279,7 +277,7 @@ export default function PostTripScreen() {
                             <InputLabelText className="mb-2 w-full">Available Capacity</InputLabelText>
                             <ThemedView className='flex flex-row gap-3'>
 
-                                <View className="mb-2 w-1/3">
+                                <ThemedView className="mb-2 w-1/3">
 
                                     <TextInput
                                         placeholder="Pounds (lbs)"
@@ -288,11 +286,11 @@ export default function PostTripScreen() {
                                         className="bg-[#FDF2F0] rounded-lg mb-3 h-[55px] px-4 py-4 text-base mb-3"
                                     />
                                     {touched.availableCapacityPounds && errors.availableCapacityPounds && (
-                                        <Text style={{ color: "red", fontSize: 12 }}>{errors.availableCapacityPounds}</Text>
+                                        <ThemedText style={{ color: "red", fontSize: 12 }}>{errors.availableCapacityPounds}</ThemedText>
                                     )}
-                                </View>
+                                </ThemedView>
 
-                                <View className="w-2/3">
+                                <ThemedView className="w-2/3">
 
                                     <TextInput
                                         placeholder="Dimension (LxWxH)"
@@ -302,9 +300,9 @@ export default function PostTripScreen() {
                                     />
 
                                     {touched.availableCapacityDimensions && errors.availableCapacityDimensions && (
-                                        <Text style={{ color: "red", fontSize: 12 }}>{errors.availableCapacityDimensions}</Text>
+                                        <ThemedText style={{ color: "red", fontSize: 12 }}>{errors.availableCapacityDimensions}</ThemedText>
                                     )}
-                                </View>
+                                </ThemedView>
                             </ThemedView>
                             {/* Post Trip Button */}
 
@@ -327,12 +325,12 @@ export default function PostTripScreen() {
                             </Button>
 
 
-                        </View>
+                        </ThemedView>
                     </ScrollView>
                 )}
             </Formik>
 
 
-        </SafeAreaView>
+        </SafeAreaView >
     );
 }

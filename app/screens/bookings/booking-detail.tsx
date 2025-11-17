@@ -4,9 +4,7 @@ import {
     ActivityIndicator,
     ScrollView,
     StatusBar,
-    Text,
-    TouchableOpacity,
-    View
+    TouchableOpacity
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import PackageList from '../../../components/Custom/PackageList';
@@ -72,7 +70,7 @@ export default function BookingDetailScreen() {
         return (
             <SafeAreaView className="flex-1 bg-white items-center justify-center">
                 <ActivityIndicator size="large" color="#E75B3B" />
-                <Text className="text-gray-600 mt-4">Loading booking details...</Text>
+                <ThemedText className="text-gray-600 mt-4">Loading booking details...</ThemedText>
             </SafeAreaView>
         );
     }
@@ -80,7 +78,7 @@ export default function BookingDetailScreen() {
     if (!groundTrip.id) {
         return (
             <SafeAreaView className="flex-1 bg-white items-center justify-center">
-                <Text className="text-gray-600">Booking not found</Text>
+                <ThemedText className="text-gray-600">Booking not found</ThemedText>
                 <Button
                     className="mt-4 bg-[#E75B3B]"
                     onPress={() => router.back()}
@@ -96,120 +94,120 @@ export default function BookingDetailScreen() {
             <StatusBar barStyle="dark-content" backgroundColor="white" />
 
             {/* Header */}
-            <View className="flex-row items-center justify-between px-4 py-3 border-b border-gray-100">
+            <ThemedView className="flex-row items-center justify-between px-4 py-3 border-b border-gray-100">
                 <TouchableOpacity
                     onPress={() => router.back()}
                     className="w-10 h-10 items-center justify-center"
                 >
                     <Icon as={ArrowLeftIcon} size="md" className="text-gray-700" />
                 </TouchableOpacity>
-                <Text className="text-lg font-semibold text-gray-900">Booking Details</Text>
-                <View className="w-10" />
-            </View>
+                <ThemedText className="text-lg font-semibold text-gray-900">Booking Details</ThemedText>
+                <ThemedView className="w-10" />
+            </ThemedView>
 
             <ScrollView className="flex-1" showsVerticalScrollIndicator={false}>
                 {/* Booking Header */}
-                <View className="px-4 py-6 bg-gray-50">
-                    <View className="flex-row items-center justify-between mb-3">
-                        <Text className="text-2xl font-bold text-gray-900">{groundTrip.trackingId}</Text>
-                        <View className={`px-3 py-1 rounded-full ${getStatusColor(groundTrip.status)}`}>
-                            <Text className="text-sm font-medium">{groundTrip.status.replace(/_/g, ' ')}</Text>
-                        </View>
-                    </View>
-                    <Text className="text-gray-600">
+                <ThemedView className="px-4 py-6 bg-gray-50">
+                    <ThemedView className="flex-row items-center justify-between mb-3">
+                        <ThemedText className="text-2xl font-bold text-gray-900">{groundTrip.trackingId}</ThemedText>
+                        <ThemedView className={`px-3 py-1 rounded-full ${getStatusColor(groundTrip.status)}`}>
+                            <ThemedText className="text-sm font-medium">{groundTrip.status.replace(/_/g, ' ')}</ThemedText>
+                        </ThemedView>
+                    </ThemedView>
+                    <ThemedText className="text-gray-600">
                         Booking Reference: {groundTrip.bookingRef}
-                    </Text>
-                    <Text className="text-gray-600">
+                    </ThemedText>
+                    <ThemedText className="text-gray-600">
                         Date: {formatDate(groundTrip.dateOfBooking)}
-                    </Text>
-                </View>
+                    </ThemedText>
+                </ThemedView>
 
                 {/* Route Information */}
-                <View className="px-4 py-6 border-b border-gray-100">
-                    <Text className="text-lg font-semibold text-gray-900 mb-4">Route Information</Text>
-                    <View className="flex-row items-center mb-4">
+                <ThemedView className="px-4 py-6 border-b border-gray-100">
+                    <ThemedText className="text-lg font-semibold text-gray-900 mb-4">Route Information</ThemedText>
+                    <ThemedView className="flex-row items-center mb-4">
                         <Icon as={MapPinIcon} size="sm" className="text-[#E75B3B] mr-3" />
-                        <View className="flex-1">
-                            <Text className="text-gray-500 text-sm">From</Text>
-                            <Text className="text-gray-900 font-medium">{groundTrip.pickUpLocation}</Text>
-                        </View>
-                    </View>
-                    <View className="flex-row items-center">
+                        <ThemedView className="flex-1">
+                            <ThemedText className="text-gray-500 text-sm">From</ThemedText>
+                            <ThemedText className="text-gray-900 font-medium">{groundTrip.pickUpLocation}</ThemedText>
+                        </ThemedView>
+                    </ThemedView>
+                    <ThemedView className="flex-row items-center">
                         <Icon as={MapPinIcon} size="sm" className="text-green-600 mr-3" />
-                        <View className="flex-1">
-                            <Text className="text-gray-500 text-sm">To</Text>
-                            <Text className="text-gray-900 font-medium">{groundTrip.dropOffLocation}</Text>
-                        </View>
-                    </View>
-                </View>
+                        <ThemedView className="flex-1">
+                            <ThemedText className="text-gray-500 text-sm">To</ThemedText>
+                            <ThemedText className="text-gray-900 font-medium">{groundTrip.dropOffLocation}</ThemedText>
+                        </ThemedView>
+                    </ThemedView>
+                </ThemedView>
 
                 {/* Trip Details */}
-                <View className="px-4 py-6 border-b border-gray-100">
-                    <Text className="text-lg font-semibold text-gray-900 mb-4">Trip Details</Text>
-                    <View className="flex-row justify-between mb-3">
-                        <Text className="text-gray-600">Weight</Text>
-                        <Text className="text-gray-900 font-medium">{groundTrip.weight}kg</Text>
-                    </View>
-                    <View className="flex-row justify-between mb-3">
-                        <Text className="text-gray-600">Price</Text>
-                        <Text className="text-gray-900 font-medium">₦{groundTrip.price?.toLocaleString()}</Text>
-                    </View>
-                    <View className="flex-row justify-between">
-                        <Text className="text-gray-600">Customer</Text>
-                        <Text className="text-gray-900 font-medium">{groundTrip.customer}</Text>
-                    </View>
-                </View>
+                <ThemedView className="px-4 py-6 border-b border-gray-100">
+                    <ThemedText className="text-lg font-semibold text-gray-900 mb-4">Trip Details</ThemedText>
+                    <ThemedView className="flex-row justify-between mb-3">
+                        <ThemedText className="text-gray-600">Weight</ThemedText>
+                        <ThemedText className="text-gray-900 font-medium">{groundTrip.weight}kg</ThemedText>
+                    </ThemedView>
+                    <ThemedView className="flex-row justify-between mb-3">
+                        <ThemedText className="text-gray-600">Price</ThemedText>
+                        <ThemedText className="text-gray-900 font-medium">₦{groundTrip.price?.toLocaleString()}</ThemedText>
+                    </ThemedView>
+                    <ThemedView className="flex-row justify-between">
+                        <ThemedText className="text-gray-600">Customer</ThemedText>
+                        <ThemedText className="text-gray-900 font-medium">{groundTrip.customer}</ThemedText>
+                    </ThemedView>
+                </ThemedView>
 
                 {/* Sender Information */}
-                <View className="px-4 py-6 border-b border-gray-100">
-                    <Text className="text-lg font-semibold text-gray-900 mb-4">Sender Information</Text>
-                    <View className="flex-row items-center mb-3">
+                <ThemedView className="px-4 py-6 border-b border-gray-100">
+                    <ThemedText className="text-lg font-semibold text-gray-900 mb-4">Sender Information</ThemedText>
+                    <ThemedView className="flex-row items-center mb-3">
                         <Icon as={UserIcon} size="sm" className="text-gray-500 mr-3" />
-                        <Text className="text-gray-900">{groundTrip.sender.name}</Text>
-                    </View>
-                    <View className="flex-row items-center mb-3">
+                        <ThemedText className="text-gray-900">{groundTrip.sender.name}</ThemedText>
+                    </ThemedView>
+                    <ThemedView className="flex-row items-center mb-3">
                         <Icon as={PhoneIcon} size="sm" className="text-gray-500 mr-3" />
-                        <Text className="text-gray-900">{groundTrip.sender.phoneNumber}</Text>
-                    </View>
-                    <View className="flex-row items-center">
+                        <ThemedText className="text-gray-900">{groundTrip.sender.phoneNumber}</ThemedText>
+                    </ThemedView>
+                    <ThemedView className="flex-row items-center">
                         <Icon as={CalendarIcon} size="sm" className="text-gray-500 mr-3" />
-                        <Text className="text-gray-900">{groundTrip.sender.email}</Text>
-                    </View>
-                </View>
+                        <ThemedText className="text-gray-900">{groundTrip.sender.email}</ThemedText>
+                    </ThemedView>
+                </ThemedView>
 
                 {/* Receiver Information */}
-                <View className="px-4 py-6 border-b border-gray-100">
-                    <Text className="text-lg font-semibold text-gray-900 mb-4">Receiver Information</Text>
-                    <View className="flex-row items-center mb-3">
+                <ThemedView className="px-4 py-6 border-b border-gray-100">
+                    <ThemedText className="text-lg font-semibold text-gray-900 mb-4">Receiver Information</ThemedText>
+                    <ThemedView className="flex-row items-center mb-3">
                         <Icon as={UserIcon} size="sm" className="text-gray-500 mr-3" />
-                        <Text className="text-gray-900">{groundTrip.receiver.name}</Text>
-                    </View>
-                    <View className="flex-row items-center mb-3">
+                        <ThemedText className="text-gray-900">{groundTrip.receiver.name}</ThemedText>
+                    </ThemedView>
+                    <ThemedView className="flex-row items-center mb-3">
                         <Icon as={PhoneIcon} size="sm" className="text-gray-500 mr-3" />
-                        <Text className="text-gray-900">{groundTrip.receiver.phone}</Text>
-                    </View>
+                        <ThemedText className="text-gray-900">{groundTrip.receiver.phone}</ThemedText>
+                    </ThemedView>
                     {groundTrip.receiver.alternativePhone && (
-                        <View className="flex-row items-center">
+                        <ThemedView className="flex-row items-center">
                             <Icon as={PhoneIcon} size="sm" className="text-gray-500 mr-3" />
-                            <Text className="text-gray-900">{groundTrip.receiver.alternativePhone} (Alt)</Text>
-                        </View>
+                            <ThemedText className="text-gray-900">{groundTrip.receiver.alternativePhone} (Alt)</ThemedText>
+                        </ThemedView>
                     )}
-                </View>
+                </ThemedView>
 
                 {/* Packages Section */}
                 {groundTrip.packages && groundTrip.packages.length > 0 && (
-                    <View className="px-4 py-6 border-b border-gray-100">
-                        <Text className="text-lg font-semibold text-gray-900 mb-4">Packages</Text>
+                    <ThemedView className="px-4 py-6 border-b border-gray-100">
+                        <ThemedText className="text-lg font-semibold text-gray-900 mb-4">Packages</ThemedText>
                         <PackageList packages={groundTrip.packages} />
-                    </View>
+                    </ThemedView>
                 )}
 
-                <View className="h-20" />
+                <ThemedView className="h-20" />
             </ScrollView>
 
             {/* Action Button */}
             {groundTrip.status.toUpperCase() === 'ACCEPTED' && (
-                <View className="px-4 py-4 border-t border-gray-100">
+                <ThemedView className="px-4 py-4 border-t border-gray-100">
                     <Button
                         size="xl"
                         className="bg-[#E75B3B] rounded-xl w-full h-[47px]"
@@ -220,7 +218,7 @@ export default function BookingDetailScreen() {
                             Start Trip
                         </ButtonText>
                     </Button>
-                </View>
+                </ThemedView>
             )}
         </SafeAreaView>
     );

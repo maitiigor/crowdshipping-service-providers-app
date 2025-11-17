@@ -5,9 +5,7 @@ import { ChevronDownIcon } from "lucide-react-native";
 import React from "react";
 import {
     ScrollView,
-    Text,
-    TouchableOpacity,
-    View,
+    TouchableOpacity
 } from "react-native";
 import { TextInput } from "react-native-gesture-handler";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -107,33 +105,33 @@ export default function EditProfileDocuments() {
             {({ handleChange, handleSubmit, values, errors, touched, setFieldValue }) => (
                 <SafeAreaView className="flex-1 bg-white">
                     {/* Header */}
-                    <View className="flex-row items-center justify-between px-6 py-4">
+                    <ThemedView className="flex-row items-center justify-between px-6 py-4">
                         <TouchableOpacity className="p-2" onPress={() => router.back()}>
                             <AntDesign name="arrowleft" size={24} color="#000" />
                         </TouchableOpacity>
 
-                        <Text className="text-lg font-semibold text-black">
+                        <ThemedText className="text-lg font-semibold text-black">
                             Edit Profile
-                        </Text>
+                        </ThemedText>
 
                         <TouchableOpacity className="p-2">
                             <MaterialIcons name="notifications-none" size={24} color="#000" />
                         </TouchableOpacity>
-                    </View>
+                    </ThemedView>
 
                     {/* Progress Indicator */}
-                    <View className="flex-row items-center justify-center px-6 py-6">
-                        <View className="flex-row items-center">
+                    <ThemedView className="flex-row items-center justify-center px-6 py-6">
+                        <ThemedView className="flex-row items-center">
                             {/* Step 1 - Completed */}
-                            <View className="w-16 h-1 bg-[#E75B3B] rounded-full" />
-                            <View className="w-4" />
+                            <ThemedView className="w-16 h-1 bg-[#E75B3B] rounded-full" />
+                            <ThemedView className="w-4" />
                             {/* Step 2 - Active */}
-                            <View className="w-16 h-1 bg-[#E75B3B] rounded-full" />
-                            <View className="w-4" />
+                            <ThemedView className="w-16 h-1 bg-[#E75B3B] rounded-full" />
+                            <ThemedView className="w-4" />
                             {/* Step 3 - Inactive */}
-                            <View className="w-16 h-1 bg-gray-300 rounded-full" />
-                        </View>
-                    </View>
+                            <ThemedView className="w-16 h-1 bg-gray-300 rounded-full" />
+                        </ThemedView>
+                    </ThemedView>
 
                     <ScrollView className="flex-1 px-6" showsVerticalScrollIndicator={false}>
 
@@ -185,7 +183,7 @@ export default function EditProfileDocuments() {
                                 onChangeText={handleChange("licenseNumber")}
                             />
                             {touched.licenseNumber && errors.licenseNumber && (
-                                <Text style={{ color: "red", fontSize: 12 }}>{errors.licenseNumber}</Text>
+                                <ThemedText style={{ color: "red", fontSize: 12 }}>{errors.licenseNumber}</ThemedText>
                             )}
                         </ThemedView>
 
@@ -210,7 +208,7 @@ export default function EditProfileDocuments() {
                                 helperText="A picture of identification Document"
                             />
                             {touched.licenseNumber && errors.licenseNumber && (
-                                <Text style={{ color: "red", fontSize: 12 }}>{errors.licenseNumber}</Text>
+                                <ThemedText style={{ color: "red", fontSize: 12 }}>{errors.licenseNumber}</ThemedText>
                             )}
                         </ThemedView>
                         <ThemedView>
@@ -234,7 +232,7 @@ export default function EditProfileDocuments() {
                                 helperText="A picture of proof of address"
                             />
                             {touched.proofOfAddress && errors.proofOfAddress && (
-                                <Text style={{ color: "red", fontSize: 12 }}>{errors.proofOfAddress}</Text>
+                                <ThemedText style={{ color: "red", fontSize: 12 }}>{errors.proofOfAddress}</ThemedText>
                             )}
                         </ThemedView>
 
@@ -259,7 +257,7 @@ export default function EditProfileDocuments() {
                                 helperText="A Picture of your Insurance Proof"
                             />
                             {touched.insuranceResidenceProof && errors.insuranceResidenceProof && (
-                                <Text style={{ color: "red", fontSize: 12 }}>{errors.insuranceResidenceProof}</Text>
+                                <ThemedText style={{ color: "red", fontSize: 12 }}>{errors.insuranceResidenceProof}</ThemedText>
                             )}
                         </ThemedView>
 
@@ -283,7 +281,7 @@ export default function EditProfileDocuments() {
                                 helperText="A Picture of your Insurance Proof"
                             />
                             {touched.insuranceResidenceProof && errors.insuranceResidenceProof && (
-                                <Text style={{ color: "red", fontSize: 12 }}>{errors.insuranceResidenceProof}</Text>
+                                <ThemedText style={{ color: "red", fontSize: 12 }}>{errors.insuranceResidenceProof}</ThemedText>
                             )}
                         </ThemedView>
                     </ScrollView>

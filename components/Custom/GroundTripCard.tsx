@@ -1,14 +1,16 @@
 import { router } from 'expo-router';
-import { CheckCircleIcon, MapPinIcon, XCircleIcon } from 'lucide-react-native';
+import { CheckCircleIcon, MapPinIcon, PlayIcon, XCircleIcon } from 'lucide-react-native';
 import React, { useState } from 'react';
-import { ActivityIndicator, Text, TouchableOpacity, View } from 'react-native';
+import { ActivityIndicator, TouchableOpacity } from 'react-native';
+import { useDispatch } from 'react-redux';
 import { useShowToast } from '../../hooks/useShowToast';
 import { GroundTrip } from '../../models';
+import { setGroundTrip } from '../../store/slices/groundTripSlice';
 
 interface GroundTripCardProps {
   trip: GroundTrip;
-  onAccept: (tripId: string) => Promise<void>;
-  onReject: (tripId: string) => Promise<void>;
+  onAccept: (tripId: string) => Promise<void> | null;
+  onReject: (tripId: string) => Promise<void> | null;
   showActions?: boolean;
 }
 
@@ -25,6 +27,7 @@ export const GroundTripCard: React.FC<GroundTripCardProps> = ({
   const [isAccepting, setIsAccepting] = useState(false);
   const [isRejecting, setIsRejecting] = useState(false);
   const showToast = useShowToast();
+  const dispatch = useDispatch();
 
   const handleAccept = async () => {
     try {
@@ -71,7 +74,9 @@ export const GroundTripCard: React.FC<GroundTripCardProps> = ({
   };
 
   const handleStartTrip = () => {
-    router.push(`/screens/dashboard/trip-status-management?tripId=${trip.id}`);
+    console.log("Starting trip:", trip);
+    dispatch(setGroundTrip(trip));
+    router.push(`/screens/dashboard/trip-status-management?tripId=${trip.id}&type=Ground`);
   };
 
   const getStatusColor = (status: string) => {
@@ -112,103 +117,120 @@ export const GroundTripCard: React.FC<GroundTripCardProps> = ({
   };
 
   return (
-    <View className="bg-white rounded-lg p-4 mb-3 shadow-sm border border-gray-100">
+    <ThemedView className="bg-white rounded-lg p-4 mb-3 shadow-sm border border-gray-100">
       {/* Header with tracking ID and status */}
-      <View className="flex-row items-center justify-between mb-3">
-        <Text className="text-lg font-semibold text-gray-900">{trip.trackingId}</Text>
-        <View className={`px-2 py-1 rounded-full ${getStatusColor(trip.status)}`}>
-          <Text className="text-xs font-medium">{trip.status}</Text>
-        </View>
-      </View>
+      <ThemedView className="flex-row items-center justify-between mb-3">
+        <ThemedText className="text-lg font-semibold text-gray-900">{trip.trackingId}</ThemedText>
+        <ThemedView className={`px-2 py-1 rounded-full ${getStatusColor(trip.status)}`}>
+          <ThemedText className="text-xs font-medium">{trip.status}</ThemedText>
+        </ThemedView>
+      </ThemedView>
 
       {/* Location info */}
-      <View className="flex-row items-center mb-2">
+      <ThemedView className="flex-row items-center mb-2">
         <LocationIcon />
-        <Text className="text-gray-600 ml-2 flex-1">
-          {trip.pickUpLocation} → {trip.dropOffLocation}
-        </Text>
-      </View>
+        <ThemedText className="text-gray-600 ml-2 flex-1">
+          {trip.pickUpLocation.address} → {trip.dropOffLocation.address}
+        </ThemedText>
+      </ThemedView>
 
       {/* Weight and price */}
-      <View className="flex-row items-center justify-between mb-3">
-        <Text className="text-gray-600">
-          <Text className="font-medium">Weight:</Text> {trip.weight}kg
-        </Text>
-        <Text className="text-gray-600">
-          <Text className="font-medium">Price:</Text> ₦{trip.price?.toLocaleString() || 'N/A'}
-        </Text>
-      </View>
+      <ThemedView className="flex-row items-center justify-between mb-3">
+        <ThemedText className="text-gray-600">
+          <ThemedText className="font-medium">Weight:</ThemedText> {trip.weight}kg
+        </ThemedText>
+        <ThemedText className="text-gray-600">
+          <ThemedText className="font-medium">Price:</ThemedText> ₦{trip.price?.toLocaleString() || 'N/A'}
+        </ThemedText>
+      </ThemedView>
 
       {/* Customer and date info */}
-      <View className="flex-row items-center justify-between mb-4">
-        <View>
-          <Text className="text-gray-500 text-sm">Customer: {trip.customer}</Text>
-          <Text className="text-gray-500 text-sm">
+      <ThemedView className="flex-row items-center justify-between mb-4">
+        <ThemedView>
+          <ThemedText className="text-gray-500 text-sm">Customer: {trip.customer}</ThemedText>
+          <ThemedText className="text-gray-500 text-sm">
             Booked: {formatDate(trip.dateOfBooking)}
-          </Text>
-        </View>
-      </View>
+          </ThemedText>
+        </ThemedView>
+      </ThemedView>
 
       {/* Action buttons - only show for pending bookings */}
-      {showActions && trip.status.toUpperCase() === 'PENDING' && (
-        <View className="flex-row space-x-3 gap-3">
-          <TouchableOpacity
-            onPress={handleReject}
-            disabled={isRejecting || isAccepting}
-            className={`flex-1 border-red-500 border-[1.5px] rounded-xl py-3 items-center ${isRejecting || isAccepting ? 'opacity-50' : ''
-              }`}
-          >
-            {isRejecting ? (
-              <ActivityIndicator size="small" color="#EF4444" />
-            ) : (
-              <Text className="text-red-500 font-medium">Reject</Text>
-            )}
-          </TouchableOpacity>
+      {
+        showActions && trip.status.toUpperCase() === 'PENDING' && (
+          <ThemedView className="flex-row space-x-3 gap-3">
+            <TouchableOpacity
+              onPress={handleReject}
+              disabled={isRejecting || isAccepting}
+              className={`flex-1 border-red-500 border-[1.5px] rounded-xl py-3 items-center ${isRejecting || isAccepting ? 'opacity-50' : ''
+                }`}
+            >
+              {isRejecting ? (
+                <ActivityIndicator size="small" color="#EF4444" />
+              ) : (
+                <ThemedText className="text-red-500 font-medium">Reject</ThemedText>
+              )}
+            </TouchableOpacity>
 
-          <TouchableOpacity
-            onPress={handleAccept}
-            disabled={isAccepting || isRejecting}
-            className={`flex-1 bg-[#E75B3B] rounded-xl py-3 items-center ${isAccepting || isRejecting ? 'opacity-50' : ''
-              }`}
-          >
-            {isAccepting ? (
-              <ActivityIndicator size="small" color="#FFFFFF" />
-            ) : (
-              <Text className="text-white font-medium">Accept</Text>
-            )}
-          </TouchableOpacity>
-        </View>
-      )}
+            <TouchableOpacity
+              onPress={handleAccept}
+              disabled={isAccepting || isRejecting}
+              className={`flex-1 bg-[#E75B3B] rounded-xl py-3 items-center ${isAccepting || isRejecting ? 'opacity-50' : ''
+                }`}
+            >
+              {isAccepting ? (
+                <ActivityIndicator size="small" color="#FFFFFF" />
+              ) : (
+                <ThemedText className="text-white font-medium">Accept</ThemedText>
+              )}
+            </TouchableOpacity>
+          </ThemedView>
+        )
+      }
 
       {/* Start Trip button for accepted bookings */}
-      {trip.status.toUpperCase() === 'ACCEPTED' && (
-        <TouchableOpacity
-          onPress={handleStartTrip}
-          className="bg-[#E75B3B] rounded-xl py-3 items-center flex-row justify-center"
-        >
-          <PlayIcon size={20} color="#FFFFFF" />
-          <Text className="text-white font-medium ml-2">Start Trip</Text>
-        </TouchableOpacity>
-      )}
+      {
+        [
+          'going_to_pickup',
+          'picked_up',
+          'in_transit',
+          'arrived_destination',
+          'delivered',
+          'toll_bill_pending',
+          'toll_bill_paid',
+          'in_progress',
+        ].includes(trip.status.toLowerCase()) && (
+          <TouchableOpacity
+            onPress={handleStartTrip}
+            className="bg-[#E75B3B] rounded-xl py-3 items-center flex-row justify-center"
+          >
+            <PlayIcon size={16} color="#FFFFFF" />
+            <ThemedText className="text-white font-medium ml-2"> Manage Trip</ThemedText>
+          </TouchableOpacity>
+        )
+      }
 
       {/* Show status message for other non-pending bookings */}
-      {trip.status.toUpperCase() !== 'PENDING' && trip.status.toUpperCase() !== 'ACCEPTED' && (
-        <View className="bg-gray-50 rounded-lg p-3">
-          <Text className="text-gray-600 text-center text-sm">
-            Status: {trip.status.replace(/_/g, ' ').toLowerCase()}
-          </Text>
-        </View>
-      )}
+      {
+        trip.status.toUpperCase() !== 'PENDING' && trip.status.toUpperCase() !== 'ACCEPTED' && (
+          <ThemedView className="bg-gray-50 rounded-lg p-3">
+            <ThemedText className="text-gray-600 text-center text-sm">
+              Status: {trip.status.replace(/_/g, ' ').toLowerCase()}
+            </ThemedText>
+          </ThemedView>
+        )
+      }
 
       {/* Show rejected message */}
-      {trip.status.toUpperCase() === 'REJECTED' && (
-        <View className="bg-red-50 rounded-lg p-3">
-          <Text className="text-red-600 text-center text-sm">
-            This booking has been rejected
-          </Text>
-        </View>
-      )}
-    </View>
+      {
+        trip.status.toUpperCase() === 'REJECTED' && (
+          <ThemedView className="bg-red-50 rounded-lg p-3">
+            <ThemedText className="text-red-600 text-center text-sm">
+              This booking has been rejected
+            </ThemedText>
+          </ThemedView>
+        )
+      }
+    </ThemedView >
   );
 };
 

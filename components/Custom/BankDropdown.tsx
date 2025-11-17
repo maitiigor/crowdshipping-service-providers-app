@@ -21,11 +21,10 @@ import {
 import InputLabelText from "./InputLabelText";
 
 interface IProps {
-    values: { bankName?: string };
-    errors: { bankName?: string };
-    touched: { bankName?: boolean };
-    handleChange: (value: string) => void;
-    handleBankChange: (bankName: Bank) => void;
+    values: { bankCode?: string; bankName?: string };
+    errors: { bankCode?: string };
+    touched: { bankCode?: boolean };
+    handleChange: (code: string, name: string) => void | Promise<void>;
 }
 
 export default function BankDropdown({
@@ -33,58 +32,52 @@ export default function BankDropdown({
     errors,
     touched,
     handleChange,
-    handleBankChange
 }: IProps) {
-
-    const [banks, setbanks] = useState<Bank[]>([]);
+    const [banks, setBanks] = useState<Bank[]>([]);
     const [search, setSearch] = useState("");
     const [loading, setLoading] = useState(false);
     const [apiError, setApiError] = useState<string | null>(null);
 
     useEffect(() => {
         const timeout = setTimeout(() => {
-            if (banks.length <= 0) loadports(search);
+            if (banks.length <= 0) loadBanks(search);
         }, 600);
         return () => clearTimeout(timeout);
     }, [search]);
 
-    const loadports = async (query?: string) => {
+    const loadBanks = async (query?: string) => {
         try {
             setLoading(true);
             setApiError(null);
             const url = `/wallet/fetch-banks`;
             const response = await apiClient.get<ApiResponse<Bank[]>>(url);
-            console.log("response", response); ``
-            setbanks(response.data.data ?? []);
+            setBanks(response.data.data ?? []);
         } catch (error) {
             console.log("get banks error:", error);
-            setApiError("Failed to load ports");
+            setApiError("Failed to load banks");
         } finally {
             setLoading(false);
         }
     };
 
-
-
     const filtered: Bank[] = search
         ? banks.filter((a) =>
-            a.name.toLowerCase().includes(search.toLowerCase())
-        )
+              a.name.toLowerCase().includes(search.toLowerCase())
+          )
         : banks;
 
-    const formatCase = (type: string) =>
-        type.charAt(0).toUpperCase() + type.slice(1).toLowerCase();
     return (
         <ThemedView>
-            <InputLabelText className="mt-2">Bank Name</InputLabelText>
-            <Select selectedValue={values.bankName} onValueChange={(name) => {
-                const selectedBank = banks.find((a) => a.name === name);
-                if (selectedBank) {
-                    handleChange('bankName'); // store ICAO code as value
-                    handleBankChange(selectedBank);
-                }
-
-            }}>
+            <InputLabelText className="mt-2">Bank</InputLabelText>
+            <Select
+                selectedValue={values.bankCode}
+                onValueChange={(code) => {
+                    const selectedBank = banks.find((a) => a.code === code);
+                    if (selectedBank) {
+                        handleChange(selectedBank.code, selectedBank.name);
+                    }
+                }}
+            >
                 <SelectTrigger
                     size="lg"
                     className="h-[55px] rounded-lg mb-2 border-primary-100 bg-rose-50 px-2"
@@ -101,27 +94,25 @@ export default function BankDropdown({
                         <SelectDragIndicatorWrapper>
                             <SelectDragIndicator />
                         </SelectDragIndicatorWrapper>
-                        {/* Search box inside the dropdown */}
                         <ThemedView className="w-full px-3 pb-2">
                             <Input size="lg" className="rounded-md bg-rose-50">
                                 <InputField
-                                    placeholder="Select Bank Name..."
+                                    placeholder="Search Bank Name..."
                                     value={search}
                                     onChangeText={setSearch}
                                     autoFocus={false}
                                 />
                             </Input>
                         </ThemedView>
-                        {/* Scrollable list */}
                         {filtered.length > 0 ? (
                             <SelectFlatList
                                 className="max-h-80"
                                 data={filtered as unknown as any[]}
                                 keyExtractor={(item: any, index: number) =>
-                                    (item?.alpha2Code as string) ?? String(index)
+                                    item?.code ?? String(index)
                                 }
                                 renderItem={({ item }: any) => (
-                                    <SelectItem label={item.name} value={item.name} />
+                                    <SelectItem label={item.name} value={item.code} />
                                 )}
                             />
                         ) : (
@@ -129,16 +120,16 @@ export default function BankDropdown({
                                 {loading
                                     ? "Loading..."
                                     : apiError
-                                        ? "Failed to load. Showing local list."
-                                        : "No results found"}
+                                    ? "Failed to load. Showing local list."
+                                    : "No results found"}
                             </ThemedText>
                         )}
                     </SelectContent>
                 </SelectPortal>
             </Select>
-            {errors.bankName && touched.bankName && (
+            {errors.bankCode && touched.bankCode && (
                 <ThemedText type="b4_body" className="text-error-500 mb-4">
-                    {errors.bankName}
+                    {errors.bankCode}
                 </ThemedText>
             )}
         </ThemedView>

@@ -72,28 +72,28 @@ export default function LiveChatScreen() {
     };
 
     const renderMessage = ({ item }: { item: Message }) => (
-        <View className={`mb-4 ${item.isOwn ? 'items-end' : 'items-start'}`}>
+        <ThemedView className={`mb-4 ${item.isOwn ? 'items-end' : 'items-start'}`}>
             <View
                 className={`max-w-[80%] px-4 py-3 rounded-2xl ${item.isOwn
                     ? 'bg-[#E75B3B] rounded-br-md'
                     : 'bg-gray-100 rounded-bl-md'
                     }`}
             >
-                <Text className={`text-base ${item.isOwn ? 'text-white' : 'text-gray-900'}`}>
+                <ThemedText className={`text-base ${item.isOwn ? 'text-white' : 'text-gray-900'}`}>
                     {item.text}
-                </Text>
-            </View>
-            <View className={`flex-row items-center mt-1 ${item.isOwn ? 'flex-row-reverse' : ''}`}>
-                <Text className="text-xs text-gray-500">{item.time}</Text>
+                </ThemedText>
+            </ThemedView>
+            <ThemedView className={`flex-row items-center mt-1 ${item.isOwn ? 'flex-row-reverse' : ''}`}>
+                <ThemedText className="text-xs text-gray-500">{item.time}</ThemedText>
                 {item.isOwn && item.status && (
-                    <View className="ml-2">
-                        <Text className="text-xs text-gray-500">
+                    <ThemedView className="ml-2">
+                        <ThemedText className="text-xs text-gray-500">
                             {item.status === 'read' ? '✓✓' : item.status === 'delivered' ? '✓✓' : '✓'}
-                        </Text>
-                    </View>
+                        </ThemedText>
+                    </ThemedView>
                 )}
-            </View>
-        </View>
+            </ThemedView>
+        </ThemedView >
     );
 
     return (
@@ -103,12 +103,12 @@ export default function LiveChatScreen() {
                 behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
             >
                 {/* Header */}
-                <View className="flex-row items-center justify-between px-4 py-3 border-b border-gray-100">
+                <ThemedView className="flex-row items-center justify-between px-4 py-3 border-b border-gray-100">
                     <TouchableOpacity onPress={() => router.back()}>
                         <Icon as={ArrowLeftIcon} size="md" className="text-gray-700" />
                     </TouchableOpacity>
 
-                    <Text className="text-xl font-semibold text-gray-900">Support</Text>
+                    <ThemedText className="text-xl font-semibold text-gray-900">Support</ThemedText>
 
                     <TouchableOpacity onPress={() => {
                         // Could implement voice call to support
@@ -116,22 +116,22 @@ export default function LiveChatScreen() {
                     }}>
                         <Icon as={PhoneIcon} size="md" className="text-gray-700" />
                     </TouchableOpacity>
-                </View>
+                </ThemedView>
 
                 {/* Date Header */}
-                <View className="items-center py-2">
-                    <Text className="text-sm text-gray-500">Today</Text>
-                </View>
+                <ThemedView className="items-center py-2">
+                    <ThemedText className="text-sm text-gray-500">Today</ThemedText>
+                </ThemedView>
 
                 {/* Support Info Banner */}
-                <View className="mx-4 mb-4 p-3 bg-blue-50 rounded-xl border border-blue-100">
-                    <Text className="text-blue-800 font-medium text-sm mb-1">
+                <ThemedView className="mx-4 mb-4 p-3 bg-blue-50 rounded-xl border border-blue-100">
+                    <ThemedText className="text-blue-800 font-medium text-sm mb-1">
                         🎧 Live Support Chat
-                    </Text>
-                    <Text className="text-blue-700 text-xs">
+                    </ThemedText>
+                    <ThemedText className="text-blue-700 text-xs">
                         You're connected to our support team. Average response time: 2-3 minutes
-                    </Text>
-                </View>
+                    </ThemedText>
+                </ThemedView>
 
                 {/* Messages */}
                 <FlatList
@@ -144,12 +144,12 @@ export default function LiveChatScreen() {
                 />
 
                 {/* Message Input */}
-                <View className="flex-row items-center px-4 py-3 border-t border-gray-100">
+                <ThemedView className="flex-row items-center px-4 py-3 border-t border-gray-100">
                     <TouchableOpacity className="mr-3">
                         <Icon as={AddIcon} size="md" className="text-gray-500" />
                     </TouchableOpacity>
 
-                    <View className="flex-1 flex-row items-center bg-gray-100 rounded-full px-4 py-2">
+                    <ThemedView className="flex-1 flex-row items-center bg-gray-100 rounded-full px-4 py-2">
                         <TextInput
                             value={message}
                             onChangeText={setMessage}
@@ -161,7 +161,7 @@ export default function LiveChatScreen() {
                         <TouchableOpacity className="ml-2">
                             <Icon as={MicIcon} size="sm" className="text-gray-500" />
                         </TouchableOpacity>
-                    </View>
+                    </ThemedView>
 
                     <TouchableOpacity
                         className="ml-3 bg-[#E75B3B] w-10 h-10 rounded-full items-center justify-center"
@@ -169,7 +169,7 @@ export default function LiveChatScreen() {
                     >
                         <Icon as={SendIcon} size="sm" className="text-white" />
                     </TouchableOpacity>
-                </View>
+                </ThemedView>
             </KeyboardAvoidingView>
         </SafeAreaView>
     );

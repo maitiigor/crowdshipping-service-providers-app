@@ -9,11 +9,8 @@ import { Formik } from "formik";
 import React, { useEffect, useRef, useState } from "react";
 import {
     ActivityIndicator,
-    ScrollView,
-    Text,
     TextInput,
-    TouchableOpacity,
-    View,
+    TouchableOpacity
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useDispatch } from "react-redux";
@@ -21,6 +18,7 @@ import * as Yup from "yup";
 import CountryDropdown from "../../../components/Custom/CountryDropdown";
 import InputLabelText from "../../../components/Custom/InputLabelText";
 import PhoneNumberInput from "../../../components/Custom/PhoneNumberInput";
+import ParallaxScrollView from "../../../components/ParallaxScrollView";
 import { ThemedText } from "../../../components/ThemedText";
 import { ThemedView } from "../../../components/ThemedView";
 import { Button } from "../../../components/ui/button";
@@ -52,7 +50,7 @@ export default function EditProfile() {
         location: Yup.object().required("Location is required"),
     });
 
-    
+
 
     const formData = userProfile;
     const match = userProfile.phoneNumber.match(/\(\+?(\d+)\)\s*(\d+)/);;
@@ -93,7 +91,7 @@ export default function EditProfile() {
         router.push("/screens/onboarding/edit-profile-documents");
     };
 
-    const  formatPhoneNumber = (phone: string): string  => {
+    const formatPhoneNumber = (phone: string): string => {
         const match = phone.match(/^\+?(\d{1,3})(\d{6,})$/);
         if (!match) return phone; // if format doesn't match, return original
         const [, countryCode, number] = match;
@@ -131,14 +129,14 @@ export default function EditProfile() {
 
         <SafeAreaView className="flex-1 bg-white">
             {/* Header */}
-            <View className="flex-row items-center justify-between px-6 py-4">
+            <ThemedView className="flex-row items-center justify-between px-6 py-4">
                 <TouchableOpacity className="p-2" onPress={() => router.back()}>
                     <AntDesign name="arrowleft" size={24} color="#E75B3B" />
                 </TouchableOpacity>
 
-                <Text className="text-lg font-semibold text-black">
+                <ThemedText className="text-lg font-semibold text-black">
                     Edit Profile
-                </Text>
+                </ThemedText>
 
                 <TouchableOpacity className="p-2">
                     <MaterialIcons
@@ -147,31 +145,30 @@ export default function EditProfile() {
                         color="#000"
                     />
                 </TouchableOpacity>
-            </View>
+            </ThemedView>
 
             {/* Progress Indicator */}
-            <View className="flex-row items-center justify-center px-6 py-6">
-                <View className="flex-row items-center">
-                    <View className="w-16 h-1 bg-[#E75B3B] rounded-full" />
-                    <View className="w-4" />
-                    <View className="w-16 h-1 bg-gray-300 rounded-full" />
-                    <View className="w-4" />
-                    <View className="w-16 h-1 bg-gray-300 rounded-full" />
-                </View>
-            </View>
+            <ThemedView className="flex-row items-center justify-center px-6 py-6">
+                <ThemedView className="flex-row items-center">
+                    <ThemedView className="w-16 h-1 bg-[#E75B3B] rounded-full" />
+                    <ThemedView className="w-4" />
+                    <ThemedView className="w-16 h-1 bg-gray-300 rounded-full" />
+                    <ThemedView className="w-4" />
+                    <ThemedView className="w-16 h-1 bg-gray-300 rounded-full" />
+                </ThemedView>
+            </ThemedView>
             <Formik
                 initialValues={initialValues}
                 validationSchema={validationSchema}
                 onSubmit={submitData}
             >
                 {({ handleChange, handleSubmit, values, errors, touched, setFieldValue }) => (
-                    <ScrollView
-                        className="flex-1 px-6"
-                        showsVerticalScrollIndicator={false}
+                    <ParallaxScrollView
+                        headerBackgroundColor={{ light: "#FFFFFF", dark: "#353636" }}
                     >
-                        <Text className="text-xl font-semibold text-black mb-6">
+                        <ThemedText className="text-xl font-semibold text-black mb-6">
                             Personal Information
-                        </Text>
+                        </ThemedText>
 
                         {/* Full Name */}
                         <ThemedView>
@@ -183,7 +180,7 @@ export default function EditProfile() {
                                 className="bg-[#FDF2F0] rounded-lg px-4 py-4 text-base"
                             />
                             {touched.fullName && errors.fullName && (
-                                <Text style={{ color: "red", fontSize: 12 }}>{errors.fullName}</Text>
+                                <ThemedText style={{ color: "red", fontSize: 12 }}>{errors.fullName}</ThemedText>
                             )}
                         </ThemedView>
 
@@ -199,7 +196,7 @@ export default function EditProfile() {
                                 keyboardType="email-address"
                             />
                             {touched.email && errors.email && (
-                                <Text style={{ color: "red", fontSize: 12 }}>{errors.email}</Text>
+                                <ThemedText style={{ color: "red", fontSize: 12 }}>{errors.email}</ThemedText>
                             )}
                         </ThemedView>
 
@@ -250,7 +247,7 @@ export default function EditProfile() {
                                 ))}
                             </Picker>
                             {touched.gender && errors.gender && (
-                                <Text style={{ color: "red", fontSize: 12 }}>{errors.gender}</Text>
+                                <ThemedText style={{ color: "red", fontSize: 12 }}>{errors.gender}</ThemedText>
                             )}
                         </ThemedView>
 
@@ -272,7 +269,7 @@ export default function EditProfile() {
                                 ))}
                             </Picker>
                             {touched.state && errors.state && (
-                                <Text style={{ color: "red", fontSize: 12 }}>{errors.state}</Text>
+                                <ThemedText style={{ color: "red", fontSize: 12 }}>{errors.state}</ThemedText>
                             )}
                         </ThemedView>
 
@@ -294,7 +291,7 @@ export default function EditProfile() {
                                 ))}
                             </Picker>
                             {touched.city && errors.city && (
-                                <Text style={{ color: "red", fontSize: 12 }}>{errors.city}</Text>
+                                <ThemedText style={{ color: "red", fontSize: 12 }}>{errors.city}</ThemedText>
                             )}
                         </ThemedView>
 
@@ -316,7 +313,7 @@ export default function EditProfile() {
                                 }}
                             />
                             {touched.location && errors.location && (
-                                <Text style={{ color: "red", fontSize: 12 }}>{errors.location.address}</Text>
+                                <ThemedText style={{ color: "red", fontSize: 12 }}>{errors.location.address}</ThemedText>
                             )}
                         </ThemedView>
 
@@ -332,7 +329,7 @@ export default function EditProfile() {
                             </ThemedText>
                         </Button>
 
-                    </ScrollView>
+                    </ParallaxScrollView>
                 )}
             </Formik>
 

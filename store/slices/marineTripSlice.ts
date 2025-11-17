@@ -1,6 +1,6 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import apiClient from "../../lib/api/client";
-import { ApiError, ApiResponse, Booking, MarineTrip, MarineTripRequest, VesselOperator } from "../../models";
+import { ApiError, ApiResponse, Booking, BookingDetail, MarineLocation, MarineTrip, MarineTripRequest, VesselOperator } from "../../models";
 
 interface MarineTripState {
     marineTripForm: MarineTripRequest;
@@ -12,7 +12,15 @@ interface MarineTripState {
     vesselOperators: VesselOperator[];
     loadingBookings: boolean;
     marineBookings: Booking[];
+    marineBookingDetail: BookingDetail;
+    loadingOrderLocation: boolean;
+    orderLocations: MarineLocation[];
     error: ApiError | null;
+}
+
+
+interface MarineLocationResponse {
+    locations: MarineLocation[]
 }
 
 const initialState: MarineTripState = {
@@ -58,11 +66,14 @@ const initialState: MarineTripState = {
     },
     loadingBookings: false,
     marineBookings: [],
+    marineBookingDetail: {} as BookingDetail,
     isLoadingVessels: false,
     vesselOperators: [],
     trips: [],
     loading: false,
     loadingTrips: false,
+    loadingOrderLocation: false,
+    orderLocations: [],
     error: null,
 };
 
@@ -73,6 +84,8 @@ export const fetchMarineTrips = createAsyncThunk(
             const response = await apiClient.get<ApiResponse<MarineTrip[]>>(
                 "/trip/maritimes",
             );
+
+
 
             return response.data;
         } catch (error: any) {
@@ -112,8 +125,7 @@ export const fetchMarineById = createAsyncThunk(
     async (id: string, { rejectWithValue }) => {
         try {
             const response = await apiClient.get<ApiResponse<MarineTrip>>(`/trip/maritime/${id}`);
-            console.log("fetched marine trip by id response:", response.data);
-            console.log("fetched marine trip by id response. bbbbb:", response.data.data);
+
             return response.data;
         }
         catch (error: any) {
@@ -196,7 +208,30 @@ const marineTripSlice = createSlice({
             .addCase(fetchMarineBookings.rejected, (state, action) => {
                 state.loadingBookings = false;
                 state.error = action.payload as ApiError;
-            });
+            }).addCase(fetchMarineBookingDetail.pending, (state) => {
+                state.loading = true;
+                state.error = null;
+            })
+            .addCase(fetchMarineBookingDetail.fulfilled, (state, action) => {
+                state.loading = false;
+                state.marineBookingDetail = action.payload.data as BookingDetail;
+            })
+            .addCase(fetchMarineBookingDetail.rejected, (state, action) => {
+                state.loading = false;
+                state.error = action.payload as ApiError;
+            }).addCase(fetchMarineOrderLocations.pending, (state) => {
+                state.loadingOrderLocation = true;
+                state.error = null;
+            })
+            .addCase(fetchMarineOrderLocations.fulfilled, (state, action) => {
+                state.loadingOrderLocation = false;
+                state.orderLocations = action.payload.data?.locations ?? [];
+
+            })
+            .addCase(fetchMarineOrderLocations.rejected, (state, action) => {
+                state.loadingOrderLocation = false;;
+                state.error = action.payload as ApiError;
+            })
     },
 });
 
@@ -208,10 +243,48 @@ export const fetchMarineBookings = createAsyncThunk(
                 "/trip/maritime/booking/history",
             );
 
-            console.log("list of trips booked", response.data)
+            console.log("🚀 ~ fetchMarineBookings ~ response:", response.data);
 
             return response.data as ApiResponse<Booking[]>;
         } catch (error: any) {
+            return rejectWithValue(
+                error.response?.data
+                    ? { code: error.response.status, message: error.response.data.message }
+                    : { code: 0, message: "Network error" } as ApiError
+            );
+        }
+    }
+);
+
+export const fetchMarineBookingDetail = createAsyncThunk(
+    "marineTrip/fetchMarineBookingDetail",
+    async (id: string, { rejectWithValue }) => {
+        try {
+            const response = await apiClient.get<ApiResponse<BookingDetail>>(
+                `/trip/booking/detail//${id}`,
+            );
+            return response.data;
+        } catch (error: any) {
+            return rejectWithValue(
+                error.response?.data
+                    ? { code: error.response.status, message: error.response.data.message }
+                    : { code: 0, message: "Network error" } as ApiError
+            );
+        }
+    }
+)
+
+
+export const fetchMarineOrderLocations = createAsyncThunk(
+    "marineTrip/fetchMarineOrderLocations",
+    async (id: String, { rejectWithValue }) => {
+        try {
+            const response = await apiClient.get(`/orders/maritime/${id}/locations`);
+
+            console.log("🚀 ~ fetchMarineOrderLocations ~ response:", response.data);
+            return response.data as ApiResponse<MarineLocationResponse>;
+        }
+        catch (error: any) {
             return rejectWithValue(
                 error.response?.data
                     ? { code: error.response.status, message: error.response.data.message }

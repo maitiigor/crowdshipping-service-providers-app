@@ -140,11 +140,11 @@ const ImageUploader: React.FC<ImageUploaderProps> = ({
         )}
         {/* subtle hint overlay when image present */}
         {uri ? (
-          <View className="absolute inset-x-0 bottom-0 py-1 bg-black/30 items-center">
+          <ThemedView className="absolute inset-x-0 bottom-0 py-1 bg-black/30 items-center">
             <ThemedText className="text-white text-xs">
               <Icon as={Upload} className="text-primary-100" size="2xl" />
             </ThemedText>
-          </View>
+          </ThemedView>
         ) : null}
 
         {/* Floating edit FAB */}
@@ -156,15 +156,15 @@ const ImageUploader: React.FC<ImageUploaderProps> = ({
           style={{ width: 36, height: 36, borderRadius: 18 }}
         >
           <Feather name="edit-2" size={18} color="#fff" />
-        </View> */}
+        </ThemedView> */}
 
         {/* Loading overlay */}
         {loading && (
-          <View className="absolute inset-0 bg-black/20 items-center justify-center">
+          <ThemedView className="absolute inset-0 bg-black/20 items-center justify-center">
             <ActivityIndicator color="#fff" />
-          </View>
+          </ThemedView>
         )}
-      </View>
+      </ThemedView>
       {!!helperText && (
         <ThemedText className="mt-2 text-typography-600 text-center">
           {helperText}
@@ -182,10 +182,10 @@ const ImageUploader: React.FC<ImageUploaderProps> = ({
           className="flex-1 bg-black/40"
           onPress={() => setSheetOpen(false)}
         >
-          <View className="mt-auto bg-white rounded-t-3xl p-4">
-            <View className="items-center">
-              <View className="w-12 h-1.5 bg-background-300 rounded-full mb-3" />
-            </View>
+          <ThemedView className="mt-auto bg-white rounded-t-3xl p-4">
+            <ThemedView className="items-center">
+              <ThemedView className="w-12 h-1.5 bg-background-300 rounded-full mb-3" />
+            </ThemedView>
             {allowCamera && (
               <Pressable
                 className="h-12 rounded-lg bg-primary-600 items-center justify-center mb-3"
@@ -213,7 +213,7 @@ const ImageUploader: React.FC<ImageUploaderProps> = ({
                 <ThemedText className="text-error-600">Remove photo</ThemedText>
               </Pressable>
             ) : null}
-          </View>
+          </ThemedView>
         </Pressable>
       </Modal>
     </AnimatedPressable>

@@ -7,21 +7,21 @@ import { HelpCircleIcon, LucideIcon } from 'lucide-react-native';
 import React from "react";
 import {
     ScrollView,
-    Text,
     TextInput,
-    TouchableOpacity,
-    View,
+    TouchableOpacity
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useDispatch } from "react-redux";
 import * as Yup from "yup";
 import CustomToast from '../../../components/Custom/CustomToast';
+import { ThemedView } from '../../../components/ThemedView';
 import { Button, ButtonText } from "../../../components/ui/button";
 import { Toast, ToastDescription, ToastTitle, useToast } from "../../../components/ui/toast";
 import { useEditProfileForm } from "../../../hooks/useRedux";
 import { ApiError } from "../../../models";
 import { AppDispatch, useAppSelector } from "../../../store";
 import { register } from "../../../store/slices/authSlice";
+import { ThemedText } from '../../../components/ThemedText';
 
 
 export default function Registration() {
@@ -180,15 +180,15 @@ export default function Registration() {
             {({ handleChange, handleSubmit, values, errors, touched }) => (
                 <SafeAreaView className="flex-1 bg-white">
                     {/* Header */}
-                    <View className="flex-row items-center justify-between px-6 py-4">
+                    <ThemedView className="flex-row items-center justify-between px-6 py-4">
                         <TouchableOpacity className="p-2" onPress={() => router.back()}>
                             <MaterialIcons name="chevron-left" size={48} color="#E75B3B" />
 
                         </TouchableOpacity>
 
-                        <Text className="text-lg font-semibold text-black">
+                        <ThemedText className="text-lg font-semibold text-black">
                             SignUp
-                        </Text>
+                        </ThemedText>
 
                         <TouchableOpacity className="p-2">
                             <MaterialIcons
@@ -197,19 +197,19 @@ export default function Registration() {
                                 color="#000"
                             />
                         </TouchableOpacity>
-                    </View>
+                    </ThemedView>
 
                     <ScrollView
                         className="flex-1 px-6"
                         showsVerticalScrollIndicator={false}
                     >
-                        <Text className="text-xl font-semibold text-black mb-6">
+                        <ThemedText className="text-xl font-semibold text-black mb-6">
                             Driver Registration
-                        </Text>
+                        </ThemedText>
 
                         {/* Full Name */}
-                        <View className="mb-4">
-                            <Text className="text-sm text-gray-700 mb-2">Your Full Name</Text>
+                        <ThemedView className="mb-4">
+                            <ThemedText className="text-sm text-gray-700 mb-2">Your Full Name</ThemedText>
                             <TextInput
                                 placeholder="Full Name"
                                 value={values.fullName}
@@ -217,13 +217,13 @@ export default function Registration() {
                                 className="bg-[#FDF2F0] rounded-lg px-4 py-4 text-base"
                             />
                             {touched.fullName && errors.fullName && (
-                                <Text style={{ color: "red", fontSize: 12 }}>{errors.fullName}</Text>
+                                <ThemedText style={{ color: "red", fontSize: 12 }}>{errors.fullName}</ThemedText>
                             )}
-                        </View>
+                        </ThemedView>
 
                         {/* Email */}
-                        <View className="mb-4">
-                            <Text className="text-sm text-gray-700 mb-2">Email Address</Text>
+                        <ThemedView className="mb-4">
+                            <ThemedText className="text-sm text-gray-700 mb-2">Email Address</ThemedText>
                             <TextInput
                                 placeholder="Email"
                                 value={values.email}
@@ -232,15 +232,15 @@ export default function Registration() {
                                 keyboardType="email-address"
                             />
                             {touched.email && errors.email && (
-                                <Text style={{ color: "red", fontSize: 12 }}>{errors.email}</Text>
+                                <ThemedText style={{ color: "red", fontSize: 12 }}>{errors.email}</ThemedText>
                             )}
-                        </View>
+                        </ThemedView>
 
                         {/* Phone Number */}
-                        <View className="mb-4">
-                            <Text className="text-sm text-gray-700 mb-2">Phone Number</Text>
-                            <View className="flex-row gap-3  items-center">
-                                <View className="w-1/4 bg-[#FDF2F0] px-1 rounded-lg">
+                        <ThemedView className="mb-4">
+                            <ThemedText className="text-sm text-gray-700 mb-2">Phone Number</ThemedText>
+                            <ThemedView className="flex-row gap-3  items-center">
+                                <ThemedView className="w-1/4 bg-[#FDF2F0] px-1 rounded-lg">
                                     <Picker
                                         selectedValue={values.countryCode}
                                         style={{ width: 100 }}
@@ -255,21 +255,21 @@ export default function Registration() {
                                         ))}
                                     </Picker>
 
-                                </View>
+                                </ThemedView>
                                 <TextInput
                                     value={values.phoneNumber}
                                     onChangeText={handleChange("phoneNumber")}
                                     className="bg-[#FDF2F0] rounded-lg flex-1 w-3/4 px-4 py-4 text-base"
                                     keyboardType="phone-pad"
                                 />
-                            </View>
+                            </ThemedView>
                             {touched.phoneNumber && errors.phoneNumber && (
-                                <Text style={{ color: "red", fontSize: 12 }}>{errors.phoneNumber}</Text>
+                                <ThemedText style={{ color: "red", fontSize: 12 }}>{errors.phoneNumber}</ThemedText>
                             )}
-                        </View>
+                        </ThemedView>
 
-                        <View className="mb-4">
-                            <Text className="text-sm text-gray-700 mb-2">Password</Text>
+                        <ThemedView className="mb-4">
+                            <ThemedText className="text-sm text-gray-700 mb-2">Password</ThemedText>
                             <TextInput
                                 placeholder="********"
                                 value={values.password}
@@ -278,12 +278,12 @@ export default function Registration() {
                                 secureTextEntry
                             />
                             {touched.password && errors.password && (
-                                <Text style={{ color: "red", fontSize: 12 }}>{errors.password}</Text>
+                                <ThemedText style={{ color: "red", fontSize: 12 }}>{errors.password}</ThemedText>
                             )}
-                        </View>
+                        </ThemedView>
 
-                        <View className="mb-4">
-                            <Text className="text-sm text-gray-700 mb-2">Confirm password</Text>
+                        <ThemedView className="mb-4">
+                            <ThemedText className="text-sm text-gray-700 mb-2">Confirm password</ThemedText>
                             <TextInput
                                 placeholder="********"
                                 value={values.confirmPassword}
@@ -292,11 +292,11 @@ export default function Registration() {
                                 secureTextEntry
                             />
                             {touched.confirmPassword && errors.confirmPassword && (
-                                <Text style={{ color: "red", fontSize: 12 }}>{errors.confirmPassword}</Text>
+                                <ThemedText style={{ color: "red", fontSize: 12 }}>{errors.confirmPassword}</ThemedText>
                             )}
-                        </View>
+                        </ThemedView>
 
-                        <View className="pb-8">
+                        <ThemedView className="pb-8">
                             <Button
                                 size="xl"
                                 className="bg-[#E75B3B] rounded-xl"
@@ -304,17 +304,17 @@ export default function Registration() {
                             >
                                 <ButtonText className="text-white font-semibold">{loading ? 'Submitting...' : 'Register'}</ButtonText>
                             </Button>
-                        </View>
+                        </ThemedView>
 
                         {/* Divider */}
-                        <View className="flex-row items-center my-6">
-                            <View className="flex-1 h-px bg-gray-300" />
-                            <Text className="px-4 text-gray-500 text-sm" style={{ fontFamily: 'Inter-Regular' }}>or</Text>
-                            <View className="flex-1 h-px bg-gray-300" />
-                        </View>
+                        <ThemedView className="flex-row items-center my-6">
+                            <ThemedView className="flex-1 h-px bg-gray-300" />
+                            <ThemedText className="px-4 text-gray-500 text-sm" style={{ fontFamily: 'Inter-Regular' }}>or</ThemedText>
+                            <ThemedView className="flex-1 h-px bg-gray-300" />
+                        </ThemedView>
 
                         {/* Social Login Buttons */}
-                        <View className="flex-row justify-between gap-4">
+                        <ThemedView className="flex-row justify-between gap-4">
                             {/* Facebook */}
                             <TouchableOpacity
                                 onPress={() => handleSocialLogin('facebook')}
@@ -338,11 +338,11 @@ export default function Registration() {
                             >
                                 <Icon as={Apple} size='xl'></Icon>
                             </TouchableOpacity>
-                        </View>
+                        </ThemedView>
 
                         {/* Country */}
-                        {/* <View className="mb-4">
-                            <Text className="text-sm text-gray-700 mb-2">Country</Text>
+                        {/* <ThemedView className="mb-4">
+                            <ThemedText className="text-sm text-gray-700 mb-2">Country</ThemedText>
                             <Picker
                                 selectedValue={values.country}
                                 onValueChange={handleChange("country")}
@@ -357,13 +357,13 @@ export default function Registration() {
                                 ))}
                             </Picker>
                             {touched.country && errors.country && (
-                                <Text style={{ color: "red", fontSize: 12 }}>{errors.country}</Text>
+                                <ThemedText style={{ color: "red", fontSize: 12 }}>{errors.country}</ThemedText>
                             )}
-                        </View> */}
+                        </ThemedView> */}
 
                         {/* Gender */}
-                        {/* <View className="mb-4">
-                            <Text className="text-sm text-gray-700 mb-2">Gender</Text>
+                        {/* <ThemedView className="mb-4">
+                            <ThemedText className="text-sm text-gray-700 mb-2">Gender</ThemedText>
                             <Picker
                                 selectedValue={values.gender}
                                 onValueChange={handleChange("gender")}
@@ -378,13 +378,13 @@ export default function Registration() {
                                 ))}
                             </Picker>
                             {touched.gender && errors.gender && (
-                                <Text style={{ color: "red", fontSize: 12 }}>{errors.gender}</Text>
+                                <ThemedText style={{ color: "red", fontSize: 12 }}>{errors.gender}</ThemedText>
                             )}
-                        </View> */}
+                        </ThemedView> */}
 
                         {/* State */}
-                        {/* <View className="mb-4">
-                            <Text className="text-sm text-gray-700 mb-2">State</Text>
+                        {/* <ThemedView className="mb-4">
+                            <ThemedText className="text-sm text-gray-700 mb-2">State</ThemedText>
                             <Picker
                                 selectedValue={values.state}
                                 onValueChange={handleChange("state")}
@@ -399,13 +399,13 @@ export default function Registration() {
                                 ))}
                             </Picker>
                             {touched.state && errors.state && (
-                                <Text style={{ color: "red", fontSize: 12 }}>{errors.state}</Text>
+                                <ThemedText style={{ color: "red", fontSize: 12 }}>{errors.state}</ThemedText>
                             )}
-                        </View> */}
+                        </ThemedView> */}
 
                         {/* City */}
-                        {/* <View className="mb-4">
-                            <Text className="text-sm text-gray-700 mb-2">City</Text>
+                        {/* <ThemedView className="mb-4">
+                            <ThemedText className="text-sm text-gray-700 mb-2">City</ThemedText>
                             <Picker
                                 selectedValue={values.city}
                                 onValueChange={handleChange("city")}
@@ -420,13 +420,13 @@ export default function Registration() {
                                 ))}
                             </Picker>
                             {touched.city && errors.city && (
-                                <Text style={{ color: "red", fontSize: 12 }}>{errors.city}</Text>
+                                <ThemedText style={{ color: "red", fontSize: 12 }}>{errors.city}</ThemedText>
                             )}
-                        </View> */}
+                        </ThemedView> */}
 
                         {/* Location */}
-                        {/* <View className="mb-8">
-                            <Text className="text-sm text-gray-700 mb-2">Location</Text>
+                        {/* <ThemedView className="mb-8">
+                            <ThemedText className="text-sm text-gray-700 mb-2">Location</ThemedText>
                             <TextInput
                                 placeholder="Enter Location"
                                 value={values.location}
@@ -434,9 +434,9 @@ export default function Registration() {
                                 className="bg-[#FDF2F0] rounded-lg px-4 py-4 text-base"
                             />
                             {touched.location && errors.location && (
-                                <Text style={{ color: "red", fontSize: 12 }}>{errors.location}</Text>
+                                <ThemedText style={{ color: "red", fontSize: 12 }}>{errors.location}</ThemedText>
                             )}
-                        </View> */}
+                        </ThemedView> */}
                     </ScrollView>
 
                     {/* Next Button */}

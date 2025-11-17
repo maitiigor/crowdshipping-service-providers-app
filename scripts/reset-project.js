@@ -27,8 +27,8 @@ export default function Index() {
         alignItems: "center",
       }}
     >
-      <Text>Edit app/index.tsx to edit this screen.</Text>
-    </View>
+      <Text>Edit app/index.tsx to edit this screen.</ThemedText>
+    </ThemedView>
   );
 }
 `;
@@ -87,10 +87,9 @@ const moveDirectories = async (userInput) => {
 
     console.log("\n✅ Project reset complete. Next steps:");
     console.log(
-      `1. Run \`npx expo start\` to start a development server.\n2. Edit app/index.tsx to edit the main screen.${
-        userInput === "y"
-          ? `\n3. Delete the /${exampleDir} directory when you're done referencing it.`
-          : ""
+      `1. Run \`npx expo start\` to start a development server.\n2. Edit app/index.tsx to edit the main screen.${userInput === "y"
+        ? `\n3. Delete the /${exampleDir} directory when you're done referencing it.`
+        : ""
       }`
     );
   } catch (error) {

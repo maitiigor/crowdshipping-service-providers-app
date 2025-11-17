@@ -5,11 +5,8 @@ import {
     ActivityIndicator,
     KeyboardAvoidingView,
     Platform,
-    ScrollView,
     StatusBar,
-    Text,
-    TouchableOpacity,
-    View,
+    TouchableOpacity
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import * as Yup from 'yup';
@@ -22,6 +19,9 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { CircleCheckIcon, HelpCircleIcon, LucideIcon } from 'lucide-react-native';
 import { useDispatch } from 'react-redux';
 import CustomToast from '../../../components/Custom/CustomToast';
+import ParallaxScrollView from '../../../components/ParallaxScrollView';
+import { ThemedText } from '../../../components/ThemedText';
+import { ThemedView } from '../../../components/ThemedView';
 import { useToast } from '../../../components/ui/toast';
 import { ApiError, LoginFormValues } from '../../../models';
 import { AppDispatch, useAppSelector } from '../../../store';
@@ -169,13 +169,11 @@ export default function LoginScreen() {
                 behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
                 className="flex-1"
             >
-                <ScrollView
-                    className="flex-1"
-                    showsVerticalScrollIndicator={false}
-                    keyboardShouldPersistTaps="handled"
+                <ParallaxScrollView
+                    headerBackgroundColor={{ light: "white", dark: "#353636" }}
                 >
                     {/* Header */}
-                    <View className="flex-row items-center justify-between px-6 py-4">
+                    <ThemedView className="flex-row items-center justify-between px-6 py-4">
                         <TouchableOpacity
                             onPress={() => router.back()}
                             className="p-2 -ml-2"
@@ -183,24 +181,24 @@ export default function LoginScreen() {
                             <Icon as={ArrowLeftIcon} size="lg" className="text-gray-700" />
                         </TouchableOpacity>
 
-                        <Text className="text-lg font-semibold text-gray-900" style={{ fontFamily: 'Poppins-SemiBold' }}>
+                        <ThemedText className="text-lg font-semibold text-gray-900" style={{ fontFamily: 'Poppins-SemiBold' }}>
                             Login
-                        </Text>
+                        </ThemedText>
 
-                        <View className="w-8" />
-                    </View>
+                        <ThemedView className="w-8" />
+                    </ThemedView>
 
                     {/* Content */}
-                    <View className="flex-1 px-6 pt-8">
+                    <ThemedView className="flex-1 px-6 pt-8">
                         {/* Welcome Text */}
-                        <View className="mb-8">
-                            <Text className="text-2xl font-bold text-gray-900 mb-2" style={{ fontFamily: 'Poppins-Bold' }}>
+                        <ThemedView className="mb-8">
+                            <ThemedText className="text-2xl font-bold text-gray-900 mb-2" style={{ fontFamily: 'Poppins-Bold' }}>
                                 Welcome Back
-                            </Text>
-                            <Text className="text-base text-gray-600 leading-6" style={{ fontFamily: 'Inter-Regular' }}>
+                            </ThemedText>
+                            <ThemedText className="text-base text-gray-600 leading-6" style={{ fontFamily: 'Inter-Regular' }}>
                                 Sign in to your account to accept and track deliveries
-                            </Text>
-                        </View>
+                            </ThemedText>
+                        </ThemedView>
 
                         {/* Login Form */}
                         <Formik
@@ -209,12 +207,12 @@ export default function LoginScreen() {
                             onSubmit={handleLogin}
                         >
                             {({ handleChange, handleBlur, handleSubmit, values, errors, touched }) => (
-                                <View className="space-y-6">
+                                <ThemedView className="space-y-6">
                                     {/* Email Input */}
-                                    <View>
-                                        <Text className="text-sm font-medium text-gray-700 mb-3" style={{ fontFamily: 'Inter-Regular' }}>
+                                    <ThemedView>
+                                        <ThemedText className="text-sm font-medium text-gray-700 mb-3" style={{ fontFamily: 'Inter-Regular' }}>
                                             Email address
-                                        </Text>
+                                        </ThemedText>
                                         <Input
                                             variant="outline"
                                             size="lg"
@@ -235,17 +233,17 @@ export default function LoginScreen() {
                                             />
                                         </Input>
                                         {errors.email && touched.email && (
-                                            <Text className="text-red-500 text-sm mt-1">
+                                            <ThemedText className="text-red-500 text-sm mt-1">
                                                 {errors.email}
-                                            </Text>
+                                            </ThemedText>
                                         )}
-                                    </View>
+                                    </ThemedView>
 
                                     {/* Password Input */}
-                                    <View>
-                                        <Text className="text-sm font-medium text-gray-700  mt-8 mb-3" style={{ fontFamily: 'Inter-Regular' }}>
+                                    <ThemedView>
+                                        <ThemedText className="text-sm font-medium text-gray-700  mt-8 mb-3" style={{ fontFamily: 'Inter-Regular' }}>
                                             Password
-                                        </Text>
+                                        </ThemedText>
                                         <Input
                                             variant="outline"
                                             size="lg"
@@ -264,7 +262,7 @@ export default function LoginScreen() {
                                                 className="text-gray-800"
                                             />
                                             {touched.password && errors.password && (
-                                                <Text style={{ color: "red", fontSize: 12 }}>{errors.password}</Text>
+                                                <ThemedText style={{ color: "red", fontSize: 12 }}>{errors.password}</ThemedText>
                                             )}
                                             <InputSlot className="pr-3" onPress={() => setShowPassword(!showPassword)}>
                                                 <Icon
@@ -275,9 +273,9 @@ export default function LoginScreen() {
                                             </InputSlot>
                                         </Input>
                                         {touched.password && errors.password && (
-                                            <Text style={{ color: "red", fontSize: 12 }}>{errors.password}</Text>
+                                            <ThemedText style={{ color: "red", fontSize: 12 }}>{errors.password}</ThemedText>
                                         )}
-                                    </View>
+                                    </ThemedView>
 
                                     {/* Login Button */}
                                     <Button
@@ -296,20 +294,20 @@ export default function LoginScreen() {
                                         onPress={() => router.push('/screens/onboarding/forgot-password')}
                                         className="items-center py-2"
                                     >
-                                        <Text className="text-[#E75B3B] mt-3 font-medium" style={{ fontFamily: 'Inter-Regular' }}>
+                                        <ThemedText className="text-[#E75B3B] mt-3 font-medium" style={{ fontFamily: 'Inter-Regular' }}>
                                             Forgot Password?
-                                        </Text>
+                                        </ThemedText>
                                     </TouchableOpacity>
 
                                     {/* Divider */}
-                                    <View className="flex-row items-center my-6">
-                                        <View className="flex-1 h-px bg-gray-300" />
-                                        <Text className="px-4 text-gray-500 text-sm" style={{ fontFamily: 'Inter-Regular' }}>or</Text>
-                                        <View className="flex-1 h-px bg-gray-300" />
-                                    </View>
+                                    <ThemedView className="flex-row items-center my-6">
+                                        <ThemedView className="flex-1 h-px bg-gray-300" />
+                                        <ThemedText className="px-4 text-gray-500 text-sm" style={{ fontFamily: 'Inter-Regular' }}>or</ThemedText>
+                                        <ThemedView className="flex-1 h-px bg-gray-300" />
+                                    </ThemedView>
 
                                     {/* Social Login Buttons */}
-                                    <View className="flex-row justify-between gap-4">
+                                    <ThemedView className="flex-row justify-between gap-4">
                                         {/* Facebook */}
                                         <TouchableOpacity
                                             onPress={() => handleSocialLogin('facebook')}
@@ -333,24 +331,24 @@ export default function LoginScreen() {
                                         >
                                             <Icon as={Apple} size='xl'></Icon>
                                         </TouchableOpacity>
-                                    </View>
-                                </View>
+                                    </ThemedView>
+                                </ThemedView>
                             )}
                         </Formik>
-                    </View>
-                </ScrollView>
+                    </ThemedView>
+                </ParallaxScrollView>
 
                 {/* Bottom Sign Up Link */}
-                <View className="px-6 py-6 border-t border-gray-200">
-                    <View className="flex-row justify-center items-center">
-                        <Text className="text-gray-600" style={{ fontFamily: 'Inter-Regular' }}>You don't have an account? </Text>
+                <ThemedView className="px-6 py-6 border-t border-gray-200">
+                    <ThemedView className="flex-row justify-center items-center">
+                        <ThemedText className="text-gray-600" style={{ fontFamily: 'Inter-Regular' }}>You don't have an account? </ThemedText>
                         <TouchableOpacity
                             onPress={() => router.push('/screens/onboarding/welcome')}
                         >
-                            <Text className="text-[#E75B3B] font-semibold" style={{ fontFamily: 'Inter-Regular' }}>Sign up</Text>
+                            <ThemedText className="text-[#E75B3B] font-semibold" style={{ fontFamily: 'Inter-Regular' }}>Sign up</ThemedText>
                         </TouchableOpacity>
-                    </View>
-                </View>
+                    </ThemedView>
+                </ThemedView>
             </KeyboardAvoidingView>
         </SafeAreaView>
     );

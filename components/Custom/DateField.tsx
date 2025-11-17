@@ -3,7 +3,7 @@ import { ThemedView } from "@/components/ThemedView";
 import AntDesign from "@expo/vector-icons/AntDesign";
 import DateTimePicker, { DateTimePickerEvent } from "@react-native-community/datetimepicker";
 import React, { useMemo, useState } from "react";
-import { Modal, Platform, Pressable, View } from "react-native";
+import { Modal, Platform, Pressable } from "react-native";
 
 export type DateFieldProps = {
   value?: Date | null;
@@ -16,28 +16,28 @@ export type DateFieldProps = {
   display?: "default" | "spinner" | "calendar" | "clock" | "inline" | "compact";
   className?: string;
   labelClassName?:
-    | "default"
-    | "link"
-    | "h1_header"
-    | "h2_header"
-    | "h3_header"
-    | "h4_header"
-    | "h5_header"
-    | "s1_subtitle"
-    | "s2_subtitle"
-    | "b2_body"
-    | "b3_body"
-    | "b4_body"
-    | "c1_caption"
-    | "c2_caption"
-    | "c3_caption"
-    | "label_text"
-    | "btn_giant"
-    | "btn_large"
-    | "btn_medium"
-    | "btn_small"
-    | "btn_tiny"
-    | undefined;
+  | "default"
+  | "link"
+  | "h1_header"
+  | "h2_header"
+  | "h3_header"
+  | "h4_header"
+  | "h5_header"
+  | "s1_subtitle"
+  | "s2_subtitle"
+  | "b2_body"
+  | "b3_body"
+  | "b4_body"
+  | "c1_caption"
+  | "c2_caption"
+  | "c3_caption"
+  | "label_text"
+  | "btn_giant"
+  | "btn_large"
+  | "btn_medium"
+  | "btn_small"
+  | "btn_tiny"
+  | undefined;
   format?: (d: Date) => string;
 };
 
@@ -162,10 +162,10 @@ const DateField: React.FC<DateFieldProps> = ({
             className="flex-1 bg-black/40"
             onPress={() => setOpenDate(false)}
           >
-            <View className="mt-auto bg-white rounded-t-3xl p-4">
-              <View className="items-center">
-                <View className="w-12 h-1.5 bg-background-300 rounded-full mb-3" />
-              </View>
+            <ThemedView className="mt-auto bg-white rounded-t-3xl p-4">
+              <ThemedView className="items-center">
+                <ThemedView className="w-12 h-1.5 bg-background-300 rounded-full mb-3" />
+              </ThemedView>
               <DateTimePicker
                 value={temp}
                 mode={mode === "datetime" ? "date" : mode}
@@ -175,7 +175,7 @@ const DateField: React.FC<DateFieldProps> = ({
                 maximumDate={maximumDate}
                 themeVariant="light"
               />
-              <View className="flex-row justify-end gap-4 mt-3">
+              <ThemedView className="flex-row justify-end gap-4 mt-3">
                 <Pressable onPress={() => setOpenDate(false)}>
                   <ThemedText className="text-typography-700">Cancel</ThemedText>
                 </Pressable>
@@ -184,8 +184,8 @@ const DateField: React.FC<DateFieldProps> = ({
                     Confirm
                   </ThemedText>
                 </Pressable>
-              </View>
-            </View>
+              </ThemedView>
+            </ThemedView>
           </Pressable>
         </Modal>
       )}

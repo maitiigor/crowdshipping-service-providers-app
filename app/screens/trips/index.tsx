@@ -3,10 +3,10 @@ import { Icon } from '@/components/ui/icon';
 import { Href, router, useNavigation } from 'expo-router';
 import { ChevronLeft, SearchIcon } from 'lucide-react-native';
 import React, { useEffect, useState } from 'react';
-import { ActivityIndicator, ScrollView, Text, TextInput, TouchableOpacity, View } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import { ActivityIndicator, TextInput, TouchableOpacity } from 'react-native';
 import GroundTripCard from '../../../components/Custom/GroundTripCard';
 import NotificationIconComponent from '../../../components/NotificationIconComponent';
+import ParallaxScrollView from '../../../components/ParallaxScrollView';
 import { ThemedText } from '../../../components/ThemedText';
 import { ThemedView } from '../../../components/ThemedView';
 import { useShowToast } from '../../../hooks/useShowToast';
@@ -165,25 +165,25 @@ export default function TripHistoryScreen() {
         if (selectedTransportType === 'Maritime') {
             if (loadingTrips) {
                 return (
-                    <View className="items-center py-6">
+                    <ThemedView className="items-center py-6">
                         <ActivityIndicator size="small" color="#E75B3B" />
-                        <Text className="text-gray-500 mt-2">Loading maritime trips...</Text>
-                    </View>
+                        <ThemedText className="text-gray-500 mt-2">Loading maritime trips...</ThemedText>
+                    </ThemedView>
                 );
             }
 
             if (marineTripsError) {
                 return (
-                    <View className="bg-red-50 border border-red-100 rounded-2xl p-5">
-                        <Text className="text-red-600 font-medium mb-2">Unable to load maritime trips</Text>
-                        <Text className="text-red-600 mb-3">{marineTripsError.message}</Text>
+                    <ThemedView className="bg-red-50 border border-red-100 rounded-2xl p-5">
+                        <ThemedText className="text-red-600 font-medium mb-2">Unable to load maritime trips</ThemedText>
+                        <ThemedText className="text-red-600 mb-3">{marineTripsError.message}</ThemedText>
                         <TouchableOpacity
                             onPress={() => retryFetchTrips('Maritime')}
                             className="self-start bg-[#E75B3B] px-5 py-2 rounded-lg"
                         >
-                            <Text className="text-white font-medium">Try again</Text>
+                            <ThemedText className="text-white font-medium">Try again</ThemedText>
                         </TouchableOpacity>
-                    </View>
+                    </ThemedView>
                 );
             }
 
@@ -191,11 +191,11 @@ export default function TripHistoryScreen() {
 
             if (filtered.length === 0) {
                 return (
-                    <View className="bg-white border border-dashed border-gray-300 rounded-2xl p-6 items-center">
-                        <Text className="text-gray-600 text-center">
+                    <ThemedView className="bg-white border border-dashed border-gray-300 rounded-2xl p-6 items-center">
+                        <ThemedText className="text-gray-600 text-center">
                             No {activeTab.toLowerCase()} maritime trips found.
-                        </Text>
-                    </View>
+                        </ThemedText>
+                    </ThemedView>
                 );
             }
 
@@ -207,25 +207,25 @@ export default function TripHistoryScreen() {
         if (selectedTransportType === 'Air') {
             if (airTripsLoading) {
                 return (
-                    <View className="items-center py-6">
+                    <ThemedView className="items-center py-6">
                         <ActivityIndicator size="small" color="#E75B3B" />
-                        <Text className="text-gray-500 mt-2">Loading air trips...</Text>
-                    </View>
+                        <ThemedText className="text-gray-500 mt-2">Loading air trips...</ThemedText>
+                    </ThemedView>
                 );
             }
 
             if (airTripsError) {
                 return (
-                    <View className="bg-red-50 border border-red-100 rounded-2xl p-5">
-                        <Text className="text-red-600 font-medium mb-2">Unable to load air trips</Text>
-                        <Text className="text-red-600 mb-3">{airTripsError.message}</Text>
+                    <ThemedView className="bg-red-50 border border-red-100 rounded-2xl p-5">
+                        <ThemedText className="text-red-600 font-medium mb-2">Unable to load air trips</ThemedText>
+                        <ThemedText className="text-red-600 mb-3">{airTripsError.message}</ThemedText>
                         <TouchableOpacity
                             onPress={() => retryFetchTrips('Air')}
                             className="self-start bg-[#E75B3B] px-5 py-2 rounded-lg"
                         >
-                            <Text className="text-white font-medium">Try again</Text>
+                            <ThemedText className="text-white font-medium">Try again</ThemedText>
                         </TouchableOpacity>
-                    </View>
+                    </ThemedView>
                 );
             }
 
@@ -233,11 +233,11 @@ export default function TripHistoryScreen() {
 
             if (filtered.length === 0) {
                 return (
-                    <View className="bg-white border border-dashed border-gray-300 rounded-2xl p-6 items-center">
-                        <Text className="text-gray-600 text-center">
+                    <ThemedView className="bg-white border border-dashed border-gray-300 rounded-2xl p-6 items-center">
+                        <ThemedText className="text-gray-600 text-center">
                             No {activeTab.toLowerCase()} air trips found.
-                        </Text>
-                    </View>
+                        </ThemedText>
+                    </ThemedView>
                 );
             }
 
@@ -249,25 +249,25 @@ export default function TripHistoryScreen() {
         if (selectedTransportType === 'Ground') {
             if (groundTripLoading) {
                 return (
-                    <View className="items-center py-6">
+                    <ThemedView className="items-center py-6">
                         <ActivityIndicator size="small" color="#E75B3B" />
-                        <Text className="text-gray-500 mt-2">Loading ground trips...</Text>
-                    </View>
+                        <ThemedText className="text-gray-500 mt-2">Loading ground trips...</ThemedText>
+                    </ThemedView>
                 );
             }
 
             if (groundTripError) {
                 return (
-                    <View className="bg-red-50 border border-red-100 rounded-2xl p-5">
-                        <Text className="text-red-600 font-medium mb-2">Unable to load ground trips</Text>
-                        <Text className="text-red-600 mb-3">{groundTripError.message}</Text>
+                    <ThemedView className="bg-red-50 border border-red-100 rounded-2xl p-5">
+                        <ThemedText className="text-red-600 font-medium mb-2">Unable to load ground trips</ThemedText>
+                        <ThemedText className="text-red-600 mb-3">{groundTripError.message}</ThemedText>
                         <TouchableOpacity
                             onPress={() => retryFetchTrips('Ground')}
                             className="self-start bg-[#E75B3B] px-5 py-2 rounded-lg"
                         >
-                            <Text className="text-white font-medium">Try again</Text>
+                            <ThemedText className="text-white font-medium">Try again</ThemedText>
                         </TouchableOpacity>
-                    </View>
+                    </ThemedView>
                 );
             }
 
@@ -275,11 +275,11 @@ export default function TripHistoryScreen() {
 
             if (filtered.length === 0) {
                 return (
-                    <View className="bg-white border border-dashed border-gray-300 rounded-2xl p-6 items-center">
-                        <Text className="text-gray-600 text-center">
+                    <ThemedView className="bg-white border border-dashed border-gray-300 rounded-2xl p-6 items-center">
+                        <ThemedText className="text-gray-600 text-center">
                             No {activeTab.toLowerCase()} ground trips found.
-                        </Text>
-                    </View>
+                        </ThemedText>
+                    </ThemedView>
                 );
             }
 
@@ -374,134 +374,133 @@ export default function TripHistoryScreen() {
 
 
     return (
-        <SafeAreaView className="flex-1 bg-gray-50">
+        <ParallaxScrollView headerBackgroundColor={{ light: "#FFFFFF", dark: "#353636" }}>
 
             {/* Booking List */}
-            <ScrollView className="flex-1 px-4">
 
-                {/* My Posted Trips */}
-                <View className="px-4 mb-3">
-                    {/* <Text className="text-xl font-bold text-gray-900 mb-4">My Posted Trips</Text> */}
+            {/* My Posted Trips */}
+            <ThemedView className="px-4 mb-3">
+                {/* <ThemedText className="text-xl font-bold text-gray-900 mb-4">My Posted Trips</ThemedText> */}
 
-                    {/* <MaritimeSummaryCard trip={marineTrips[0]} /> */}
+                {/* <MaritimeSummaryCard trip={marineTrips[0]} /> */}
 
-                    {/* Transport Tabs */}
-                    <View className="flex-row gap-3">
-                        {transportTypes.map((transport) => {
-                            const isActive = selectedTransportType === transport.type;
-                            const IconComponent = transport.IconComponent;
-
-                            return (
-                                <>
-
-                                    <TouchableOpacity
-                                        key={transport.type}
-                                        onPress={() => setSelectedTransportType(transport.type)}
-                                        className={`flex-1 items-center justify-center py-5 rounded-2xl ${isActive ? 'bg-[#E75B3B]' : 'bg-white'}`}
-                                        activeOpacity={isActive ? 0.8 : 1}
-                                    >
-                                        <View className="items-center">
-                                            <IconComponent isActive={isActive} />
-                                            <Text className={`mt-2 text-sm capitalize ${isActive ? 'text-white font-medium' : 'text-gray-700'}`}>
-                                                {transport.type}
-                                            </Text>
-                                        </View>
-                                    </TouchableOpacity>
-                                </>
-                            );
-                        })}
-                    </View>
-                </View>
-
-                {/* Posted Trips Content */}
-                <View className="mt-2 flex-row justify-between items-center mb-4 gap-3">
+                {/* Transport Tabs */}
+                <ThemedView className="flex-row gap-3">
                     {transportTypes.map((transport) => {
+                        const isActive = selectedTransportType === transport.type;
+                        const IconComponent = transport.IconComponent;
 
                         return (
-                            <View className={`px-4 mb-6 ${transport.type === selectedTransportType ? '' : 'hidden'}`} key={transport.type}>
-                                {transport.type === 'Ground' ? (
-                                    <View className="mb-6">
+                            <>
 
-                                        <View className="flex-row justify-between items-center gap-2 mb-4">
-                                            {['All', 'Accepted', 'Rejected'].map((status) => (
-                                                <TouchableOpacity
-                                                    key={status}
-                                                    className={`py-2 gap-2 rounded-full flex items-center justify-center ${getTabStyle(status as TripStatus)}`}
-                                                    style={{ width: '33%' }}
-                                                    onPress={() => setActiveTab(status as TripStatus)}
-                                                >
-                                                    <Text className={`font-medium text-center ${activeTab === status ? 'text-white' : 'text-gray-600'}`}>
-                                                        {status}
-                                                    </Text>
-                                                </TouchableOpacity>
-                                            ))}
-                                        </View>
+                                <TouchableOpacity
+                                    key={transport.type}
+                                    onPress={() => setSelectedTransportType(transport.type)}
+                                    className={`flex-1 items-center justify-center py-5 rounded-2xl ${isActive ? 'bg-[#E75B3B]' : 'bg-white'}`}
+                                    activeOpacity={isActive ? 0.8 : 1}
+                                >
+                                    <ThemedView className="items-center">
+                                        <IconComponent isActive={isActive} />
+                                        <ThemedText className={`mt-2 text-sm capitalize ${isActive ? 'text-white font-medium' : 'text-gray-700'}`}>
+                                            {transport.type}
+                                        </ThemedText>
+                                    </ThemedView>
+                                </TouchableOpacity>
+                            </>
+                        );
+                    })}
+                </ThemedView>
+            </ThemedView>
 
-                                        <View className="bg-white mt-2 mb-3 rounded-xl border-[#F4B4A5] h-[48px] border border-gray-200 flex-row px-3 items-center shadow-sm">
-                                            <SearchIcon />
-                                            <TextInput
-                                                placeholder="Search by tracking ID, pickup, or dropoff..."
-                                                className="flex-1 ml-3 text-gray-700"
-                                                placeholderTextColor="#9CA3AF"
-                                                value={searchQuery}
-                                                onChangeText={setSearchQuery}
-                                            />
-                                        </View>
+            {/* Posted Trips Content */}
+            <ThemedView className="mt-2 flex-row justify-between items-center mb-4 gap-3">
+                {transportTypes.map((transport) => {
 
+                    return (
+                        <ThemedView className={`px-4 mb-6 ${transport.type === selectedTransportType ? '' : 'hidden'}`} key={transport.type}>
+                            {transport.type === 'Ground' ? (
+                                <ThemedView className="mb-6">
 
+                                    <ThemedView className="flex-row justify-between items-center gap-2 mb-4">
+                                        {['All', 'Accepted', 'Rejected'].map((status) => (
+                                            <TouchableOpacity
+                                                key={status}
+                                                className={`py-2 gap-2 rounded-full flex items-center justify-center ${getTabStyle(status as TripStatus)}`}
+                                                style={{ width: '33%' }}
+                                                onPress={() => setActiveTab(status as TripStatus)}
+                                            >
+                                                <ThemedText className={`font-medium text-center ${activeTab === status ? 'text-white' : 'text-gray-600'}`}>
+                                                    {status}
+                                                </ThemedText>
+                                            </TouchableOpacity>
+                                        ))}
+                                    </ThemedView>
 
-                                        {renderMyPostedTripContent()}
-                                    </View>
-                                ) : (
-                                    <View className="mb-6">
-
-
-                                        <View className="flex-row gap-2 justify-between items-center mb-4">
-                                            {['All', 'Concluded', 'Cancelled'].map((status) => (
-                                                <TouchableOpacity
-                                                    key={status}
-                                                    className={`px-4 py-2 rounded-full flex items-center justify-center ${getTabStyle(status as TripStatus)}`}
-                                                    style={{ width: '33%' }}
-                                                    onPress={() => setActiveTab(status as TripStatus)}
-                                                >
-                                                    <Text className={`font-medium text-center ${activeTab === status ? 'text-white' : 'text-gray-600'}`}>
-                                                        {status}
-                                                    </Text>
-                                                </TouchableOpacity>
-                                            ))}
-                                        </View>
-
-                                        <View className="bg-white rounded-xl border-[#F4B4A5] h-[48px] border border-gray-200 flex-row px-3 items-center shadow-sm">
-                                            <SearchIcon />
-                                            <TextInput
-                                                placeholder="Search by tracking ID, pickup, or dropoff..."
-                                                className="flex-1 text-gray-700"
-                                                placeholderTextColor="#9CA3AF"
-                                                value={searchQuery}
-                                                onChangeText={setSearchQuery}
-                                            />
-                                        </View>
+                                    <ThemedView className="bg-white mt-2 mb-3 rounded-xl border-[#F4B4A5] h-[48px] border border-gray-200 flex-row px-3 items-center shadow-sm">
+                                        <SearchIcon />
+                                        <TextInput
+                                            placeholder="Search by tracking ID, pickup, or dropoff..."
+                                            className="flex-1 ml-3 text-gray-700"
+                                            placeholderTextColor="#9CA3AF"
+                                            value={searchQuery}
+                                            onChangeText={setSearchQuery}
+                                        />
+                                    </ThemedView>
 
 
-                                        {/* <TouchableOpacity
+
+                                    {renderMyPostedTripContent()}
+                                </ThemedView>
+                            ) : (
+                                <ThemedView className="mb-6">
+
+
+                                    <ThemedView className="flex-row gap-2 justify-between items-center mb-4">
+                                        {['All', 'Concluded', 'Cancelled'].map((status) => (
+                                            <TouchableOpacity
+                                                key={status}
+                                                className={`px-4 py-2 rounded-full flex items-center justify-center ${getTabStyle(status as TripStatus)}`}
+                                                style={{ width: '33%' }}
+                                                onPress={() => setActiveTab(status as TripStatus)}
+                                            >
+                                                <ThemedText className={`font-medium text-center ${activeTab === status ? 'text-white' : 'text-gray-600'}`}>
+                                                    {status}
+                                                </ThemedText>
+                                            </TouchableOpacity>
+                                        ))}
+                                    </ThemedView>
+
+                                    <ThemedView className="bg-white rounded-xl border-[#F4B4A5] h-[48px] border border-gray-200 flex-row px-3 items-center shadow-sm">
+                                        <SearchIcon />
+                                        <TextInput
+                                            placeholder="Search by tracking ID, pickup, or dropoff..."
+                                            className="flex-1 text-gray-700"
+                                            placeholderTextColor="#9CA3AF"
+                                            value={searchQuery}
+                                            onChangeText={setSearchQuery}
+                                        />
+                                    </ThemedView>
+
+
+                                    {/* <TouchableOpacity
                                             className={`px-4 py-2 rounded-full flex items-center justify-center ${getTabStyle('Pending')}`}
                                             style={{ width: '33.33%' }}
                                             onPress={() => setActiveTab('Rejected')}
                                         >
-                                            <Text className={`font-medium text-center ${activeTab === 'Pending' ? 'text-white' : 'text-gray-600'}`}>
+                                            <ThemedText className={`font-medium text-center ${activeTab === 'Pending' ? 'text-white' : 'text-gray-600'}`}>
                                                 Rejected
-                                            </Text>
+                                            </ThemedText>
                                         </TouchableOpacity> */}
 
-                                        {renderMyPostedTripContent()}
-                                    </View>
-                                )}
+                                    {renderMyPostedTripContent()}
+                                </ThemedView>
+                            )}
 
-                            </View>
-                        )
-                    })}
-                </View>
-            </ScrollView>
-        </SafeAreaView>
+                        </ThemedView>
+                    )
+                })}
+            </ThemedView>
+
+        </ParallaxScrollView>
     );
 }

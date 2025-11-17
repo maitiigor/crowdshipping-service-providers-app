@@ -5,7 +5,7 @@ import { Input, InputField } from '@/components/ui/input';
 import { Select, SelectBackdrop, SelectContent, SelectDragIndicator, SelectDragIndicatorWrapper, SelectIcon, SelectInput, SelectItem, SelectPortal, SelectScrollView, SelectTrigger } from '@/components/ui/select';
 import { router } from 'expo-router';
 import React, { useState } from 'react';
-import { Alert, ScrollView, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import { Alert, ScrollView, TextInput, TouchableOpacity } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 export default function NewReportScreen() {
@@ -75,24 +75,24 @@ export default function NewReportScreen() {
     return (
         <SafeAreaView className="flex-1 bg-gray-50">
             {/* Header */}
-            <View className="flex-row items-center justify-between px-4 py-3 bg-white border-b border-gray-100">
+            <ThemedView className="flex-row items-center justify-between px-4 py-3 bg-white border-b border-gray-100">
                 <TouchableOpacity onPress={() => router.back()}>
                     <Icon as={ArrowLeftIcon} size="md" className="text-gray-700" />
                 </TouchableOpacity>
 
-                <Text className="text-xl font-semibold text-gray-900">New Report</Text>
+                <ThemedText className="text-xl font-semibold text-gray-900">New Report</ThemedText>
 
                 <TouchableOpacity onPress={() => router.push('/screens/notifications')}>
                     <Icon as={BellIcon} size="md" className="text-gray-700" />
                 </TouchableOpacity>
-            </View>
+            </ThemedView>
 
             <ScrollView className="flex-1 px-4 py-6">
                 {/* Report Type */}
-                <View className="mb-6">
-                    <Text className="text-base font-medium text-gray-900 mb-2">
-                        Report Type <Text className="text-red-500">*</Text>
-                    </Text>
+                <ThemedView className="mb-6">
+                    <ThemedText className="text-base font-medium text-gray-900 mb-2">
+                        Report Type <ThemedText className="text-red-500">*</ThemedText>
+                    </ThemedText>
                     <Select
                         selectedValue={formData.reportType}
                         onValueChange={(value) => setFormData(prev => ({ ...prev, reportType: value }))}
@@ -119,13 +119,13 @@ export default function NewReportScreen() {
                             </SelectContent>
                         </SelectPortal>
                     </Select>
-                </View>
+                </ThemedView>
 
                 {/* Nature of Report */}
-                <View className="mb-6">
-                    <Text className="text-base font-medium text-gray-900 mb-2">
+                <ThemedView className="mb-6">
+                    <ThemedText className="text-base font-medium text-gray-900 mb-2">
                         Nature of Report:
-                    </Text>
+                    </ThemedText>
                     <Select
                         selectedValue={formData.natureOfReport}
                         onValueChange={(value) => setFormData(prev => ({ ...prev, natureOfReport: value }))}
@@ -152,13 +152,13 @@ export default function NewReportScreen() {
                             </SelectContent>
                         </SelectPortal>
                     </Select>
-                </View>
+                </ThemedView>
 
                 {/* Other Options */}
-                <View className="mb-6">
-                    <Text className="text-base font-medium text-gray-900 mb-2">
+                <ThemedView className="mb-6">
+                    <ThemedText className="text-base font-medium text-gray-900 mb-2">
                         Other Options
-                    </Text>
+                    </ThemedText>
                     <Input>
                         <InputField
                             placeholder="Enter Option"
@@ -166,13 +166,13 @@ export default function NewReportScreen() {
                             onChangeText={(text) => setFormData(prev => ({ ...prev, otherOptions: text }))}
                         />
                     </Input>
-                </View>
+                </ThemedView>
 
                 {/* Report Amount */}
-                <View className="mb-6">
-                    <Text className="text-base font-medium text-gray-900 mb-2">
+                <ThemedView className="mb-6">
+                    <ThemedText className="text-base font-medium text-gray-900 mb-2">
                         Report Amount
-                    </Text>
+                    </ThemedText>
                     <Input>
                         <InputField
                             placeholder="Enter Amount"
@@ -181,13 +181,13 @@ export default function NewReportScreen() {
                             keyboardType="numeric"
                         />
                     </Input>
-                </View>
+                </ThemedView>
 
                 {/* Tracking ID */}
-                <View className="mb-6">
-                    <Text className="text-base font-medium text-gray-900 mb-2">
+                <ThemedView className="mb-6">
+                    <ThemedText className="text-base font-medium text-gray-900 mb-2">
                         Tracking ID
-                    </Text>
+                    </ThemedText>
                     <Input>
                         <InputField
                             placeholder="Enter Tracking ID"
@@ -195,14 +195,14 @@ export default function NewReportScreen() {
                             onChangeText={(text) => setFormData(prev => ({ ...prev, trackingId: text }))}
                         />
                     </Input>
-                </View>
+                </ThemedView>
 
                 {/* Detailed Description */}
-                <View className="mb-6">
-                    <Text className="text-base font-medium text-gray-900 mb-2">
-                        Detailed Description: <Text className="text-red-500">*</Text>
-                    </Text>
-                    <View className="border border-gray-300 rounded-lg p-3 bg-white">
+                <ThemedView className="mb-6">
+                    <ThemedText className="text-base font-medium text-gray-900 mb-2">
+                        Detailed Description: <ThemedText className="text-red-500">*</ThemedText>
+                    </ThemedText>
+                    <ThemedView className="border border-gray-300 rounded-lg p-3 bg-white">
                         <TextInput
                             placeholder="Enter Description"
                             value={formData.detailedDescription}
@@ -213,29 +213,29 @@ export default function NewReportScreen() {
                             className="text-gray-900 text-base"
                             style={{ minHeight: 120 }}
                         />
-                        <Text className="text-xs text-gray-400 text-right mt-2">
+                        <ThemedText className="text-xs text-gray-400 text-right mt-2">
                             0/500
-                        </Text>
-                    </View>
-                </View>
+                        </ThemedText>
+                    </ThemedView>
+                </ThemedView>
 
                 {/* File Upload Section */}
-                <View className="mb-8">
+                <ThemedView className="mb-8">
                     <TouchableOpacity className="border-2 border-dashed border-gray-300 rounded-lg p-8 items-center justify-center bg-white">
-                        <View className="w-12 h-12 bg-orange-100 rounded-full items-center justify-center mb-3">
-                            <Text className="text-[#E75B3B] text-xl">📎</Text>
-                        </View>
-                        <Text className="text-gray-600 text-center font-medium mb-1">
+                        <ThemedView className="w-12 h-12 bg-orange-100 rounded-full items-center justify-center mb-3">
+                            <ThemedText className="text-[#E75B3B] text-xl">📎</ThemedText>
+                        </ThemedView>
+                        <ThemedText className="text-gray-600 text-center font-medium mb-1">
                             Upload photos, videos, receipts, or
-                        </Text>
-                        <Text className="text-gray-600 text-center">
+                        </ThemedText>
+                        <ThemedText className="text-gray-600 text-center">
                             other relevant files.
-                        </Text>
+                        </ThemedText>
                     </TouchableOpacity>
-                </View>
+                </ThemedView>
 
                 {/* Action Buttons */}
-                <View className="flex-row gap-x-4 mb-6">
+                <ThemedView className="flex-row gap-x-4 mb-6">
                     <Button
                         variant="outline"
                         className="flex-1 border-[#E75B3B]"
@@ -250,7 +250,7 @@ export default function NewReportScreen() {
                     >
                         <ButtonText className="text-white">Submit Report</ButtonText>
                     </Button>
-                </View>
+                </ThemedView>
             </ScrollView>
         </SafeAreaView>
     );

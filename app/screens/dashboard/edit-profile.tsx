@@ -2,7 +2,7 @@
 import { ArrowLeftIcon, BellIcon, CalendarDaysIcon, ChevronDownIcon, Icon } from '@/components/ui/icon';
 import { router } from 'expo-router';
 import React, { useState } from 'react';
-import { ScrollView, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import { ScrollView, TextInput, TouchableOpacity } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 interface ProfileData {
@@ -48,8 +48,8 @@ export default function EditProfileScreen() {
         rightIcon?: React.ReactNode,
         onRightIconPress?: () => void
     ) => (
-        <View className="mb-4">
-            <View className="relative">
+        <ThemedView className="mb-4">
+            <ThemedView className="relative">
                 <TextInput
                     value={value}
                     onChangeText={onChangeText}
@@ -65,8 +65,8 @@ export default function EditProfileScreen() {
                         {rightIcon}
                     </TouchableOpacity>
                 )}
-            </View>
-        </View>
+            </ThemedView>
+        </ThemedView>
     );
 
     const renderPickerField = (
@@ -74,34 +74,34 @@ export default function EditProfileScreen() {
         onPress: () => void,
         leftIcon?: React.ReactNode
     ) => (
-        <View className="mb-4">
+        <ThemedView className="mb-4">
             <TouchableOpacity
                 className="w-full px-4 py-4 bg-gray-50 rounded-lg border border-gray-200 flex-row items-center justify-between"
                 onPress={onPress}
             >
-                <View className="flex-row items-center">
-                    {leftIcon && <View className="mr-3">{leftIcon}</View>}
-                    <Text className="text-base text-gray-900">{value}</Text>
-                </View>
+                <ThemedView className="flex-row items-center">
+                    {leftIcon && <ThemedView className="mr-3">{leftIcon}</ThemedView>}
+                    <ThemedText className="text-base text-gray-900">{value}</ThemedText>
+                </ThemedView>
                 <Icon as={ChevronDownIcon} size="sm" className="text-gray-500" />
             </TouchableOpacity>
-        </View>
+        </ThemedView>
     );
 
     return (
         <SafeAreaView className="flex-1 bg-white">
             {/* Header */}
-            <View className="flex-row items-center justify-between px-4 py-3 border-b border-gray-100">
+            <ThemedView className="flex-row items-center justify-between px-4 py-3 border-b border-gray-100">
                 <TouchableOpacity onPress={() => router.back()}>
                     <Icon as={ArrowLeftIcon} size="md" className="text-gray-700" />
                 </TouchableOpacity>
 
-                <Text className="text-xl font-semibold text-gray-900">Edit Profile</Text>
+                <ThemedText className="text-xl font-semibold text-gray-900">Edit Profile</ThemedText>
 
                 <TouchableOpacity>
                     <Icon as={BellIcon} size="md" className="text-gray-700" />
                 </TouchableOpacity>
-            </View>
+            </ThemedView>
 
             <ScrollView className="flex-1 px-4 py-6">
                 {/* Full Name */}
@@ -133,7 +133,7 @@ export default function EditProfileScreen() {
                     profileData.email,
                     (text) => setProfileData({ ...profileData, email: text }),
                     'Enter your email',
-                    <View className="w-5 h-5 bg-gray-300 rounded" />
+                    <ThemedView className="w-5 h-5 bg-gray-300 rounded" />
                 )}
 
                 {/* Country */}
@@ -143,7 +143,7 @@ export default function EditProfileScreen() {
                 )}
 
                 {showCountryPicker && (
-                    <View className="mb-4 bg-gray-50 rounded-lg border border-gray-200">
+                    <ThemedView className="mb-4 bg-gray-50 rounded-lg border border-gray-200">
                         {countries.map((country) => (
                             <TouchableOpacity
                                 key={country}
@@ -153,21 +153,21 @@ export default function EditProfileScreen() {
                                     setShowCountryPicker(false);
                                 }}
                             >
-                                <Text className="text-base text-gray-900">{country}</Text>
+                                <ThemedText className="text-base text-gray-900">{country}</ThemedText>
                             </TouchableOpacity>
                         ))}
-                    </View>
+                    </ThemedView>
                 )}
 
                 {/* Phone Number */}
                 {renderPickerField(
                     profileData.phoneNumber,
                     () => { },
-                    <View className="flex-row items-center">
-                        <View className="w-6 h-4 bg-green-500 mr-1" />
-                        <View className="w-6 h-4 bg-white mr-1" />
-                        <View className="w-6 h-4 bg-green-500" />
-                    </View>
+                    <ThemedView className="flex-row items-center">
+                        <ThemedView className="w-6 h-4 bg-green-500 mr-1" />
+                        <ThemedView className="w-6 h-4 bg-white mr-1" />
+                        <ThemedView className="w-6 h-4 bg-green-500" />
+                    </ThemedView>
                 )}
 
                 {/* Gender */}
@@ -177,7 +177,7 @@ export default function EditProfileScreen() {
                 )}
 
                 {showGenderPicker && (
-                    <View className="mb-4 bg-gray-50 rounded-lg border border-gray-200">
+                    <ThemedView className="mb-4 bg-gray-50 rounded-lg border border-gray-200">
                         {genders.map((gender) => (
                             <TouchableOpacity
                                 key={gender}
@@ -187,10 +187,10 @@ export default function EditProfileScreen() {
                                     setShowGenderPicker(false);
                                 }}
                             >
-                                <Text className="text-base text-gray-900">{gender}</Text>
+                                <ThemedText className="text-base text-gray-900">{gender}</ThemedText>
                             </TouchableOpacity>
                         ))}
-                    </View>
+                    </ThemedView>
                 )}
 
                 {/* Address */}
@@ -202,17 +202,17 @@ export default function EditProfileScreen() {
             </ScrollView>
 
             {/* Update Button */}
-            <View className="px-4 pb-4">
+            <ThemedView className="px-4 pb-4">
                 <TouchableOpacity
                     className="bg-orange-500 py-4 rounded-full flex-row items-center justify-center"
                     onPress={updateProfile}
                 >
-                    <Text className="text-white font-semibold text-base mr-2">Update</Text>
-                    <View className="w-5 h-5 bg-white rounded-full items-center justify-center">
-                        <Text className="text-orange-500 text-xs">✓</Text>
-                    </View>
+                    <ThemedText className="text-white font-semibold text-base mr-2">Update</ThemedText>
+                    <ThemedView className="w-5 h-5 bg-white rounded-full items-center justify-center">
+                        <ThemedText className="text-orange-500 text-xs">✓</ThemedText>
+                    </ThemedView>
                 </TouchableOpacity>
-            </View>
+            </ThemedView>
         </SafeAreaView>
     );
 }

@@ -1,30 +1,27 @@
-import { AntDesign, MaterialIcons } from "@expo/vector-icons";
+import { MaterialIcons } from "@expo/vector-icons";
 import { router, useNavigation } from "expo-router";
 import { ChevronLeft, CircleCheckIcon, Edit, HelpCircleIcon, Plus, Trash2 } from "lucide-react-native";
 import React, { useEffect } from "react";
 import {
-    ActivityIndicator,
     Alert,
     Image,
     ScrollView,
-    Text,
-    TouchableOpacity,
-    View,
+    TouchableOpacity
 } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
 import { useDispatch } from "react-redux";
+import NotificationIconComponent from "../../../components/NotificationIconComponent";
+import ParallaxScrollView from "../../../components/ParallaxScrollView";
+import { ThemedText } from "../../../components/ThemedText";
+import { ThemedView } from "../../../components/ThemedView";
+import { Box } from "../../../components/ui/box";
 import { Button, ButtonText } from "../../../components/ui/button";
+import { HStack } from "../../../components/ui/hstack";
+import { Icon } from "../../../components/ui/icon";
+import { Skeleton, SkeletonText } from "../../../components/ui/skeleton";
 import { useShowToast } from '../../../hooks/useShowToast';
 import { Vehicle } from "../../../models";
 import { AppDispatch, useAppSelector } from "../../../store";
 import { deleteVehicle, fetchVehicles, setVehicle } from "../../../store/slices/vechileSlice";
-import { ThemedView } from "../../../components/ThemedView";
-import { ThemedText } from "../../../components/ThemedText";
-import { Icon } from "../../../components/ui/icon";
-import NotificationIconComponent from "../../../components/NotificationIconComponent";
-import { Box } from "../../../components/ui/box";
-import { Skeleton, SkeletonText } from "../../../components/ui/skeleton";
-import { HStack } from "../../../components/ui/hstack";
 
 interface VehicleCardProps {
     vehicle: Vehicle;
@@ -116,40 +113,40 @@ const VehicleCard: React.FC<VehicleCardProps> = ({ vehicle, onEdit, onDelete }) 
 
             })
         }}>
-            <View className="bg-white rounded-lg p-4 mb-4 shadow-sm border border-gray-100">
-                <View className="flex-row justify-between items-start">
-                    <View className="flex-1">
-                        <Text className="text-lg text-center font-semibold text-gray-900 mb-1">
+            <ThemedView className="bg-white rounded-lg p-4 mb-4 shadow-sm border border-gray-100">
+                <ThemedView className="flex-row justify-between items-start">
+                    <ThemedView className="flex-1">
+                        <ThemedText className="text-lg text-center font-semibold text-gray-900 mb-1">
                             {vehicle.make} {vehicle.model}
-                        </Text>
-                        <Text className="text-sm text-gray-500 mb-1">
+                        </ThemedText>
+                        <ThemedText className="text-sm text-gray-500 mb-1">
                             Car Model: {vehicle.model}-{vehicle.year}
-                        </Text>
-                        <Text className="text-sm text-gray-500 mb-3">
+                        </ThemedText>
+                        <ThemedText className="text-sm text-gray-500 mb-3">
                             {vehicle.licensePlate}
-                        </Text>
-                        <View className="flex-row items-center">
-                            <Text className="text-sm text-gray-500 mr-2">Current Status</Text>
-                            <View className={`px-3 py-1 rounded-full ${getStatusColor(vehicle.status)}`}>
-                                <Text className={`text-xs font-medium ${getStatusTextColor(vehicle.status)}`}>
+                        </ThemedText>
+                        <ThemedView className="flex-row items-center">
+                            <ThemedText className="text-sm text-gray-500 mr-2">Current Status</ThemedText>
+                            <ThemedView className={`px-3 py-1 rounded-full ${getStatusColor(vehicle.status)}`}>
+                                <ThemedText className={`text-xs font-medium ${getStatusTextColor(vehicle.status)}`}>
                                     {getStatusText(vehicle.status)}
-                                </Text>
-                            </View>
-                        </View>
-                    </View>
+                                </ThemedText>
+                            </ThemedView>
+                        </ThemedView>
+                    </ThemedView>
 
                     {/* Vehicle Image */}
-                    <View className="ml-4">
+                    <ThemedView className="ml-4">
                         <Image
                             source={getVehicleImage()}
                             className="w-20 h-16 rounded-lg"
                             resizeMode="contain"
                         />
-                    </View>
-                </View>
+                    </ThemedView>
+                </ThemedView>
 
                 {/* Action Buttons */}
-                <View className="flex-row justify-end mt-4 space-x-2">
+                <ThemedView className="flex-row justify-end mt-4 space-x-2">
                     {/* Delete Button */}
                     <TouchableOpacity
                         onPress={handleDelete}
@@ -167,8 +164,8 @@ const VehicleCard: React.FC<VehicleCardProps> = ({ vehicle, onEdit, onDelete }) 
                             <Edit size={20} color="white" />
                         </TouchableOpacity>
                     )}
-                </View>
-            </View>
+                </ThemedView>
+            </ThemedView>
         </TouchableOpacity>
 
     );
@@ -226,92 +223,92 @@ export default function MyVehiclesScreen() {
     const navigation = useNavigation();
 
     useEffect(() => {
-            navigation.setOptions({
-                headerShown: true,
-                headerTitle: () => {
-                    return (
-                        <ThemedText type="s1_subtitle" className="text-center">
-                            My Vehicles
-                        </ThemedText>
-                    );
-                },
-                headerTitleAlign: "center",
-                headerTitleStyle: { fontSize: 20 }, // Increased font size
-                headerShadowVisible: false,
-                headerStyle: {
-                    backgroundColor: "#FFFFFF",
-                    elevation: 0, // Android
-                    shadowOpacity: 0, // iOS
-                    shadowColor: "transparent", // iOS
-                    borderBottomWidth: 0,
-                },
-                headerLeft: () => (
+        navigation.setOptions({
+            headerShown: true,
+            headerTitle: () => {
+                return (
+                    <ThemedText type="s1_subtitle" className="text-center">
+                        My Vehicles
+                    </ThemedText>
+                );
+            },
+            headerTitleAlign: "center",
+            headerTitleStyle: { fontSize: 20 }, // Increased font size
+            headerShadowVisible: false,
+            headerStyle: {
+                backgroundColor: "#FFFFFF",
+                elevation: 0, // Android
+                shadowOpacity: 0, // iOS
+                shadowColor: "transparent", // iOS
+                borderBottomWidth: 0,
+            },
+            headerLeft: () => (
+                <ThemedView
+                    style={{
+                        shadowColor: "#FDEFEB1A",
+                        shadowOffset: { width: 0, height: 1 },
+                        shadowOpacity: 0.102,
+                        shadowRadius: 3,
+                        elevation: 4,
+                    }}
+                >
                     <ThemedView
                         style={{
-                            shadowColor: "#FDEFEB1A",
+                            shadowColor: "#0000001A",
                             shadowOffset: { width: 0, height: 1 },
                             shadowOpacity: 0.102,
-                            shadowRadius: 3,
-                            elevation: 4,
+                            shadowRadius: 2,
+                            elevation: 2,
                         }}
                     >
-                        <ThemedView
-                            style={{
-                                shadowColor: "#0000001A",
-                                shadowOffset: { width: 0, height: 1 },
-                                shadowOpacity: 0.102,
-                                shadowRadius: 2,
-                                elevation: 2,
-                            }}
+                        <TouchableOpacity
+                            onPress={() => navigation.goBack()}
+                            className="p-2 rounded   flex justify-center items-center"
                         >
-                            <TouchableOpacity
-                                onPress={() => navigation.goBack()}
-                                className="p-2 rounded   flex justify-center items-center"
-                            >
-                                <Icon
-                                    as={ChevronLeft}
-                                    size="3xl"
-                                    className="text-typography-900"
-                                />
-                            </TouchableOpacity>
-                        </ThemedView>
+                            <Icon
+                                as={ChevronLeft}
+                                size="3xl"
+                                className="text-typography-900"
+                            />
+                        </TouchableOpacity>
                     </ThemedView>
-                ),
-                headerRight: () => <NotificationIconComponent />,
-            });
-        }, [navigation, router]);
+                </ThemedView>
+            ),
+            headerRight: () => <NotificationIconComponent />,
+        });
+    }, [navigation, router]);
 
     return (
-        <SafeAreaView className="flex-1 bg-gray-50">
-          
-            
+        <ParallaxScrollView headerBackgroundColor={{ light: "#FFFFFF", dark: "#353636" }}>
+
+
 
             {/* Content */}
-            <View className="flex-1 px-6 pt-4">
+            <ThemedView className="flex-1 px-6 pt-4">
                 {loading ? (
                     Array.from({ length: 7 }).map((_: any, index: number) => (
-                            <ThemedView key={index} className="w-full">
-                                <Box className="w-full gap-4 p-3 rounded-md ">
-                                    <SkeletonText _lines={3} className="h-2" />
-                                    <HStack className="gap-1 align-middle">
-                                        <Skeleton
-                                            variant="circular"
-                                            className="h-[24px] w-[28px] mr-2"
-                                        />
-                                        <SkeletonText _lines={2} gap={1} className="h-2 w-2/5" />
-                                    </HStack>
-                                </Box>
-                            </ThemedView>
-                        ))
+                        <ThemedView key={index} className="w-full">
+                            <Box className="w-full gap-4 p-3 rounded-md ">
+                                <SkeletonText _lines={3} className="h-2" />
+                                <HStack className="gap-1 align-middle">
+                                    <Skeleton
+                                        variant="circular"
+                                        className="h-[24px] w-[28px] mr-2"
+                                    />
+                                    <SkeletonText _lines={2} gap={1} className="h-2 w-2/5" />
+                                </HStack>
+                            </Box>
+                        </ThemedView>
+                    ))
                 ) : vehicles.length === 0 ? (
-                    <View className="flex-1 justify-center items-center">
+                    <ThemedView className="flex-1 justify-center items-center">
                         <MaterialIcons name="directions-car" size={64} color="#9CA3AF" />
-                        <Text className="text-lg font-medium text-gray-900 mt-4 mb-2">
+                        <ThemedText className="text-lg font-medium text-gray-900 mt-4 mb-2">
                             No Vehicles Added
-                        </Text>
-                        <Text className="text-gray-600 text-center mb-6">
+                        </ThemedText>
+                        <ThemedText className="text-gray-600 text-center mb-6">
                             You haven't added any vehicles yet. Add your first vehicle to get started.
-                        </Text>
+                        </ThemedText>
                         <Button
                             onPress={handleAddVehicle}
                             className="bg-[#E75B3B] rounded-lg px-6 py-2   flex-row items-center justify-center"
@@ -320,7 +317,7 @@ export default function MyVehiclesScreen() {
                                 Add Your First Vehicle
                             </ButtonText>
                         </Button>
-                    </View>
+                    </ThemedView>
                 ) : (
                     <>
                         <ScrollView
@@ -339,7 +336,7 @@ export default function MyVehiclesScreen() {
                         </ScrollView>
 
                         {/* Add Vehicle Button */}
-                        <View className="absolute bottom-6 left-6 right-6">
+                        <ThemedView className="absolute bottom-6 left-6 right-6">
                             <Button
                                 onPress={handleAddVehicle}
                                 className="bg-[#E75B3B] rounded-lg flex-row items-center justify-center"
@@ -349,10 +346,10 @@ export default function MyVehiclesScreen() {
                                     Add Vehicle
                                 </ButtonText>
                             </Button>
-                        </View>
+                        </ThemedView>
                     </>
                 )}
-            </View>
-        </SafeAreaView>
+            </ThemedView>
+        </ParallaxScrollView>
     );
 }

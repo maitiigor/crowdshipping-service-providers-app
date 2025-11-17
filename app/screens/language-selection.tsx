@@ -5,10 +5,8 @@ import { useTranslation } from 'react-i18next';
 import {
     ScrollView,
     StatusBar,
-    Text,
     TextInput,
-    TouchableOpacity,
-    View,
+    TouchableOpacity
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Icon, SearchIcon } from '../../components/ui/icon';
@@ -89,42 +87,42 @@ export default function LanguageSelectionScreen() {
             <StatusBar barStyle="dark-content" backgroundColor="white" />
 
             {/* Header */}
-            <View className="px-4 py-4 pt-8">
+            <ThemedView className="px-4 py-4 pt-8">
                 {/* Title */}
-                <Text className="text-3xl font-bold text-gray-900 mb-4">
+                <ThemedText className="text-3xl font-bold text-gray-900 mb-4">
                     Choose the language
-                </Text>
+                </ThemedText>
 
                 {/* Subtitle */}
-                <Text className="text-gray-600 text-lg mb-2">
+                <ThemedText className="text-gray-600 text-lg mb-2">
                     Select your preferred language below
-                </Text>
-                <Text className="text-gray-600 text-lg mb-8">
+                </ThemedText>
+                <ThemedText className="text-gray-600 text-lg mb-8">
                     This helps us serve you better.
-                </Text>
+                </ThemedText>
 
                 {/* You Selected Section */}
-                <Text className="text-xl font-semibold text-gray-900 mb-4">
+                <ThemedText className="text-xl font-semibold text-gray-900 mb-4">
                     You Selected
-                </Text>
+                </ThemedText>
 
                 {/* Selected Language Display */}
-                <View className="bg-gray-50 rounded-lg p-4 mb-8">
-                    <Text className="text-gray-600 text-lg">
+                <ThemedView className="bg-gray-50 rounded-lg p-4 mb-8">
+                    <ThemedText className="text-gray-600 text-lg">
                         {selectedLanguageName || 'None selected'}
-                    </Text>
-                </View>
+                    </ThemedText>
+                </ThemedView>
 
                 {/* All Languages Section */}
-                <Text className="text-xl font-semibold text-gray-900 mb-4">
+                <ThemedText className="text-xl font-semibold text-gray-900 mb-4">
                     All Languages
-                </Text>
+                </ThemedText>
 
                 {/* Search Bar */}
-                <View className="relative mb-6">
-                    <View className="absolute left-4 top-1/2 transform -translate-y-1/2 z-10">
+                <ThemedView className="relative mb-6">
+                    <ThemedView className="absolute left-4 top-1/2 transform -translate-y-1/2 z-10">
                         <Icon as={SearchIcon} size="md" className="text-gray-400" />
-                    </View>
+                    </ThemedView>
                     <TextInput
                         value={searchQuery}
                         onChangeText={setSearchQuery}
@@ -132,8 +130,8 @@ export default function LanguageSelectionScreen() {
                         placeholderTextColor="#9CA3AF"
                         className="bg-gray-50 rounded-lg pl-12 pr-4 py-4 text-gray-900 text-lg"
                     />
-                </View>
-            </View>
+                </ThemedView>
+            </ThemedView>
 
             {/* Language List */}
             <ScrollView className="flex-1 px-4" showsVerticalScrollIndicator={false}>
@@ -150,25 +148,25 @@ export default function LanguageSelectionScreen() {
                             }`}
                     >
                         {/* Flag */}
-                        <Text className="text-2xl mr-4">
+                        <ThemedText className="text-2xl mr-4">
                             {language.flag}
-                        </Text>
+                        </ThemedText>
 
                         {/* Language Name */}
-                        <Text className={`text-lg font-medium ${selectedLanguage === language.code
+                        <ThemedText className={`text-lg font-medium ${selectedLanguage === language.code
                             ? 'text-[#E75B3B]'
                             : 'text-gray-900'
                             }`}>
                             {language.name}
-                        </Text>
+                        </ThemedText>
 
                         {/* Selection Indicator */}
                         {selectedLanguage === language.code && (
-                            <View className="ml-auto">
-                                <View className="w-6 h-6 bg-[#E75B3B] rounded-full items-center justify-center">
-                                    <Text className="text-white text-sm">✓</Text>
-                                </View>
-                            </View>
+                            <ThemedView className="ml-auto">
+                                <ThemedView className="w-6 h-6 bg-[#E75B3B] rounded-full items-center justify-center">
+                                    <ThemedText className="text-white text-sm">✓</ThemedText>
+                                </ThemedView>
+                            </ThemedView>
                         )}
                     </TouchableOpacity>
                 ))}
@@ -176,16 +174,16 @@ export default function LanguageSelectionScreen() {
 
             {/* Continue Button - Show only when a language is selected */}
             {selectedLanguage && (
-                <View className="px-4 pb-8 pt-4">
+                <ThemedView className="px-4 pb-8 pt-4">
                     <TouchableOpacity
                         className="bg-[#E75B3B] py-4 rounded-xl"
                         onPress={handleContinue}
                     >
-                        <Text className="text-white text-center font-semibold text-base">
+                        <ThemedText className="text-white text-center font-semibold text-base">
                             Continue
-                        </Text>
+                        </ThemedText>
                     </TouchableOpacity>
-                </View>
+                </ThemedView>
             )}
         </SafeAreaView>
     );

@@ -2,7 +2,7 @@
 import { ArrowLeftIcon, BellIcon, Icon } from '@/components/ui/icon';
 import { router, useLocalSearchParams } from 'expo-router';
 import React from 'react';
-import { ScrollView, Text, TouchableOpacity, View } from 'react-native';
+import { ScrollView, TouchableOpacity } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 export default function TransactionDetailsScreen() {
@@ -51,93 +51,93 @@ export default function TransactionDetailsScreen() {
     };
 
     const renderDetailRow = (label: string, value: string, isStatus?: boolean) => (
-        <View className="flex-row justify-between items-center py-3 border-b border-gray-100">
-            <Text className="text-gray-600 text-base">{label}</Text>
-            <View className="flex-1 items-end">
+        <ThemedView className="flex-row justify-between items-center py-3 border-b border-gray-100">
+            <ThemedText className="text-gray-600 text-base">{label}</ThemedText>
+            <ThemedView className="flex-1 items-end">
                 {isStatus ? (
-                    <View className={`px-3 py-1 rounded-full ${getStatusColor(value)}`}>
-                        <Text className={`font-medium text-sm ${getStatusColor(value).split(' ')[0]}`}>
+                    <ThemedView className={`px-3 py-1 rounded-full ${getStatusColor(value)}`}>
+                        <ThemedText className={`font-medium text-sm ${getStatusColor(value).split(' ')[0]}`}>
                             {value.charAt(0).toUpperCase() + value.slice(1)}
-                        </Text>
-                    </View>
+                        </ThemedText>
+                    </ThemedView>
                 ) : (
-                    <Text className="text-gray-900 font-medium text-base text-right">
+                    <ThemedText className="text-gray-900 font-medium text-base text-right">
                         {value}
-                    </Text>
+                    </ThemedText>
                 )}
-            </View>
-        </View>
+            </ThemedView>
+        </ThemedView>
     );
 
     return (
         <SafeAreaView className="flex-1 bg-gray-50">
             {/* Header */}
-            <View className="flex-row items-center justify-between px-4 py-3 bg-white border-b border-gray-100">
+            <ThemedView className="flex-row items-center justify-between px-4 py-3 bg-white border-b border-gray-100">
                 <TouchableOpacity onPress={() => router.back()}>
                     <Icon as={ArrowLeftIcon} size="md" className="text-gray-700" />
                 </TouchableOpacity>
 
-                <Text className="text-xl font-semibold text-gray-900">Transaction Details</Text>
+                <ThemedText className="text-xl font-semibold text-gray-900">Transaction Details</ThemedText>
 
                 <TouchableOpacity>
                     <Icon as={BellIcon} size="md" className="text-gray-700" />
                 </TouchableOpacity>
-            </View>
+            </ThemedView>
 
             <ScrollView className="flex-1 px-4 py-6">
                 {/* Transaction Status Card */}
-                <View className="bg-white rounded-2xl p-6 mb-6 shadow-sm items-center">
-                    <View className={`w-20 h-20 rounded-full items-center justify-center mb-4 ${getStatusColor(transactionData.status)}`}>
-                        <Text className="text-3xl">
+                <ThemedView className="bg-white rounded-2xl p-6 mb-6 shadow-sm items-center">
+                    <ThemedView className={`w-20 h-20 rounded-full items-center justify-center mb-4 ${getStatusColor(transactionData.status)}`}>
+                        <ThemedText className="text-3xl">
                             {getStatusIcon(transactionData.status)}
-                        </Text>
-                    </View>
+                        </ThemedText>
+                    </ThemedView>
 
-                    <Text className="text-2xl font-bold text-gray-900 mb-2">
+                    <ThemedText className="text-2xl font-bold text-gray-900 mb-2">
                         {transactionData.amount}
-                    </Text>
+                    </ThemedText>
 
-                    <Text className="text-lg font-semibold text-gray-900 mb-1">
+                    <ThemedText className="text-lg font-semibold text-gray-900 mb-1">
                         {transactionData.title}
-                    </Text>
+                    </ThemedText>
 
-                    <Text className="text-gray-600 text-center">
+                    <ThemedText className="text-gray-600 text-center">
                         {transactionData.description}
-                    </Text>
-                </View>
+                    </ThemedText>
+                </ThemedView>
 
                 {/* Transaction Details */}
-                <View className="bg-white rounded-2xl p-6 mb-6 shadow-sm">
-                    <Text className="text-lg font-semibold text-gray-900 mb-4">
+                <ThemedView className="bg-white rounded-2xl p-6 mb-6 shadow-sm">
+                    <ThemedText className="text-lg font-semibold text-gray-900 mb-4">
                         Transaction Details
-                    </Text>
+                    </ThemedText>
 
-                    <View className="space-y-0">
+                    <ThemedView className="space-y-0">
                         {renderDetailRow('Transaction ID', transactionData.id)}
                         {renderDetailRow('Date', transactionData.date)}
                         {renderDetailRow('Time', transactionData.time)}
                         {renderDetailRow('Reference', transactionData.reference)}
                         {renderDetailRow('Payment Method', transactionData.paymentMethod)}
                         {renderDetailRow('Status', transactionData.status, true)}
-                    </View>
-                </View>
+                    </ThemedView>
+                </ThemedView>
 
                 {/* Recipient Information (for payments) */}
                 {transactionData.type === 'payment' && (
-                    <View className="bg-white rounded-2xl p-6 mb-6 shadow-sm">
-                        <Text className="text-lg font-semibold text-gray-900 mb-4">
+                    <ThemedView className="bg-white rounded-2xl p-6 mb-6 shadow-sm">
+                        <ThemedText className="text-lg font-semibold text-gray-900 mb-4">
                             Recipient Information
-                        </Text>
+                        </ThemedText>
 
-                        <View className="space-y-0">
+                        <ThemedView className="space-y-0">
                             {renderDetailRow('Name', transactionData.recipientName)}
                             {renderDetailRow('Account Number', transactionData.recipientAccount)}
-                        </View>
-                    </View>
+                        </ThemedView>
+                    </ThemedView>
                 )}
 
                 {/* Action Buttons */}
-                <View className="space-y-3">
+                <ThemedView className="space-y-3">
                     <TouchableOpacity
                         className="border border-orange-500 py-4 rounded-xl"
                         onPress={() => {
@@ -145,9 +145,9 @@ export default function TransactionDetailsScreen() {
                             console.log('Download receipt');
                         }}
                     >
-                        <Text className="text-orange-500 font-semibold text-center">
+                        <ThemedText className="text-orange-500 font-semibold text-center">
                             Download Receipt
-                        </Text>
+                        </ThemedText>
                     </TouchableOpacity>
 
                     {transactionData.status === 'failed' && (
@@ -158,9 +158,9 @@ export default function TransactionDetailsScreen() {
                                 console.log('Retry transaction');
                             }}
                         >
-                            <Text className="text-white font-semibold text-center">
+                            <ThemedText className="text-white font-semibold text-center">
                                 Retry Transaction
-                            </Text>
+                            </ThemedText>
                         </TouchableOpacity>
                     )}
 
@@ -171,11 +171,11 @@ export default function TransactionDetailsScreen() {
                             console.log('Report issue');
                         }}
                     >
-                        <Text className="text-gray-700 font-semibold text-center">
+                        <ThemedText className="text-gray-700 font-semibold text-center">
                             Report an Issue
-                        </Text>
+                        </ThemedText>
                     </TouchableOpacity>
-                </View>
+                </ThemedView>
             </ScrollView>
         </SafeAreaView>
     );

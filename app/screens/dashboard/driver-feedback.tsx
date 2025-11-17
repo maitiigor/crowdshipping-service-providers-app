@@ -2,10 +2,8 @@ import { router, useLocalSearchParams } from 'expo-router';
 import React, { useState } from 'react';
 import {
     StatusBar,
-    Text,
     TextInput,
-    TouchableOpacity,
-    View,
+    TouchableOpacity
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Button, ButtonText } from '../../../components/ui/button';
@@ -40,7 +38,7 @@ export default function DriverFeedbackScreen() {
             <StatusBar barStyle="dark-content" backgroundColor="white" />
 
             {/* Header */}
-            <View className="flex-row items-center justify-between px-4 py-4 border-b border-gray-100">
+            <ThemedView className="flex-row items-center justify-between px-4 py-4 border-b border-gray-100">
                 <TouchableOpacity
                     onPress={() => router.back()}
                     className="w-10 h-10 items-center justify-center"
@@ -48,41 +46,41 @@ export default function DriverFeedbackScreen() {
                     <Icon as={ArrowLeftIcon} size="md" className="text-gray-700" />
                 </TouchableOpacity>
 
-                <Text className="text-lg font-semibold text-gray-900">
+                <ThemedText className="text-lg font-semibold text-gray-900">
                     Driver Feedback
-                </Text>
+                </ThemedText>
 
                 <TouchableOpacity className="w-10 h-10 items-center justify-center">
                     <Icon as={BellIcon} size="md" className="text-gray-700" />
                 </TouchableOpacity>
-            </View>
+            </ThemedView>
 
             {/* Content */}
-            <View className="flex-1 px-4 py-6">
+            <ThemedView className="flex-1 px-4 py-6">
                 {/* Star Rating */}
-                <View className="items-center mb-8">
-                    <View className="flex-row space-x-2">
+                <ThemedView className="items-center mb-8">
+                    <ThemedView className="flex-row space-x-2">
                         {[0, 1, 2, 3, 4].map((index) => (
                             <TouchableOpacity
                                 key={index}
                                 onPress={() => handleStarPress(index)}
                                 className="p-2"
                             >
-                                <Text className={`text-3xl ${index < rating ? 'text-[#E75B3B]' : 'text-gray-300'
+                                <ThemedText className={`text-3xl ${index < rating ? 'text-[#E75B3B]' : 'text-gray-300'
                                     }`}>
                                     ★
-                                </Text>
+                                </ThemedText>
                             </TouchableOpacity>
                         ))}
-                    </View>
-                </View>
+                    </ThemedView>
+                </ThemedView>
 
                 {/* Comment Section */}
-                <View className="mb-8">
-                    <Text className="text-lg font-medium text-gray-900 mb-3">
+                <ThemedView className="mb-8">
+                    <ThemedText className="text-lg font-medium text-gray-900 mb-3">
                         Comment
-                    </Text>
-                    <View className="rounded-lg p-4 min-h-32  bg-[#FDEFEB]">
+                    </ThemedText>
+                    <ThemedView className="rounded-lg p-4 min-h-32  bg-[#FDEFEB]">
                         <TextInput
                             value={comment}
                             onChangeText={setComment}
@@ -92,8 +90,8 @@ export default function DriverFeedbackScreen() {
                             textAlignVertical="top"
                             className="text-gray-900 text-base flex-1"
                         />
-                    </View>
-                </View>
+                    </ThemedView>
+                </ThemedView>
 
                 {/* Submit Button */}
                 <Button
@@ -105,7 +103,7 @@ export default function DriverFeedbackScreen() {
                         Submit
                     </ButtonText>
                 </Button>
-            </View>
+            </ThemedView>
         </SafeAreaView>
     );
 }

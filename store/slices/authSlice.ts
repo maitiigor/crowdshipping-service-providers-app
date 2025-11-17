@@ -100,6 +100,12 @@ const authSlice = createSlice({
         setUser(state, action: PayloadAction<User>) {
             state.user = action.payload;
         },
+        setUserKycStatus(state, action: PayloadAction<string>) {
+            state.user.kycStatus = action.payload;
+        },
+        setUserStatus(state, action: PayloadAction<string>) {
+            state.user.status = action.payload;
+        },
         setUserProfile(state, action: PayloadAction<UserProfile>) {
             state.userProfile = action.payload;
 
@@ -486,6 +492,8 @@ export const {
     clearPin,
     setVerified,
     setUserProfile,
+    setUserKycStatus,
+    setUserStatus,
     setVerificationCode,
     setVerificationCountdown,
     decrementCountdown,

@@ -2,13 +2,13 @@ import { AntDesign } from "@expo/vector-icons";
 import { router } from "expo-router";
 import React, { useState } from "react";
 import {
-    ScrollView,
-    Text,
-    TouchableOpacity,
-    View
+    TouchableOpacity
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
+import ParallaxScrollView from "../../../components/ParallaxScrollView";
+import { ThemedView } from "../../../components/ThemedView";
 import { Button, ButtonText } from "../../../components/ui/button";
+import { ThemedText } from "../../../components/ThemedText";
 
 interface VerificationItem {
     id: string;
@@ -17,7 +17,7 @@ interface VerificationItem {
 }
 
 export default function DocumentVerification() {
-   
+
     const [verificationItems, setVerificationItems] = useState<VerificationItem[]>([
         { id: '1', text: 'Readable, clear and not blurry', checked: true },
         { id: '2', text: 'Well-lit, not reflective, not too dark', checked: true },
@@ -64,74 +64,74 @@ export default function DocumentVerification() {
     return (
         <SafeAreaView className="flex-1 bg-white">
             {/* Header */}
-            <View className="flex-row items-center px-6 py-4">
+            <ThemedView className="flex-row items-center px-6 py-4">
                 <TouchableOpacity className="p-2" onPress={() => router.back()}>
                     <AntDesign name="arrowleft" size={24} color="#000" />
                 </TouchableOpacity>
-            </View>
+            </ThemedView>
 
-            <ScrollView className="flex-1 px-6" showsVerticalScrollIndicator={false}>
+            <ParallaxScrollView headerBackgroundColor={{ light: "#FFFFFF", dark: "#353636" }}>
                 {/* Document Image */}
-                <View className="mb-6">
-                    <View className="bg-gray-100 rounded-2xl p-4">
+                <ThemedView className="mb-6">
+                    <ThemedView className="bg-gray-100 rounded-2xl p-4">
                         {/* This would be the actual uploaded document image */}
-                        <View className="bg-white rounded-xl p-4 shadow-sm">
-                            <View className="flex-row items-start mb-3">
-                                <View className="w-6 h-4 bg-green-600 mr-2 mt-1" />
-                                <View className="flex-1">
-                                    <Text className="text-xs font-bold text-green-700 mb-1">
+                        <ThemedView className="bg-white rounded-xl p-4 shadow-sm">
+                            <ThemedView className="flex-row items-start mb-3">
+                                <ThemedView className="w-6 h-4 bg-green-600 mr-2 mt-1" />
+                                <ThemedView className="flex-1">
+                                    <ThemedText className="text-xs font-bold text-green-700 mb-1">
                                         FEDERAL REPUBLIC OF NIGERIA
-                                    </Text>
-                                    <Text className="text-xs font-bold text-green-700 mb-1">
+                                    </ThemedText>
+                                    <ThemedText className="text-xs font-bold text-green-700 mb-1">
                                         NATIONAL DRIVERS LICENCE
-                                    </Text>
-                                    <View className="bg-orange-500 px-2 py-1 rounded self-start">
-                                        <Text className="text-xs text-white font-bold">LAGOS STATE</Text>
-                                    </View>
-                                </View>
-                            </View>
+                                    </ThemedText>
+                                    <ThemedView className="bg-orange-500 px-2 py-1 rounded self-start">
+                                        <ThemedText className="text-xs text-white font-bold">LAGOS STATE</ThemedText>
+                                    </ThemedView>
+                                </ThemedView>
+                            </ThemedView>
 
-                            <View className="flex-row">
-                                <View className="w-20 h-24 bg-gray-200 rounded mr-3">
+                            <ThemedView className="flex-row">
+                                <ThemedView className="w-20 h-24 bg-gray-200 rounded mr-3">
                                     {/* Profile photo placeholder */}
-                                    <View className="w-full h-full bg-gray-300 rounded" />
-                                </View>
+                                    <ThemedView className="w-full h-full bg-gray-300 rounded" />
+                                </ThemedView>
 
-                                <View className="flex-1">
-                                    <Text className="text-xs font-bold mb-1">12-04-1985</Text>
-                                    <Text className="text-xs mb-1">AYENI, MICHEAL ADEBAYO</Text>
-                                    <Text className="text-xs mb-1">CHRIST EMBASSY CHURCH,</Text>
-                                    <Text className="text-xs mb-1">OREGUN ROAD, OREGUN, IKEJA</Text>
-                                    <Text className="text-xs mb-1">IKEJA LAGOS</Text>
-                                    <Text className="text-xs mb-1">SEX: M    HT: 1.98M</Text>
-                                    <Text className="text-xs mb-1">BD: O+</Text>
-                                </View>
+                                <ThemedView className="flex-1">
+                                    <ThemedText className="text-xs font-bold mb-1">12-04-1985</ThemedText>
+                                    <ThemedText className="text-xs mb-1">AYENI, MICHEAL ADEBAYO</ThemedText>
+                                    <ThemedText className="text-xs mb-1">CHRIST EMBASSY CHURCH,</ThemedText>
+                                    <ThemedText className="text-xs mb-1">OREGUN ROAD, OREGUN, IKEJA</ThemedText>
+                                    <ThemedText className="text-xs mb-1">IKEJA LAGOS</ThemedText>
+                                    <ThemedText className="text-xs mb-1">SEX: M    HT: 1.98M</ThemedText>
+                                    <ThemedText className="text-xs mb-1">BD: O+</ThemedText>
+                                </ThemedView>
 
-                                <View className="items-end">
-                                    <Text className="text-xs mb-1">23-04-2016</Text>
-                                    <Text className="text-xs mb-1">10-03-2019</Text>
-                                    <Text className="text-xs">LAG</Text>
-                                </View>
-                            </View>
+                                <ThemedView className="items-end">
+                                    <ThemedText className="text-xs mb-1">23-04-2016</ThemedText>
+                                    <ThemedText className="text-xs mb-1">10-03-2019</ThemedText>
+                                    <ThemedText className="text-xs">LAG</ThemedText>
+                                </ThemedView>
+                            </ThemedView>
 
-                            <View className="flex-row justify-between items-end mt-3">
-                                <View>
-                                    <Text className="text-xs">LIC NO: 08521810</Text>
-                                    <Text className="text-xs">DATE OF ISSUE: 03-03-2014</Text>
-                                </View>
-                                <View className="w-16 h-8 bg-gray-200 rounded">
+                            <ThemedView className="flex-row justify-between items-end mt-3">
+                                <ThemedView>
+                                    <ThemedText className="text-xs">LIC NO: 08521810</ThemedText>
+                                    <ThemedText className="text-xs">DATE OF ISSUE: 03-03-2014</ThemedText>
+                                </ThemedView>
+                                <ThemedView className="w-16 h-8 bg-gray-200 rounded">
                                     {/* Signature placeholder */}
-                                </View>
-                            </View>
-                        </View>
-                    </View>
-                </View>
+                                </ThemedView>
+                            </ThemedView>
+                        </ThemedView>
+                    </ThemedView>
+                </ThemedView>
 
                 {/* Confirm The Following Section */}
-                <View className="mb-6">
-                    <Text className="text-lg font-semibold text-black mb-4">
+                <ThemedView className="mb-6">
+                    <ThemedText className="text-lg font-semibold text-black mb-4">
                         Confirm The Following
-                    </Text>
+                    </ThemedText>
 
                     {verificationItems.map((item) => (
                         <TouchableOpacity
@@ -139,22 +139,22 @@ export default function DocumentVerification() {
                             className="flex-row items-center mb-3"
                             onPress={() => toggleVerificationItem(item.id)}
                         >
-                            <View className={`w-5 h-5 rounded border-2 mr-3 items-center justify-center ${item.checked ? 'bg-green-500 border-green-500' : 'border-gray-300'
+                            <ThemedView className={`w-5 h-5 rounded border-2 mr-3 items-center justify-center ${item.checked ? 'bg-green-500 border-green-500' : 'border-gray-300'
                                 }`}>
                                 {item.checked && (
                                     <AntDesign name="check" size={12} color="white" />
                                 )}
-                            </View>
-                            <Text className="text-gray-700 flex-1">{item.text}</Text>
+                            </ThemedView>
+                            <ThemedText className="text-gray-700 flex-1">{item.text}</ThemedText>
                         </TouchableOpacity>
                     ))}
-                </View>
+                </ThemedView>
 
                 {/* Please confirm that Section */}
-                <View className="mb-8">
-                    <Text className="text-lg font-semibold text-black mb-4">
+                <ThemedView className="mb-8">
+                    <ThemedText className="text-lg font-semibold text-black mb-4">
                         Please confirm that
-                    </Text>
+                    </ThemedText>
 
                     {confirmationItems.map((item) => (
                         <TouchableOpacity
@@ -162,15 +162,15 @@ export default function DocumentVerification() {
                             className="flex-row items-center mb-3"
                             onPress={() => toggleConfirmationItem(item.id)}
                         >
-                            <View className="w-2 h-2 bg-gray-400 rounded-full mr-3" />
-                            <Text className="text-gray-700 flex-1">{item.text}</Text>
+                            <ThemedView className="w-2 h-2 bg-gray-400 rounded-full mr-3" />
+                            <ThemedText className="text-gray-700 flex-1">{item.text}</ThemedText>
                         </TouchableOpacity>
                     ))}
-                </View>
-            </ScrollView>
+                </ThemedView>
+            </ParallaxScrollView>
 
             {/* Action Buttons */}
-            <View className="px-6 pb-8 space-y-3">
+            <ThemedView className="px-6 pb-8 space-y-3">
                 <Button
                     size="xl"
                     className="bg-[#E75B3B] rounded-xl mb-3"
@@ -191,7 +191,7 @@ export default function DocumentVerification() {
                         Change Photo
                     </ButtonText>
                 </Button>
-            </View>
+            </ThemedView>
         </SafeAreaView>
     );
 }

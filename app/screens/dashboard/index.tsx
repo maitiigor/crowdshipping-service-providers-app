@@ -9,8 +9,7 @@ import {
   Switch,
   Text,
   TextInput,
-  TouchableOpacity,
-  View,
+  TouchableOpacity
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
@@ -34,6 +33,7 @@ import {
   Wallet
 } from '../../../components/ui/icon';
 
+import NotificationIconComponent from '../../../components/NotificationIconComponent';
 import { useShowToast } from '../../../hooks/useShowToast';
 import { AirTrip, MarineTrip } from '../../../models';
 import { useAppDispatch, useAppSelector } from '../../../store';
@@ -42,7 +42,6 @@ import { logout } from '../../../store/slices/authSlice';
 import { acceptBooking, fetchDeliveryBookings, rejectBooking } from '../../../store/slices/groundTripSlice';
 import { fetchMarineTrips } from '../../../store/slices/marineTripSlice';
 import { fetchNotifications } from '../../../store/slices/notificationSlice';
-import NotificationIconComponent from '../../../components/NotificationIconComponent';
 
 
 // UI Components
@@ -137,38 +136,38 @@ const Sidebar: React.FC<SidebarProps> = ({ isVisible, onClose, onEditProfile, on
   ];
 
   return (
-    <View className="absolute inset-0 z-50">
+    <ThemedView className="absolute inset-0 z-50">
       {/* Overlay */}
       <TouchableOpacity className="absolute inset-0 bg-black/50" onPress={onClose} activeOpacity={1} />
 
       {/* Sidebar */}
-      <View className="absolute left-0 top-0 bottom-0 w-80 bg-white shadow-2xl">
+      <ThemedView className="absolute left-0 top-0 bottom-0 w-80 bg-white shadow-2xl">
         <SafeAreaView className="flex-1">
           {/* Header */}
-          <View className="px-6 py-4 border-b border-gray-200">
-            <View className="flex-row items-center justify-between">
-              <View className="flex-row items-center">
-                <View className="w-12 h-12 bg-[#E75B3B] rounded-full items-center justify-center mr-3">
-                  <Text className="text-white text-lg font-bold">G</Text>
-                </View>
-                <View>
-                  <Text className="text-lg font-semibold text-gray-900">Welcome back,</Text>
-                  <Text className="text-lg font-semibold text-gray-900">{firstName}</Text>
-                </View>
-              </View>
+          <ThemedView className="px-6 py-4 border-b border-gray-200">
+            <ThemedView className="flex-row items-center justify-between">
+              <ThemedView className="flex-row items-center">
+                <ThemedView className="w-12 h-12 bg-[#E75B3B] rounded-full items-center justify-center mr-3">
+                  <ThemedText className="text-white text-lg font-bold">G</ThemedText>
+                </ThemedView>
+                <ThemedView>
+                  <ThemedText className="text-lg font-semibold text-gray-900">Welcome back,</ThemedText>
+                  <ThemedText className="text-lg font-semibold text-gray-900">{firstName}</ThemedText>
+                </ThemedView>
+              </ThemedView>
               <TouchableOpacity onPress={onClose}>
-                <Text className="text-2xl text-gray-500">×</Text>
+                <ThemedText className="text-2xl text-gray-500">×</ThemedText>
               </TouchableOpacity>
-            </View>
+            </ThemedView>
             <TouchableOpacity className="mt-3" onPress={onEditProfile}>
-              <Text className="text-[#E75B3B] font-medium">View Profile</Text>
+              <ThemedText className="text-[#E75B3B] font-medium">View Profile</ThemedText>
             </TouchableOpacity>
-          </View>
+          </ThemedView>
 
           {/* Menu Items */}
           <ScrollView className="flex-1 px-6 py-4">
-            <View className="flex-row items-center justify-around bg-[#F5F5F5] rounded-full  h-12">
-              <Text className="font-normal text-lg">Availability</Text>
+            <ThemedView className="flex-row items-center justify-around bg-[#F5F5F5] rounded-full  h-12">
+              <ThemedText className="font-normal text-lg">Availability</ThemedText>
               <Switch
                 value={isOnline}
                 onValueChange={setAvailablity}
@@ -176,32 +175,32 @@ const Sidebar: React.FC<SidebarProps> = ({ isVisible, onClose, onEditProfile, on
                 thumbColor="#FFFFFF"
                 style={{ transform: [{ scaleX: 1.5 }, { scaleY: 1.5 }] }}
               />
-              <Text>{isOnline ? 'Online' : 'Offline'}</Text>
-            </View>
+              <Text>{isOnline ? 'Online' : 'Offline'}</ThemedText>
+            </ThemedView>
             {menuItems.map((item, index) => (
               <TouchableOpacity
                 key={index}
                 className={`flex-row items-center py-3  ${item.active ? 'opacity-100' : 'opacity-70'}`}
                 onPress={item.onPress}
               >
-                <View className="w-6 mr-4">{item.icon}</View>
-                <Text className={`text-lg ${item.active ? 'text-gray-900' : 'font-semibold text-gray-700'}`} style={{ fontFamily: 'Poppins-SemiBold' }}>
+                <ThemedView className="w-6 mr-4">{item.icon}</ThemedView>
+                <ThemedText className={`text-lg ${item.active ? 'text-gray-900' : 'font-semibold text-gray-700'}`} style={{ fontFamily: 'Poppins-SemiBold' }}>
                   {item.label}
-                </Text>
+                </ThemedText>
               </TouchableOpacity>
             ))}
           </ScrollView>
 
           {/* Logout */}
-          <View className="px-6 py-4 border-t border-gray-200">
+          <ThemedView className="px-6 py-4 border-t border-gray-200">
             <TouchableOpacity className="flex-row items-center py-3" onPress={onLogout}>
-              <View className="w-6 mr-4"><LogoutIcon /></View>
-              <Text className="text-base text-red-500 font-medium">Log out</Text>
+              <ThemedView className="w-6 mr-4"><LogoutIcon /></ThemedView>
+              <ThemedText className="text-base text-red-500 font-medium">Log out</ThemedText>
             </TouchableOpacity>
-          </View>
+          </ThemedView>
         </SafeAreaView>
-      </View>
-    </View>
+      </ThemedView >
+    </ThemedView >
   );
 };
 
@@ -284,12 +283,12 @@ const formatCapacity = (trip: MarineTrip) => {
 export const MaritimeSummaryCard: React.FC<{ trip?: MarineTrip }> = ({ trip }) => {
   if (!trip) {
     return (
-      <View className="bg-[#FDEFEB] h-[130px] rounded-xl p-5 shadow-sm border border-[#FDEFEB]">
-        <Text className="text-lg font-semibold text-gray-900">No maritime trip yet</Text>
-        <Text className="text-gray-600 mt-2">
+      <ThemedView className="bg-[#FDEFEB] h-[130px] rounded-xl p-5 shadow-sm border border-[#FDEFEB]">
+        <ThemedText className="text-lg font-semibold text-gray-900">No maritime trip yet</ThemedText>
+        <ThemedText className="text-gray-600 mt-2">
           Post a maritime trip to see it here and receive bids.
-        </Text>
-      </View>
+        </ThemedText>
+      </ThemedView>
     );
   }
 
@@ -304,15 +303,15 @@ export const MaritimeSummaryCard: React.FC<{ trip?: MarineTrip }> = ({ trip }) =
       })}
     >
 
-      <View className="bg-[#FDEFEB] rounded-2xl my-3 p-5 shadow-sm border border-[#FDEFEB]">
-        <Text className="text-xl font-semibold text-gray-900 mb-1">{routeSummary}</Text>
-        <Text className="text-base text-gray-700 mb-3">
+      <ThemedView className="bg-[#FDEFEB] rounded-2xl my-3 p-5 shadow-sm border border-[#FDEFEB]">
+        <ThemedText className="text-xl font-semibold text-gray-900 mb-1">{routeSummary}</ThemedText>
+        <ThemedText className="text-base text-gray-700 mb-3">
           Date: {formatRelativeToToday(trip.departureDate)}
-        </Text>
-        <View className="bg-[#F8CCC2] px-4 py-2 rounded-full self-start">
-          <Text className="text-sm font-medium text-[#D25336]">Bids Received: {bidsReceived}</Text>
-        </View>
-      </View>
+        </ThemedText>
+        <ThemedView className="bg-[#F8CCC2] px-4 py-2 rounded-full self-start">
+          <ThemedText className="text-sm font-medium text-[#D25336]">Bids Received: {bidsReceived}</ThemedText>
+        </ThemedView>
+      </ThemedView>
     </TouchableOpacity>
   );
 };
@@ -321,12 +320,12 @@ export const MaritimeSummaryCard: React.FC<{ trip?: MarineTrip }> = ({ trip }) =
 export const AirTripSummaryCard: React.FC<{ trip?: AirTrip }> = ({ trip }) => {
   if (!trip) {
     return (
-      <View className="bg-[#FDEFEB] h-[130px] rounded-xl p-5 shadow-sm border border-[#FDEFEB]">
-        <Text className="text-lg font-semibold text-gray-900">No maritime trip yet</Text>
-        <Text className="text-gray-600 mt-2">
+      <ThemedView className="bg-[#FDEFEB] h-[130px] rounded-xl p-5 shadow-sm border border-[#FDEFEB]">
+        <ThemedText className="text-lg font-semibold text-gray-900">No maritime trip yet</ThemedText>
+        <ThemedText className="text-gray-600 mt-2">
           Post a maritime trip to see it here and receive bids.
-        </Text>
-      </View>
+        </ThemedText>
+      </ThemedView>
     );
   }
 
@@ -341,15 +340,15 @@ export const AirTripSummaryCard: React.FC<{ trip?: AirTrip }> = ({ trip }) => {
       })}
     >
 
-      <View className="bg-[#FDEFEB] rounded-2xl my-3 p-5 shadow-sm border border-[#FDEFEB]">
-        <Text className="text-xl font-semibold text-gray-900 mb-1">{routeSummary}</Text>
-        <Text className="text-base text-gray-700 mb-3">
+      <ThemedView className="bg-[#FDEFEB] rounded-2xl my-3 p-5 shadow-sm border border-[#FDEFEB]">
+        <ThemedText className="text-xl font-semibold text-gray-900 mb-1">{routeSummary}</ThemedText>
+        <ThemedText className="text-base text-gray-700 mb-3">
           Date: {formatRelativeToToday(trip.departureDate)}
-        </Text>
-        <View className="bg-[#F8CCC2] px-4 py-2 rounded-full self-start">
-          <Text className="text-sm font-medium text-[#D25336]">Bids Received: {bidsReceived}</Text>
-        </View>
-      </View>
+        </ThemedText>
+        <ThemedView className="bg-[#F8CCC2] px-4 py-2 rounded-full self-start">
+          <ThemedText className="text-sm font-medium text-[#D25336]">Bids Received: {bidsReceived}</ThemedText>
+        </ThemedView>
+      </ThemedView>
     </TouchableOpacity>
   );
 };
@@ -457,35 +456,35 @@ export default function DashboardScreen() {
     if (selectedTransportType === 'Maritime') {
       if (loadingTrips) {
         return (
-          <View className="items-center py-6">
+          <ThemedView className="items-center py-6">
             <ActivityIndicator size="small" color="#E75B3B" />
-            <Text className="text-gray-500 mt-2">Loading maritime trips near you...</Text>
-          </View>
+            <ThemedText className="text-gray-500 mt-2">Loading maritime trips near you...</ThemedText>
+          </ThemedView>
         );
       }
 
       if (marineTripsError) {
         return (
-          <View className="bg-red-50 border border-red-100 rounded-2xl p-5">
-            <Text className="text-red-600 font-medium mb-2">Unable to load maritime trips</Text>
-            <Text className="text-red-600 mb-3">{marineTripsError.message}</Text>
+          <ThemedView className="bg-red-50 border border-red-100 rounded-2xl p-5">
+            <ThemedText className="text-red-600 font-medium mb-2">Unable to load maritime trips</ThemedText>
+            <ThemedText className="text-red-600 mb-3">{marineTripsError.message}</ThemedText>
             <TouchableOpacity
               onPress={() => retryFetchTrips('Maritime')}
               className="self-start bg-[#E75B3B] px-5 py-2 rounded-lg"
             >
-              <Text className="text-white font-medium">Try again</Text>
+              <ThemedText className="text-white font-medium">Try again</ThemedText>
             </TouchableOpacity>
-          </View>
+          </ThemedView>
         );
       }
 
       if (marineTrips.filter((trip) => trip.status == 'open').length === 0) {
         return (
-          <View className="bg-white border border-dashed border-gray-300 rounded-2xl p-6 items-center">
-            <Text className="text-gray-600 text-center">
+          <ThemedView className="bg-white border border-dashed border-gray-300 rounded-2xl p-6 items-center">
+            <ThemedText className="text-gray-600 text-center">
               No maritime trips near you yet. Check back soon.
-            </Text>
-          </View>
+            </ThemedText>
+          </ThemedView>
         );
       }
 
@@ -500,35 +499,35 @@ export default function DashboardScreen() {
     if (selectedTransportType === 'Air') {
       if (airTripsLoading) {
         return (
-          <View className="items-center py-6">
+          <ThemedView className="items-center py-6">
             <ActivityIndicator size="small" color="#E75B3B" />
-            <Text className="text-gray-500 mt-2">Loading your air trips..</Text>
-          </View>
+            <ThemedText className="text-gray-500 mt-2">Loading your air trips..</ThemedText>
+          </ThemedView>
         );
       }
 
       if (airTripsError) {
         return (
-          <View className="bg-red-50 border border-red-100 rounded-2xl p-5">
-            <Text className="text-red-600 font-medium mb-2">Unable to load air trips</Text>
-            <Text className="text-red-600 mb-3">{airTripsError.message}</Text>
+          <ThemedView className="bg-red-50 border border-red-100 rounded-2xl p-5">
+            <ThemedText className="text-red-600 font-medium mb-2">Unable to load air trips</ThemedText>
+            <ThemedText className="text-red-600 mb-3">{airTripsError.message}</ThemedText>
             <TouchableOpacity
               onPress={() => retryFetchTrips('Maritime')}
               className="self-start bg-[#E75B3B] px-5 py-2 rounded-lg"
             >
-              <Text className="text-white font-medium">Try again</Text>
+              <ThemedText className="text-white font-medium">Try again</ThemedText>
             </TouchableOpacity>
-          </View>
+          </ThemedView>
         );
       }
 
       if (airTrips.filter((trip) => trip.status == 'open').length === 0) {
         return (
-          <View className="bg-white border border-dashed border-gray-300 rounded-2xl p-6 items-center">
-            <Text className="text-gray-600 text-center">
+          <ThemedView className="bg-white border border-dashed border-gray-300 rounded-2xl p-6 items-center">
+            <ThemedText className="text-gray-600 text-center">
               No maritime trips near you yet. Check back soon.
-            </Text>
-          </View>
+            </ThemedText>
+          </ThemedView>
         );
       }
 
@@ -540,35 +539,35 @@ export default function DashboardScreen() {
     if (selectedTransportType === 'Ground') {
       if (groundTripLoading) {
         return (
-          <View className="items-center py-6">
+          <ThemedView className="items-center py-6">
             <ActivityIndicator size="small" color="#E75B3B" />
-            <Text className="text-gray-500 mt-2">Loading your ground trips..</Text>
-          </View>
+            <ThemedText className="text-gray-500 mt-2">Loading your ground trips..</ThemedText>
+          </ThemedView>
         );
       }
 
       if (groundTripError) {
         return (
-          <View className="bg-red-50 border border-red-100 rounded-2xl p-5">
-            <Text className="text-red-600 font-medium mb-2">Unable to load ground trips</Text>
-            <Text className="text-red-600 mb-3">{groundTripError.message}</Text>
+          <ThemedView className="bg-red-50 border border-red-100 rounded-2xl p-5">
+            <ThemedText className="text-red-600 font-medium mb-2">Unable to load ground trips</ThemedText>
+            <ThemedText className="text-red-600 mb-3">{groundTripError.message}</ThemedText>
             <TouchableOpacity
               onPress={() => retryFetchTrips('Ground')}
               className="self-start bg-[#E75B3B] px-5 py-2 rounded-lg"
             >
-              <Text className="text-white font-medium">Try again</Text>
+              <ThemedText className="text-white font-medium">Try again</ThemedText>
             </TouchableOpacity>
-          </View>
+          </ThemedView>
         );
       }
 
       if (groundTrips.filter((trip) => trip.status == 'PENDING').length === 0) {
         return (
-          <View className="bg-white border border-dashed border-gray-300 rounded-2xl p-6 items-center">
-            <Text className="text-gray-600 text-center">
+          <ThemedView className="bg-white border border-dashed border-gray-300 rounded-2xl p-6 items-center">
+            <ThemedText className="text-gray-600 text-center">
               No ground trips near you yet. Check back soon.
-            </Text>
-          </View>
+            </ThemedText>
+          </ThemedView>
         );
       }
 
@@ -583,11 +582,11 @@ export default function DashboardScreen() {
     }
 
     return (
-      <View className="bg-white border border-dashed border-gray-300 rounded-2xl p-6 items-center">
-        <Text className="text-gray-600 text-center">
+      <ThemedView className="bg-white border border-dashed border-gray-300 rounded-2xl p-6 items-center">
+        <ThemedText className="text-gray-600 text-center">
           No avaliable posted {selectedTransportType.toLowerCase()} trips yet by you.
-        </Text>
-      </View>
+        </ThemedText>
+      </ThemedView>
     );
   };
 
@@ -596,52 +595,52 @@ export default function DashboardScreen() {
       <StatusBar barStyle="dark-content" backgroundColor="white" />
 
       {/* Header */}
-      <View className="bg-white h-24 ps-4 pr-4 flex-row items-center justify-between border-b border-gray-200">
+      <ThemedView className="bg-white h-24 ps-4 pr-4 flex-row items-center justify-between border-b border-gray-200">
         <TouchableOpacity onPress={() => setSidebarVisible(true)}>
-          <View className="flex items-end mb-auto">
+          <ThemedView className="flex items-end mb-auto">
             <MenuIcon />
-          </View>
+          </ThemedView>
         </TouchableOpacity>
 
-        <View className="flex-1 items-center">
-          <View className="flex-row items-center">
-            <Text className="text-lg font-semibold text-gray-900">Hello, {firstName}</Text>
-          </View>
-          <View className="flex-row items-center">
+        <ThemedView className="flex-1 items-center">
+          <ThemedView className="flex-row items-center">
+            <ThemedText className="text-lg font-semibold text-gray-900">Hello, {firstName}</ThemedText>
+          </ThemedView>
+          <ThemedView className="flex-row items-center">
             <LocationIcon />
-            <Text className="text-sm text-gray-600 ml-1">{profile.profile.address}</Text>
-            <Text className="text-sm text-gray-400 ml-1">▼</Text>
-          </View>
-        </View>
+            <ThemedText className="text-sm text-gray-600 ml-1">{profile.profile?.address}</ThemedText>
+            <ThemedText className="text-sm text-gray-400 ml-1">▼</ThemedText>
+          </ThemedView>
+        </ThemedView>
 
         <NotificationIconComponent />
-      </View>
+      </ThemedView>
 
       <ScrollView className="flex-1" showsVerticalScrollIndicator={false}>
         {/* Search Bar */}
-        <View className="px-4 pt-4">
-          <View className="bg-white rounded-xl border-[#F4B4A5] h-[48px] border border-gray-200 flex-row px-3 items-center shadow-sm">
+        <ThemedView className="px-4 pt-4">
+          <ThemedView className="bg-white rounded-xl border-[#F4B4A5] h-[48px] border border-gray-200 flex-row px-3 items-center shadow-sm">
             <SearchIcon />
             <TextInput
               placeholder="Search for jobs..."
               className="flex-1 ml-3 text-gray-700"
               placeholderTextColor="#9CA3AF"
             />
-          </View>
-        </View>
+          </ThemedView>
+        </ThemedView>
 
 
 
 
 
         {/* My Posted Trips */}
-        <View className="px-4 mb-3">
-          {/* <Text className="text-xl font-bold text-gray-900 mb-4">My Posted Trips</Text> */}
+        <ThemedView className="px-4 mb-3">
+          {/* <ThemedText className="text-xl font-bold text-gray-900 mb-4">My Posted Trips</ThemedText> */}
 
           {/* <MaritimeSummaryCard trip={marineTrips[0]} /> */}
 
           {/* Transport Tabs */}
-          <View className="flex-row gap-3 mt-4">
+          <ThemedView className="flex-row gap-3 mt-4">
             {transportTypes.map((transport) => {
               const isActive = selectedTransportType === transport.type;
               const IconComponent = transport.IconComponent;
@@ -655,52 +654,52 @@ export default function DashboardScreen() {
                     className={`flex-1 items-center justify-center py-5 rounded-2xl ${isActive ? 'bg-[#E75B3B]' : 'bg-white'}`}
                     activeOpacity={isActive ? 0.8 : 1}
                   >
-                    <View className="items-center">
+                    <ThemedView className="items-center">
                       <IconComponent isActive={isActive} />
-                      <Text className={`mt-2 text-sm capitalize ${isActive ? 'text-white font-medium' : 'text-gray-700'}`}>
+                      <ThemedText className={`mt-2 text-sm capitalize ${isActive ? 'text-white font-medium' : 'text-gray-700'}`}>
                         {transport.type}
-                      </Text>
-                    </View>
+                      </ThemedText>
+                    </ThemedView>
                   </TouchableOpacity>
                 </>
               );
             })}
-          </View>
-        </View>
+          </ThemedView>
+        </ThemedView>
 
         {/* Posted Trips Content */}
-        <View className="">
+        <ThemedView className="">
           {transportTypes.map((transport) => {
 
             return (
-              <View className={`px-4 mb-6 ${transport.type === selectedTransportType ? '' : 'hidden'}`} key={transport.type}>
+              <ThemedView className={`px-4 mb-6 ${transport.type === selectedTransportType ? '' : 'hidden'}`} key={transport.type}>
                 {transport.type === 'Ground' ? (
-                  <View className="mb-2 ">
-                    <Text className="text-xl font-bold text-gray-900 mb-4">
+                  <ThemedView className="mb-2 ">
+                    <ThemedText className="text-xl font-bold text-gray-900 mb-4">
                       Ground Trips Near You
-                    </Text>
+                    </ThemedText>
 
                     {renderMyPostedTripContent()}
-                  </View>
+                  </ThemedView>
                 ) : (
-                  <View className="mb-6 mt-4">
+                  <ThemedView className="mb-6 mt-4">
                     <TouchableOpacity
                       className="bg-[#E75B3B] flex items-center justify-center h-[48px] rounded-xl py-4 shadow-sm"
                       onPress={() => router.push(transportRoutes[transport.type])}
                     >
-                      <View className="flex-row items-center">
+                      <ThemedView className="flex-row items-center">
                         <Plus color="white" className='mr-3' />
-                        <Text className="text-white self-center font-semibold text-lg">Post My Trip</Text>
-                      </View>
+                        <ThemedText className="text-white self-center font-semibold text-lg">Post My Trip</ThemedText>
+                      </ThemedView>
                     </TouchableOpacity>
                     {renderMyPostedTripContent()}
-                  </View>
+                  </ThemedView>
                 )}
 
-              </View>
+              </ThemedView>
             )
           })}
-        </View>
+        </ThemedView>
 
       </ScrollView>
 

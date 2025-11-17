@@ -4,9 +4,7 @@ import {
     Alert,
     Dimensions,
     StatusBar,
-    Text,
-    TouchableOpacity,
-    View
+    TouchableOpacity
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Button, ButtonText } from '../../../components/ui/button';
@@ -16,6 +14,7 @@ import { Input, InputField } from '../../../components/ui/input';
 import { useShowToast } from '../../../hooks/useShowToast';
 import { useAppDispatch, useAppSelector } from '../../../store';
 import { updateTripStatus } from '../../../store/slices/groundTripSlice';
+import { resendDeliveryOtp } from '../../../store/slices/tripManagementSlice';
 
 const { width, height } = Dimensions.get('window');
 
@@ -33,8 +32,30 @@ export default function CompleteDeliveryOTPScreen() {
     // Use actual booking ID from trip data or fallback
     const bookingId = groundTrip?.trackingId || groundTrip?.bookingRef || 'ID2350847391';
 
-    const handleResendOTP = () => {
-        Alert.alert('OTP Sent', 'A new OTP has been sent to the recipient');
+    const handleResendOTP = async () => {
+        if (!tripId) {
+            Alert.alert('Error', 'Trip ID is missing');
+            return;
+        }
+        try {
+            await dispatch(resendDeliveryOtp({ tripId })).unwrap();
+
+            showToast({
+                title: "OTP Sent",
+                description: "OTP has been resent successfully",
+                icon: CheckCircleIcon,
+                action: "success"
+            });
+
+        } catch (error: any) {
+            showToast({
+                title: "OTP Send Failed",
+                description: error.message || "Failed to send OTP",
+                icon: ArrowLeftIcon,
+                action: "error"
+            });
+        }
+
     };
 
     const handleSubmitOTP = async () => {
@@ -51,11 +72,9 @@ export default function CompleteDeliveryOTPScreen() {
         try {
             setIsVerifying(true);
 
-            // In a real app, this would verify the OTP with the backend first
-            console.log('Verifying OTP:', otp);
 
             // For now, we'll assume OTP is valid and complete the trip
-            await dispatch(updateTripStatus({ id: tripId, status: 'COMPLETED' })).unwrap();
+            await dispatch(updateTripStatus({ id: tripId, status: 'COMPLETED', otp: otp })).unwrap();
 
             showToast({
                 title: "Trip Completed!",
@@ -96,7 +115,7 @@ export default function CompleteDeliveryOTPScreen() {
             <StatusBar barStyle="dark-content" backgroundColor="white" />
 
             {/* Header */}
-            <View className="flex-row items-center justify-between px-4 py-4 border-b border-gray-100">
+            <ThemedView className="flex-row items-center justify-between px-4 py-4 border-b border-gray-100">
                 <TouchableOpacity
                     className="w-10 h-10 items-center justify-center"
                     onPress={() => router.back()}
@@ -104,31 +123,31 @@ export default function CompleteDeliveryOTPScreen() {
                     <Icon as={ArrowLeftIcon} size="md" className="text-gray-700" />
                 </TouchableOpacity>
 
-                <Text className="text-lg font-semibold text-gray-900">
+                <ThemedText className="text-lg font-semibold text-gray-900">
                     Complete Delivery (OTP)
-                </Text>
+                </ThemedText>
 
-                <View className="w-10 h-10" />
-            </View>
+                <ThemedView className="w-10 h-10" />
+            </ThemedView>
 
             {/* Content */}
-            <View className="flex-1 px-4 py-8 justify-center">
-                <View className="items-center mb-8">
+            <ThemedView className="flex-1 px-4 py-8 justify-center">
+                <ThemedView className="items-center mb-8">
                     {/* OTP Icon/Illustration */}
-                    <View className="w-20 h-20 bg-[#E75B3B] rounded-full items-center justify-center mb-6">
-                        <Text className="text-white text-2xl font-bold">OTP</Text>
-                    </View>
+                    <ThemedView className="w-20 h-20 bg-[#E75B3B] rounded-full items-center justify-center mb-6">
+                        <ThemedText className="text-white text-2xl font-bold">OTP</ThemedText>
+                    </ThemedView>
 
-                    <Text className="text-xl font-medium text-gray-900 text-center mb-2">
+                    <ThemedText className="text-xl font-medium text-gray-900 text-center mb-2">
                         Enter OTP provided by recipient for
-                    </Text>
-                    <Text className="text-xl font-medium text-gray-900 text-center mb-6">
+                    </ThemedText>
+                    <ThemedText className="text-xl font-medium text-gray-900 text-center mb-6">
                         booking: {bookingId}
-                    </Text>
-                </View>
+                    </ThemedText>
+                </ThemedView>
 
                 {/* OTP Input */}
-                <View className="mb-8">
+                <ThemedView className="mb-8">
                     <Input className="mb-4 h-[48px] rounded-lg">
                         <InputField
                             placeholder="Enter OTP"
@@ -140,10 +159,10 @@ export default function CompleteDeliveryOTPScreen() {
                             className="text-2xl font-bold tracking-widest"
                         />
                     </Input>
-                </View>
+                </ThemedView>
 
                 {/* Action Buttons */}
-                <View className="flex flex-row justify-center gap-4 w-100">
+                <ThemedView className="flex flex-row justify-center gap-4 w-100">
                     <Button
                         variant="outline"
                         className="border-[#E75B3B] rounded-xl h-[47px] w-1/2"
@@ -164,11 +183,11 @@ export default function CompleteDeliveryOTPScreen() {
                             {isVerifying ? 'Verifying...' : 'Submit OTP'}
                         </ButtonText>
                     </Button>
-                </View>
-            </View>
+                </ThemedView>
+            </ThemedView>
 
             {/* Bottom spacing */}
-            <View className="h-20" />
+            <ThemedView className="h-20" />
 
             {/* Delivery completion modal */}
             <DeliveryCompleteModal

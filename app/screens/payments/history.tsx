@@ -1,270 +1,269 @@
-'use client';
-import { ArrowLeftIcon, BellIcon, Icon } from '@/components/ui/icon';
-import { router } from 'expo-router';
-import React, { useState } from 'react';
-import { ScrollView, Text, TouchableOpacity, View } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import { EmptyState } from "@/components/Custom/EmptyState";
+import NotificationIcon from "@/components/Custom/NotificationIcon";
+import { ThemedText } from "@/components/ThemedText";
+import { ThemedView } from "@/components/ThemedView";
+import { Box } from "@/components/ui/box";
+import { Button, ButtonText } from "@/components/ui/button";
+import { HStack } from "@/components/ui/hstack";
+import { Icon } from "@/components/ui/icon";
+import { Menu, MenuItem, MenuItemLabel } from "@/components/ui/menu";
+import { Skeleton, SkeletonText } from "@/components/ui/skeleton";
+import { useThemeColor } from "@/hooks/useThemeColor";
+import dayjs from "dayjs";
+import relativeTime from "dayjs/plugin/relativeTime";
+import { useNavigation, useRouter } from "expo-router";
+import {
+  ChevronLeft,
+  CircleCheckBig,
+  History,
+  ListFilterPlus,
+} from "lucide-react-native";
+import React, { useEffect, useState } from "react";
+import { FlatList, TouchableOpacity, View } from "react-native";
+import { useAppDispatch, useAppSelector } from "../../../store";
+import { fetchWallet } from "../../../store/slices/walletSlice";
+import { isLoading } from "expo-font";
+import NotificationIconComponent from "../../../components/NotificationIconComponent";
 
-type TransactionType = 'all' | 'payment' | 'withdraw';
-type TransactionStatus = 'successful' | 'pending' | 'failed';
-
-interface Transaction {
-    id: string;
-    type: 'withdraw' | 'payment';
-    title: string;
-    description: string;
-    amount: string;
-    timeAgo: string;
-    status: TransactionStatus;
-    date: string;
-    time: string;
-    reference: string;
-    paymentMethod: string;
-    recipientName?: string;
-    recipientAccount?: string;
-}
-
-const mockTransactions: Transaction[] = [
-    {
-        id: 'TXN001',
-        type: 'withdraw',
-        title: 'Withdraw Successful',
-        description: 'You successfully withdraw ₦300,000 from wallet.',
-        amount: '₦300,000',
-        timeAgo: '2 hours ago',
-        status: 'successful',
-        date: 'June 15, 2025',
-        time: '2:30 PM',
-        reference: 'REF123456789',
-        paymentMethod: 'Bank Transfer'
-    },
-    {
-        id: 'TXN002',
-        type: 'payment',
-        title: 'Payment successful!',
-        description: 'Shipping payment of ₦200,000 successfully paid',
-        amount: '₦200,000',
-        timeAgo: '4 hours ago',
-        status: 'successful',
-        date: 'June 15, 2025',
-        time: '12:15 PM',
-        reference: 'REF987654321',
-        paymentMethod: 'Bank Transfer',
-        recipientName: 'John Doe',
-        recipientAccount: '1234567890'
-    },
-    {
-        id: 'TXN003',
-        type: 'withdraw',
-        title: 'Withdraw Pending',
-        description: 'Withdrawal of ₦150,000 is being processed.',
-        amount: '₦150,000',
-        timeAgo: '1 day ago',
-        status: 'pending',
-        date: 'June 14, 2025',
-        time: '3:45 PM',
-        reference: 'REF456789123',
-        paymentMethod: 'Bank Transfer'
-    },
-    {
-        id: 'TXN004',
-        type: 'payment',
-        title: 'Payment Failed',
-        description: 'Shipping payment of ₦100,000 failed due to insufficient funds',
-        amount: '₦100,000',
-        timeAgo: '2 days ago',
-        status: 'failed',
-        date: 'June 13, 2025',
-        time: '11:20 AM',
-        reference: 'REF789123456',
-        paymentMethod: 'Bank Transfer',
-        recipientName: 'Jane Smith',
-        recipientAccount: '0987654321'
-    },
-    {
-        id: 'TXN005',
-        type: 'withdraw',
-        title: 'Withdraw Successful',
-        description: 'You successfully withdraw ₦500,000 from wallet.',
-        amount: '₦500,000',
-        timeAgo: '3 days ago',
-        status: 'successful',
-        date: 'June 12, 2025',
-        time: '4:10 PM',
-        reference: 'REF321654987',
-        paymentMethod: 'Bank Transfer'
-    },
-    {
-        id: 'TXN006',
-        type: 'payment',
-        title: 'Payment successful!',
-        description: 'Shipping payment of ₦350,000 successfully paid',
-        amount: '₦350,000',
-        timeAgo: '5 days ago',
-        status: 'successful',
-        date: 'June 10, 2025',
-        time: '1:25 PM',
-        reference: 'REF654987321',
-        paymentMethod: 'Bank Transfer',
-        recipientName: 'Mike Johnson',
-        recipientAccount: '5432167890'
-    }
-];
-
+// dayjs fromNow plugin
+dayjs.extend(relativeTime);
 export default function TransactionHistoryScreen() {
-    const [activeTab, setActiveTab] = useState<TransactionType>('all');
+  const navigation = useNavigation();
+  const router = useRouter();
+  const backroundTopNav = useThemeColor({}, "background");
+  const [selectedFilter, setSelectedFilter] = useState<string>("");
 
-    const filteredTransactions = mockTransactions.filter(transaction => {
-        if (activeTab === 'all') return true;
-        return transaction.type === activeTab;
-    });
+  // Build fetchOptions conditionally
+  const fetchOptions = selectedFilter
+    ? { query: { trans_type: selectedFilter.toLowerCase() } }
+    : undefined;
 
-    const getTabStyle = (tab: TransactionType) => {
-        return activeTab === tab
-            ? 'bg-orange-500 text-white'
-            : 'bg-transparent text-gray-600 border border-gray-300';
-    };
+  // Include the filter in the query key for proper caching
+  const queryKey = selectedFilter
+    ? ["wallet", selectedFilter.toLowerCase()]
+    : ["wallet"];
+    const dispatch = useAppDispatch();
+   
+    const {wallet, transactions, loadingWallet } = useAppSelector((state) => state.wallet);
 
-    const getStatusColor = (status: TransactionStatus) => {
-        switch (status) {
-            case 'successful':
-                return 'text-green-600';
-            case 'pending':
-                return 'text-yellow-600';
-            case 'failed':
-                return 'text-red-600';
-            default:
-                return 'text-gray-600';
-        }
-    };
 
-    const handleTransactionPress = (transaction: Transaction) => {
-        router.push({
-            pathname: '/screens/payments/transaction-details',
-            params: {
-                transactionId: transaction.id,
-                type: transaction.type,
-                title: transaction.title,
-                description: transaction.description,
-                amount: transaction.amount,
-                timeAgo: transaction.timeAgo,
-                status: transaction.status,
-                date: transaction.date,
-                time: transaction.time,
-                reference: transaction.reference,
-                paymentMethod: transaction.paymentMethod,
-                recipientName: transaction.recipientName || '',
-                recipientAccount: transaction.recipientAccount || ''
-            }
-        });
-    };
 
-    const renderTransactionItem = (transaction: Transaction) => (
-        <TouchableOpacity
-            key={transaction.id}
-            className="flex-row items-center px-4 py-4 border-b border-gray-100"
-            onPress={() => handleTransactionPress(transaction)}
+
+
+    const refetch = () => {
+      // Dispatch an action to refetch transactions based on the selected filter
+
+      try {
+         dispatch(fetchWallet());
+      } catch (error) {
+        console.log("Error refetching wallet:", error);
+      }
+    }
+
+  useEffect(() => {
+    dispatch(fetchWallet());
+    navigation.setOptions({
+      headerShown: true,
+      headerTitle: () => {
+        return (
+          <ThemedText type="s1_subtitle" className="text-center">
+            Transaction History
+          </ThemedText>
+        );
+      },
+      headerTitleAlign: "center",
+      headerTitleStyle: { fontSize: 20 }, // Increased font size
+      headerShadowVisible: false,
+      headerStyle: {
+        backgroundColor: backroundTopNav,
+        elevation: 0, // Android
+        shadowOpacity: 0, // iOS
+        shadowColor: "transparent", // iOS
+        borderBottomWidth: 0,
+      },
+      headerLeft: () => (
+        <ThemedView
+          style={{
+            shadowColor: "#FDEFEB1A",
+            shadowOffset: { width: 0, height: 1 },
+            shadowOpacity: 0.102,
+            shadowRadius: 3,
+            elevation: 4,
+          }}
         >
-            <View className="w-12 h-12 bg-orange-100 rounded-full items-center justify-center mr-3">
-                <View className="w-6 h-6 bg-orange-500 rounded items-center justify-center">
-                    <Text className="text-white text-xs">
-                        {transaction.type === 'withdraw' ? '↑' : '↓'}
-                    </Text>
-                </View>
-            </View>
+          <ThemedView
+            style={{
+              shadowColor: "#0000001A",
+              shadowOffset: { width: 0, height: 1 },
+              shadowOpacity: 0.102,
+              shadowRadius: 2,
+              elevation: 2,
+            }}
+          >
+            <TouchableOpacity
+              onLongPress={() => router.push("/(tabs)")}
+              onPress={() => navigation.goBack()}
+              className="p-2 rounded   flex justify-center items-center"
+            >
+              <Icon
+                as={ChevronLeft}
+                size="3xl"
+                className="text-typography-900"
+              />
+            </TouchableOpacity>
+          </ThemedView>
+        </ThemedView>
+      ),
+      headerRight: () => <NotificationIconComponent />,
+    });
+  }, [navigation, router, backroundTopNav]);
 
-            <View className="flex-1">
-                <View className="flex-row items-center justify-between mb-1">
-                    <Text className="text-base font-semibold text-gray-900">
-                        {transaction.title}
-                    </Text>
-                    <Text className={`text-sm font-medium ${getStatusColor(transaction.status)}`}>
-                        {transaction.status.charAt(0).toUpperCase() + transaction.status.slice(1)}
-                    </Text>
-                </View>
-                <Text className="text-sm text-gray-600 mb-1">
-                    {transaction.description}
-                </Text>
-                <View className="flex-row items-center justify-between">
-                    <Text className="text-xs text-gray-500">
-                        {transaction.timeAgo}
-                    </Text>
-                    <Text className="text-base font-bold text-gray-900">
-                        {transaction.amount}
-                    </Text>
-                </View>
-            </View>
+  return (
+    <ThemedView className="flex-1 bg-white p-5">
+      <ThemedView className="flex-1 gap-3 mt-3">
+        <ThemedView className="flex">
+          <ThemedView className="flex-row justify-between items-center">
+            <ThemedText type="h5_header" className="text-black mt-4">
+              Filter
+            </ThemedText>
+            <Menu
+              placement="bottom"
+              className="mr-2 relative right-2 top-3"
+              offset={5}
+              onSelectionChange={(key) => {
+                setSelectedFilter(key as string);
+                refetch();
+              }} // Add this to set the filter
+              trigger={({ ...triggerProps }) => {
+                return (
+                  <Button variant="link" {...triggerProps}>
+                    <ButtonText className="flex-row items-center gap-2 p-2 rounded-lg border border-typography-300">
+                      <Icon
+                        as={ListFilterPlus}
+                        size="2xl"
+                        className="text-black"
+                      />
+                    </ButtonText>
+                  </Button>
+                );
+              }}
+            >
+              <MenuItem key="debit" textValue="debit">
+                <MenuItemLabel size="sm">
+                  <ThemedText type="default" className="text-black">
+                    Debit
+                  </ThemedText>
+                </MenuItemLabel>
+              </MenuItem>
+              <MenuItem key="credit" textValue="credit">
+                <MenuItemLabel size="sm">
+                  <ThemedText type="default" className="text-black">
+                    Credit
+                  </ThemedText>
+                </MenuItemLabel>
+              </MenuItem>
+            </Menu>
+          </ThemedView>
+          <ThemedView className="mt-5">
+            {loadingWallet ? (
+              Array.from({ length: 7 }).map((_: any, index: number) => (
+                <ThemedView key={index} className="w-full">
+                  <Box className="w-full gap-4 p-3 rounded-md ">
+                    <SkeletonText _lines={3} className="h-2" />
+                    <HStack className="gap-1 align-middle">
+                      <Skeleton
+                        variant="circular"
+                        className="h-[24px] w-[28px] mr-2"
+                      />
+                      <SkeletonText _lines={2} gap={1} className="h-2 w-2/5" />
+                    </HStack>
+                  </Box>
+                </ThemedView>
+              ))
+            ) : (
+              <FlatList
+                scrollEnabled={false}
+                data={transactions ?? []}
+                ListEmptyComponent={
+                  <EmptyState
+                    title="No transactions yet"
+                    description="Your transaction history will appear here."
+                    icon={History}
+                    className="mt-10"
+                  />
+                }
+                refreshing={loadingWallet}
+                onRefresh={() => {
+                  refetch();
+                }}
+                contentContainerClassName="pb-20"
+                ItemSeparatorComponent={() => <View style={{ height: 5 }} />}
+                renderItem={({ item }) => (
+                  <TouchableOpacity
+                    onPress={() => {}}
+                    className={` flex-row justify-between items-center py-4 rounded-xl`}
+                  >
+                    {/* Make this container flexible and allow children to shrink */}
+                    <ThemedView className="flex-row items-center gap-3 flex-1 min-w-0">
+                      <ThemedView
+                        className={`p-3  rounded-full ${
+                          item.type === "credit"
+                            ? "bg-success-0"
+                            : "bg-primary-50"
+                        }`}
+                      >
+                        <Icon
+                          as={CircleCheckBig}
+                          size="2xl"
+                          className={`${
+                            item.type === "credit"
+                              ? "text-green-500"
+                              : "text-red-500"
+                          }`}
+                        />
+                      </ThemedView>
+                      {/* Ensure the text area can wrap/shrink */}
+                      <ThemedView className="flex-1 min-w-0">
+                        <ThemedText
+                          type="b2_body"
+                          className="flex-wrap"
+                          numberOfLines={2}
+                          ellipsizeMode="tail"
+                        >
+                          {item?.title ?? `Wallet has been ${item.type}ed`}
+                        </ThemedText>
+                        <ThemedView className="flex-row items-center">
+                          <ThemedText
+                            type="c1_caption"
+                            className="text-typography-700 capitalize w-[80%]"
+                          >
+                            {item?.description}
+                          </ThemedText>
+                        </ThemedView>
+                      </ThemedView>
+                    </ThemedView>
 
-            <View className="ml-2">
-                <Text className="text-gray-400 text-lg">›</Text>
-            </View>
-        </TouchableOpacity>
-    );
-
-    return (
-        <SafeAreaView className="flex-1 bg-gray-50">
-            {/* Header */}
-            <View className="flex-row items-center justify-between px-4 py-3 bg-white border-b border-gray-100">
-                <TouchableOpacity onPress={() => router.back()}>
-                    <Icon as={ArrowLeftIcon} size="md" className="text-gray-700" />
-                </TouchableOpacity>
-
-                <Text className="text-xl font-semibold text-gray-900">Transaction History</Text>
-
-                <TouchableOpacity>
-                    <Icon as={BellIcon} size="md" className="text-gray-700" />
-                </TouchableOpacity>
-            </View>
-
-            {/* Tab Navigation */}
-            <View className="bg-white px-4 py-4">
-                <View className="flex-row gap-2">
-                    <TouchableOpacity
-                        className={`px-4 py-2 rounded-full ${getTabStyle('all')}`}
-                        onPress={() => setActiveTab('all')}
+                    <ThemedText
+                      type="c1_caption"
+                      className="flex-wrap text-primary-500"
+                      numberOfLines={2}
+                      ellipsizeMode="tail"
                     >
-                        <Text className={`font-medium ${activeTab === 'all' ? 'text-white' : 'text-gray-600'}`}>
-                            All
-                        </Text>
-                    </TouchableOpacity>
-
-                    <TouchableOpacity
-                        className={`px-4 py-2 rounded-full ${getTabStyle('payment')}`}
-                        onPress={() => setActiveTab('payment')}
-                    >
-                        <Text className={`font-medium ${activeTab === 'payment' ? 'text-white' : 'text-gray-600'}`}>
-                            Payments
-                        </Text>
-                    </TouchableOpacity>
-
-                    <TouchableOpacity
-                        className={`px-4 py-2 rounded-full ${getTabStyle('withdraw')}`}
-                        onPress={() => setActiveTab('withdraw')}
-                    >
-                        <Text className={`font-medium ${activeTab === 'withdraw' ? 'text-white' : 'text-gray-600'}`}>
-                            Withdrawals
-                        </Text>
-                    </TouchableOpacity>
-                </View>
-            </View>
-
-            {/* Transaction List */}
-            <ScrollView className="flex-1">
-                <View className="bg-white mx-4 mt-4 rounded-xl border border-gray-200">
-                    {filteredTransactions.length > 0 ? (
-                        filteredTransactions.map(renderTransactionItem)
-                    ) : (
-                        <View className="flex-1 items-center justify-center py-20">
-                            <View className="w-20 h-20 bg-gray-100 rounded-full items-center justify-center mb-4">
-                                <View className="w-10 h-10 bg-gray-300 rounded-lg" />
-                            </View>
-                            <Text className="text-gray-500 text-center">
-                                No {activeTab === 'all' ? '' : activeTab} transactions found
-                            </Text>
-                        </View>
-                    )}
-                </View>
-            </ScrollView>
-        </SafeAreaView>
-    );
+                      {dayjs(item.updatedAt || item.createdAt)
+                        .fromNow()
+                        .replace(/\bminutes\b/g, "mins")
+                        .replace(/\bminute\b/g, "min")
+                        .replace(/\bseconds\b/g, "secs")
+                        .replace(/\bsecond\b/g, "sec")}
+                    </ThemedText>
+                  </TouchableOpacity>
+                )}
+                keyExtractor={(item) => item?.referenceId?.toString()}
+              />
+            )}
+          </ThemedView>
+        </ThemedView>
+      </ThemedView>
+    </ThemedView>
+  );
 }

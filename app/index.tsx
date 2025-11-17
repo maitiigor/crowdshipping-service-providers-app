@@ -29,11 +29,12 @@ export default function AppIndex() {
         return <Redirect href="/screens/language-selection" />;
     }
 
-    if (auth.isAuthenticated && auth.user.kycStatus != "pending") {
+    if (auth.isAuthenticated && (auth.user.kycStatus !== "pending" || auth.userProfile.isVerfied)) {
         return <Redirect href="/screens/dashboard" />;
     }
 
-    if (auth.isAuthenticated && auth.user.kycStatus === "pending") {
+    if (auth.isAuthenticated && (auth.user.kycStatus === "pending" || !auth.userProfile.isVerfied)) {
+      
         return <Redirect href="/screens/onboarding/edit-profile" />;
     }
 

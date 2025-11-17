@@ -71,14 +71,14 @@ export default function DepartPortScreen() {
                 <StatusBar barStyle="dark-content" backgroundColor="white" />
 
                 {/* Full Screen Map */}
-                <View className="flex-1 relative">
+                <ThemedView className="flex-1 relative">
                     {/* Placeholder for map - in real app, use react-native-maps */}
-                    <View className="flex-1 bg-gray-200 items-center justify-center">
-                        <Text className="text-gray-500 text-lg">Map View</Text>
-                        <Text className="text-gray-400 text-sm mt-2">
+                    <ThemedView className="flex-1 bg-gray-200 items-center justify-center">
+                        <ThemedText className="text-gray-500 text-lg">Map View</ThemedText>
+                        <ThemedText className="text-gray-400 text-sm mt-2">
                             Route tracking will be displayed here
-                        </Text>
-                    </View>
+                        </ThemedText>
+                    </ThemedView>
 
                     {/* Back Button */}
                     <TouchableOpacity
@@ -87,7 +87,7 @@ export default function DepartPortScreen() {
                     >
                         <Icon as={ArrowLeftIcon} size="md" className="text-gray-700" />
                     </TouchableOpacity>
-                </View>
+                </ThemedView>
 
                 {/* Bottom Sheet */}
                 <BottomSheet
@@ -105,76 +105,76 @@ export default function DepartPortScreen() {
                         contentContainerStyle={{ paddingBottom: 100 }}
                     >
                         {/* Trip Info */}
-                        <View className="px-4 py-6">
-                            <Text className="text-xl text-center font-medium font-poppins text-gray-900 mb-2">
+                        <ThemedView className="px-4 py-6">
+                            <ThemedText className="text-xl text-center font-medium font-poppins text-gray-900 mb-2">
                                 {tripData.title}
-                            </Text>
-                            <View className="flex-row items-center justify-center mb-4">
-                                <Text className="text-gray-600  text-center">
+                            </ThemedText>
+                            <ThemedView className="flex-row items-center justify-center mb-4">
+                                <ThemedText className="text-gray-600  text-center">
                                     {tripData.status} • {tripData.date}
-                                </Text>
-                            </View>
-                            <Text className="text-xl font-semibold text-center text-[#E75B3B]">
+                                </ThemedText>
+                            </ThemedView>
+                            <ThemedText className="text-xl font-semibold text-center text-[#E75B3B]">
                                 {tripData.amount}
-                            </Text>
-                        </View>
+                            </ThemedText>
+                        </ThemedView>
 
                         {/* Warning Notice */}
-                        <View className="mx-4 mb-6">
-                            <View className="bg-red-50 border border-red-200 rounded-lg p-4 flex-row items-start">
-                                <View className="w-6 h-6 rounded-full items-center justify-center mr-3 mt-0.5">
+                        <ThemedView className="mx-4 mb-6">
+                            <ThemedView className="bg-red-50 border border-red-200 rounded-lg p-4 flex-row items-start">
+                                <ThemedView className="w-6 h-6 rounded-full items-center justify-center mr-3 mt-0.5">
                                     <Icon as={WarningCircle} size="xl" fill='#FF0004' className='h-12' />
-                                </View>
-                                <View className="flex-1">
-                                    <Text className="text-[#FF0004] text-sm px-5 leading-normal  font-medium" style={{ fontFamily: 'Inter-Regular' }}>
+                                </ThemedView>
+                                <ThemedView className="flex-1">
+                                    <ThemedText className="text-[#FF0004] text-sm px-5 leading-normal  font-medium" style={{ fontFamily: 'Inter-Regular' }}>
                                         Please note: the goods is a perishable goods, goods are insured for safety sake.
-                                    </Text>
-                                </View>
-                            </View>
-                        </View>
+                                    </ThemedText>
+                                </ThemedView>
+                            </ThemedView>
+                        </ThemedView>
 
                         {/* Driver Info */}
-                        <View className="mx-4 mb-6">
-                            <View className="bg-white rounded-lg p-4 border border-gray-200 shadow-sm">
-                                <View className="flex-row items-center justify-between">
-                                    <View className="flex-row items-center flex-1">
-                                        <View className="w-12 h-12 rounded-full bg-[#E75B3B] items-center justify-center mr-3">
-                                            <Text className="text-white text-lg font-bold">
+                        <ThemedView className="mx-4 mb-6">
+                            <ThemedView className="bg-white rounded-lg p-4 border border-gray-200 shadow-sm">
+                                <ThemedView className="flex-row items-center justify-between">
+                                    <ThemedView className="flex-row items-center flex-1">
+                                        <ThemedView className="w-12 h-12 rounded-full bg-[#E75B3B] items-center justify-center mr-3">
+                                            <ThemedText className="text-white text-lg font-bold">
                                                 {tripData.driver.name.charAt(0)}
-                                            </Text>
-                                        </View>
-                                        <View className="flex-1">
-                                            <Text className="text-md font-medium text-[#131927]">
+                                            </ThemedText>
+                                        </ThemedView>
+                                        <ThemedView className="flex-1">
+                                            <ThemedText className="text-md font-medium text-[#131927]">
                                                 {tripData.driver.name}
-                                            </Text>
-                                            <View className="flex-row items-center">
+                                            </ThemedText>
+                                            <ThemedView className="flex-row items-center">
                                                 <Icon as={StarIcon} size="xs" fill="#DFD600" className="mr-1" />
-                                                <Text className="text-gray-600">
+                                                <ThemedText className="text-gray-600">
                                                     {tripData.driver.rating} ({tripData.driver.reviews})
-                                                </Text>
-                                            </View>
-                                        </View>
-                                    </View>
+                                                </ThemedText>
+                                            </ThemedView>
+                                        </ThemedView>
+                                    </ThemedView>
 
                                     {/* Action Buttons */}
-                                    <View className="flex-row space-x-2">
+                                    <ThemedView className="flex-row space-x-2">
                                         <TouchableOpacity className="w-10 h-10 bg-gray-100 rounded-full items-center justify-center">
                                             <Icon as={MessageCircleIcon} size="sm" className="text-[#E75B3B]" />
                                         </TouchableOpacity>
                                         <TouchableOpacity className="w-10 h-10 bg-gray-100 rounded-full items-center justify-center">
                                             <Icon as={PhoneIcon} size="sm" className="text-[#E75B3B]" />
                                         </TouchableOpacity>
-                                    </View>
-                                </View>
-                            </View>
-                        </View>
+                                    </ThemedView>
+                                </ThemedView>
+                            </ThemedView>
+                        </ThemedView>
 
                         {/* Location Timeline */}
-                        <View className="px-4 mb-6">
+                        <ThemedView className="px-4 mb-6">
                             {locations.map((location, index) => (
                                 <View key={location.id} className="flex-row mb-4">
                                     {/* Timeline Indicator */}
-                                    <View className="items-center mr-4">
+                                    <ThemedView className="items-center mr-4">
                                         <View
                                             className={`w-4 h-4 rounded-full border-2 ${location.isCompleted
                                                 ? 'bg-[#E75B3B] border-[#E75B3B]'
@@ -182,25 +182,25 @@ export default function DepartPortScreen() {
                                                 }`}
                                         />
                                         {index < locations.length - 1 && (
-                                            <View className="w-0.5 h-12 bg-gray-300 mt-2" />
+                                            <ThemedView className="w-0.5 h-12 bg-gray-300 mt-2" />
                                         )}
-                                    </View>
+                                    </ThemedView>
 
                                     {/* Location Info */}
-                                    <View className="flex-1">
-                                        <Text className="text-lg font-medium text-[#131927] mb-1">
+                                    < ThemedView className="flex-1" >
+                                        <ThemedText className="text-lg font-medium text-[#131927] mb-1">
                                             {location.address}
-                                        </Text>
-                                        <Text className="text-gray-500 text-sm">
+                                        </ThemedText>
+                                        <ThemedText className="text-gray-500 text-sm">
                                             {location.time}
-                                        </Text>
-                                    </View>
-                                </View>
+                                        </ThemedText>
+                                    </ThemedView>
+                                </ThemedView>
                             ))}
-                        </View>
+                        </ThemedView>
 
                         {/* Action Buttons */}
-                        <View className="px-4 gap-y-6 space-y-3">
+                        <ThemedView className="px-4 gap-y-6 space-y-3">
                             <Button
                                 size="xl"
                                 className="bg-[#E75B3B] rounded-xl w-full h-[47px]"
@@ -238,10 +238,10 @@ export default function DepartPortScreen() {
                                     Decline Change Request
                                 </ButtonText>
                             </Button>
-                        </View>
+                        </ThemedView>
                     </BottomSheetScrollView>
                 </BottomSheet>
-            </SafeAreaView>
-        </GestureHandlerRootView>
+            </SafeAreaView >
+        </GestureHandlerRootView >
     );
 }

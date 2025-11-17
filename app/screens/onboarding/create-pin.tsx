@@ -17,6 +17,7 @@ import { useAuth } from "../../../hooks/useRedux";
 import { ApiError, OTPVerificationRequest, ResendOTPRequest } from "../../../models";
 import { AppDispatch, useAppSelector } from "../../../store";
 import { resendOTP, verifyOTP } from "../../../store/slices/authSlice";
+import ParallaxScrollView from "../../../components/ParallaxScrollView";
 
 export default function CreatePin() {
     const { verificationCountdown, startCountdown } = useAuth();
@@ -166,16 +167,8 @@ export default function CreatePin() {
     };
 
     return (
-        <SafeAreaView className="flex-1 bg-white">
-            {/* Header */}
-            <View className="flex-row items-center px-6 py-4">
-                <TouchableOpacity className="p-2" onPress={() => router.back()}>
-                    <AntDesign name="arrowleft" size={24} color="#E75B3B" />
-                </TouchableOpacity>
-                <View className="flex-1 items-center">
-                    <Text className="text-lg font-semibold text-black">SignUp</Text>
-                </View>
-            </View>
+        <ParallaxScrollView headerBackgroundColor={{ light: "#FFFFFF", dark: "#353636" }}>
+          
 
             {/* OTP Verification Component */}
             <OTPVerification
@@ -194,6 +187,6 @@ export default function CreatePin() {
                 isVisible={showSuccessModal}
                 onClose={handleCloseApp}
             />
-        </SafeAreaView>
+        </ParallaxScrollView>
     );
 }

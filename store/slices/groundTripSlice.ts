@@ -9,14 +9,22 @@ interface GroundTripState {
     error: ApiError | null;
 }
 const initialState: GroundTripState = {
-    groundTrip: {
+groundTrip: {
         id: "",
         trackingId: "",
         weight: 0,
         customer: "",
         price: 0,
-        pickUpLocation: "",
-        dropOffLocation: "",
+        pickUpLocation: {
+            address: "",
+            coordinates: [0, 0],
+            type: "",
+        },
+        dropOffLocation: {
+            address: "",
+            coordinates: [0, 0],
+            type: "",
+        },
         bookingRef: "",
         dateOfBooking: "",
         status: "",
@@ -43,8 +51,10 @@ const groundTripSlice = createSlice({
     name: "groundTrip",
     initialState,
     reducers: {
-        saveGroundTrip(state, action) {
+        setGroundTrip(state, action) {
+            console.log("setting ground trip:", action.payload)
             state.groundTrip = action.payload;
+            console.log("ground trip set:", state.groundTrip)
         },
         fetchGroundTrips(state, action) {
             state.loading = true;
@@ -149,8 +159,6 @@ export const fetchDeliveryBookings = createAsyncThunk(
                 "/orders/new/bookings",
             );
 
-            //  console.log("list of trips booked", response.data)
-
             return response.data
         } catch (error: any) {
             ///   console.log("fetch bookings error:", error)
@@ -169,8 +177,6 @@ export const fetchActiveDeliveryBookings = createAsyncThunk(
             const response = await apiClient.get<ApiResponse<GroundTrip[]>>(
                 "/orders/active/bookings",
             );
-
-            console.log("list of trips booked", response.data)
 
             return response.data
         } catch (error: any) {
@@ -245,15 +251,23 @@ export const rejectBooking = createAsyncThunk(
     })
 
 export const updateTripStatus = createAsyncThunk(
-    "groundTrip/updateTripStatus", async (payload: { id: string; status: string; deliveryImage?: string }, { rejectWithValue }) => {
+    "groundTrip/updateTripStatus", async (payload: { id: string; status: string; deliveryImage?: string; expenses?: { amount: number; receipt: string; description: string }[]; otp?: string }, { rejectWithValue }) => {
         try {
             console.log("updating trip status:", payload.status)
 
             // Prepare request body
-            const requestBody: { status: string; deliveryImage?: string } = { status: payload.status };
+            const requestBody: { status: string; deliveredImageUrl?: string; expenses?: { amount: number; receipt: string ; description: string }[]; otp?: string } = { status: payload.status };
             if (payload.deliveryImage) {
                 console.log("delivery image:", payload.deliveryImage)
-                requestBody.deliveryImage = payload.deliveryImage;
+                requestBody.deliveredImageUrl = payload.deliveryImage;
+            }
+
+            if (payload.expenses) {
+                requestBody.expenses = payload.expenses;
+            }
+
+            if (payload.otp) {
+                requestBody.otp = payload.otp;
             }
 
             const response = await apiClient.patch<ApiResponse<any>>(
@@ -261,7 +275,7 @@ export const updateTripStatus = createAsyncThunk(
                 requestBody // status can be GOING_TO_PICKUP, PICKED_UP, IN_TRANSIT, ARRIVED_DESTINATION, DELIVERED, TOLL_BILL_PENDING, TOLL_BILL_PAID, COMPLETED
             );
 
-            console.log("trip status updated:",requestBody)
+            console.log("trip status updated:", requestBody)
 
             return response.data;
         } catch (error: any) {
@@ -274,5 +288,9 @@ export const updateTripStatus = createAsyncThunk(
         }
     })
 
+
+export const {
+    setGroundTrip,
+} = groundTripSlice.actions;
 
 export default groundTripSlice.reducer

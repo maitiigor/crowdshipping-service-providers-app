@@ -7,9 +7,7 @@ import {
     Image,
     ScrollView,
     StatusBar,
-    Text,
-    TouchableOpacity,
-    View
+    TouchableOpacity
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Button, ButtonText } from '../../../components/ui/button';
@@ -36,8 +34,8 @@ export default function ConfirmDeliveryScreen() {
     const bookingData = {
         id: groundTrip?.trackingId || 'ID2350847391',
         date: groundTrip?.dateOfBooking || 'June 12, 2025 | 10:00 am',
-        departureAirport: groundTrip?.pickUpLocation || 'Tangerang City, Banten 138',
-        arrivalAirport: groundTrip?.dropOffLocation || 'Tangerang City, Banten 15138',
+        departureAirport: groundTrip.pickUpLocation.address || 'Tangerang City, Banten 138',
+        arrivalAirport: groundTrip?.dropOffLocation.address || 'Tangerang City, Banten 15138',
         airline: 'Ground Transport', // For ground trips, this would be transport type
         flight: groundTrip?.trackingId || 'GT1315', // Use tracking ID as reference
         parcel: groundTrip?.packages?.[0]?.productType || 'Sensitive Documents',
@@ -201,6 +199,13 @@ export default function ConfirmDeliveryScreen() {
                 id: tripId,
                 status: 'DELIVERED',
                 deliveryImage: deliveryImageUrl
+            })).unwrap().then(() => {
+
+            });
+
+            await dispatch(updateTripStatus({
+                id: tripId,
+                status: 'COMPLETED',
             })).unwrap();
 
             showToast({
@@ -232,7 +237,7 @@ export default function ConfirmDeliveryScreen() {
             <StatusBar barStyle="dark-content" backgroundColor="white" />
 
             {/* Header */}
-            <View className="flex-row items-center justify-between px-4 py-4 border-b border-gray-100">
+            <ThemedView className="flex-row items-center justify-between px-4 py-4 border-b border-gray-100">
                 <TouchableOpacity
                     className="w-10 h-10 items-center justify-center"
                     onPress={() => router.back()}
@@ -240,12 +245,12 @@ export default function ConfirmDeliveryScreen() {
                     <Icon as={ArrowLeftIcon} size="md" className="text-gray-700" />
                 </TouchableOpacity>
 
-                <Text className="text-lg font-semibold text-[#2A2A2A]">
+                <ThemedText className="text-lg font-semibold text-[#2A2A2A]">
                     Confirm Delivery
-                </Text>
+                </ThemedText>
 
-                <View className="w-10 h-10" />
-            </View>
+                <ThemedView className="w-10 h-10" />
+            </ThemedView>
 
             {/* Content */}
             <ScrollView
@@ -254,113 +259,113 @@ export default function ConfirmDeliveryScreen() {
                 showsVerticalScrollIndicator={false}
             >
                 {/* Booking Details */}
-                <View className="mb-6">
-                    <View className="flex-row justify-between items-center mb-4">
-                        <Text className="text-gray-400 text-lg">Booking ID</Text>
-                        <Text className="text-[#2A2A2A] text-xl font-normal">{bookingData.id}</Text>
-                    </View>
+                <ThemedView className="mb-6">
+                    <ThemedView className="flex-row justify-between items-center mb-4">
+                        <ThemedText className="text-gray-400 text-lg">Booking ID</ThemedText>
+                        <ThemedText className="text-[#2A2A2A] text-xl font-normal">{bookingData.id}</ThemedText>
+                    </ThemedView>
 
-                    <View className="flex-row justify-between items-center mb-4">
-                        <Text className="text-gray-400 text-lg">Date of Booking</Text>
-                        <Text className="text-[#2A2A2A] font-normal">{bookingData.date}</Text>
-                    </View>
+                    <ThemedView className="flex-row justify-between items-center mb-4">
+                        <ThemedText className="text-gray-400 text-lg">Date of Booking</ThemedText>
+                        <ThemedText className="text-[#2A2A2A] font-normal">{bookingData.date}</ThemedText>
+                    </ThemedView>
 
-                    <View className="flex-row justify-between items-center mb-4">
-                        <Text className="text-gray-400 text-lg">Departure Airport</Text>
-                        <Text className="text-[#2A2A2A] font-normal text-right flex-1 ml-4">
+                    <ThemedView className="flex-row justify-between items-center mb-4">
+                        <ThemedText className="text-gray-400 text-lg">Departure Airport</ThemedText>
+                        <ThemedText className="text-[#2A2A2A] font-normal text-right flex-1 ml-4">
                             {bookingData.departureAirport}
-                        </Text>
-                    </View>
+                        </ThemedText>
+                    </ThemedView>
 
-                    <View className="flex-row justify-between items-center mb-4">
-                        <Text className="text-gray-400 text-lg">Arrival Airport</Text>
-                        <Text className="text-[#2A2A2A] font-normal text-right flex-1 ml-4">
+                    <ThemedView className="flex-row justify-between items-center mb-4">
+                        <ThemedText className="text-gray-400 text-lg">Arrival Airport</ThemedText>
+                        <ThemedText className="text-[#2A2A2A] font-normal text-right flex-1 ml-4">
                             {bookingData.arrivalAirport}
-                        </Text>
-                    </View>
+                        </ThemedText>
+                    </ThemedView>
 
-                    <View className="flex-row justify-between items-center mb-4">
-                        <Text className="text-gray-400 text-lg">Airline</Text>
-                        <Text className="text-[#2A2A2A] font-normal">{bookingData.airline}</Text>
-                    </View>
+                    <ThemedView className="flex-row justify-between items-center mb-4">
+                        <ThemedText className="text-gray-400 text-lg">Airline</ThemedText>
+                        <ThemedText className="text-[#2A2A2A] font-normal">{bookingData.airline}</ThemedText>
+                    </ThemedView>
 
-                    <View className="flex-row justify-between items-center mb-4">
-                        <Text className="text-gray-400 text-lg">Flight</Text>
-                        <Text className="text-[#2A2A2A] font-normal">{bookingData.flight}</Text>
-                    </View>
+                    <ThemedView className="flex-row justify-between items-center mb-4">
+                        <ThemedText className="text-gray-400 text-lg">Flight</ThemedText>
+                        <ThemedText className="text-[#2A2A2A] font-normal">{bookingData.flight}</ThemedText>
+                    </ThemedView>
 
-                    <View className="flex-row justify-between items-center mb-4">
-                        <Text className="text-gray-400 text-lg">Parcel</Text>
-                        <Text className="text-[#2A2A2A] font-normal">{bookingData.parcel}</Text>
-                    </View>
+                    <ThemedView className="flex-row justify-between items-center mb-4">
+                        <ThemedText className="text-gray-400 text-lg">Parcel</ThemedText>
+                        <ThemedText className="text-[#2A2A2A] font-normal">{bookingData.parcel}</ThemedText>
+                    </ThemedView>
 
-                    <View className="flex-row justify-between items-center mb-4">
-                        <Text className="text-gray-400 text-lg">Fare</Text>
-                        <Text className="text-[#2A2A2A] font-normal">{bookingData.fare}</Text>
-                    </View>
+                    <ThemedView className="flex-row justify-between items-center mb-4">
+                        <ThemedText className="text-gray-400 text-lg">Fare</ThemedText>
+                        <ThemedText className="text-[#2A2A2A] font-normal">{bookingData.fare}</ThemedText>
+                    </ThemedView>
 
-                    <View className="flex-row justify-between items-center">
-                        <Text className="text-gray-400 text-lg">Current Status</Text>
-                        <View className="bg-orange-100 px-3 py-1 rounded-full">
-                            <Text className="text-orange-600 text-sm font-normal">
+                    <ThemedView className="flex-row justify-between items-center">
+                        <ThemedText className="text-gray-400 text-lg">Current Status</ThemedText>
+                        <ThemedView className="bg-orange-100 px-3 py-1 rounded-full">
+                            <ThemedText className="text-orange-600 text-sm font-normal">
                                 {bookingData.status}
-                            </Text>
-                        </View>
-                    </View>
-                </View>
+                            </ThemedText>
+                        </ThemedView>
+                    </ThemedView>
+                </ThemedView>
 
                 {/* Upload Photo Section */}
-                <View className="mb-6">
+                <ThemedView className="mb-6">
                     <TouchableOpacity
                         className="border-2 border-dashed border-gray-300 rounded-lg p-6 items-center justify-center min-h-[120px]"
                         onPress={handleImageUpload}
                         disabled={isUploading}
                     >
                         {isUploading ? (
-                            <View className="items-center">
-                                <View className="w-12 h-12 bg-blue-100 rounded-full items-center justify-center mb-4">
-                                    <Text className="text-blue-600 text-xs">...</Text>
-                                </View>
-                                <Text className="text-blue-600 font-medium mb-1">
+                            <ThemedView className="items-center">
+                                <ThemedView className="w-12 h-12 bg-blue-100 rounded-full items-center justify-center mb-4">
+                                    <ThemedText className="text-blue-600 text-xs">...</ThemedText>
+                                </ThemedView>
+                                <ThemedText className="text-blue-600 font-medium mb-1">
                                     Uploading Photo...
-                                </Text>
-                                <Text className="text-gray-500 text-sm">
+                                </ThemedText>
+                                <ThemedText className="text-gray-500 text-sm">
                                     Please wait
-                                </Text>
-                            </View>
+                                </ThemedText>
+                            </ThemedView>
                         ) : uploadedImage && deliveryImageUrl ? (
-                            <View className="items-center">
+                            <ThemedView className="items-center">
                                 <Image
                                     source={{ uri: uploadedImage }}
                                     className="w-16 h-16 rounded-lg mb-4"
                                     resizeMode="cover"
                                 />
-                                <Text className="text-green-700 text-sm font-medium">✓ Photo uploaded successfully</Text>
-                                <Text className="text-gray-500 text-xs mt-1">Tap to change photo</Text>
-                            </View>
+                                <ThemedText className="text-green-700 text-sm font-medium">✓ Photo uploaded successfully</ThemedText>
+                                <ThemedText className="text-gray-500 text-xs mt-1">Tap to change photo</ThemedText>
+                            </ThemedView>
                         ) : (
-                            <View className="items-center">
-                                <View className="w-12 h-12 bg-gray-100 rounded-full items-center justify-center mb-4">
+                            <ThemedView className="items-center">
+                                <ThemedView className="w-12 h-12 bg-gray-100 rounded-full items-center justify-center mb-4">
                                     <Icon as={UploadIcon} size="md" className="text-gray-400" />
-                                </View>
-                                <Text className="text-gray-700 font-medium mb-1">
+                                </ThemedView>
+                                <ThemedText className="text-gray-700 font-medium mb-1">
                                     Upload Photo of Delivered Parcel
-                                </Text>
-                                <Text className="text-gray-500 text-sm">
+                                </ThemedText>
+                                <ThemedText className="text-gray-500 text-sm">
                                     Take a photo or select from gallery
-                                </Text>
-                            </View>
+                                </ThemedText>
+                            </ThemedView>
                         )}
                     </TouchableOpacity>
-                </View>
+                </ThemedView>
 
                 {/* Package Image */}
-                <View className="mb-6 items-center">
-                    <View className="w-full h-64 m=b-6 bg-gray-100 rounded-lg items-center justify-center">
-                        <View className="w-full h-full rounded items-center justify-center">
-                            <View className="w-full h-64 bg-white rounded-2xl items-center justify-center border-2 border-orange-200">
+                <ThemedView className="mb-6 items-center">
+                    <ThemedView className="w-full h-64 m=b-6 bg-gray-100 rounded-lg items-center justify-center">
+                        <ThemedView className="w-full h-full rounded items-center justify-center">
+                            <ThemedView className="w-full h-64 bg-white rounded-2xl items-center justify-center border-2 border-orange-200">
                                 <Image
-                                    source={require('../../../assets/images/package-sample.png')}
+                                    source={uploadedImage ? { uri: uploadedImage } : require('../../../assets/images/package-sample.png')}
                                     style={{
                                         width: '90%',
                                         height: '90%',
@@ -368,13 +373,13 @@ export default function ConfirmDeliveryScreen() {
                                     }}
                                     resizeMode="cover"
                                 />
-                            </View>
-                        </View>
-                    </View>
-                </View>
+                            </ThemedView>
+                        </ThemedView>
+                    </ThemedView>
+                </ThemedView>
 
                 {/* Bottom Buttons */}
-                <View className="px-4 pb-6 gap-y-3">
+                <ThemedView className="px-4 pb-6 gap-y-3">
                     <Button
                         size="xl"
                         className="bg-[#E75B3B] rounded-xl w-full h-[47px]"
@@ -397,7 +402,7 @@ export default function ConfirmDeliveryScreen() {
                             {isUpdating ? 'Updating...' : isUploading ? 'Uploading...' : 'Continue'}
                         </ButtonText>
                     </Button>
-                </View>
+                </ThemedView>
             </ScrollView>
 
         </SafeAreaView>

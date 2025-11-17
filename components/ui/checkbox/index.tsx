@@ -1,16 +1,16 @@
 'use client';
-import React from 'react';
 import { createCheckbox } from '@gluestack-ui/checkbox';
-import { View, Pressable, Text, Platform } from 'react-native';
-import type { TextProps, ViewProps } from 'react-native';
+import { IPrimitiveIcon, PrimitiveIcon, UIIcon } from '@gluestack-ui/icon';
+import type { VariantProps } from '@gluestack-ui/nativewind-utils';
 import { tva } from '@gluestack-ui/nativewind-utils/tva';
-import { PrimitiveIcon, IPrimitiveIcon, UIIcon } from '@gluestack-ui/icon';
 import {
-  withStyleContext,
   useStyleContext,
+  withStyleContext,
 } from '@gluestack-ui/nativewind-utils/withStyleContext';
 import { cssInterop } from 'nativewind';
-import type { VariantProps } from '@gluestack-ui/nativewind-utils';
+import React from 'react';
+import type { TextProps, ViewProps } from 'react-native';
+import { Platform, Pressable, Text, View } from 'react-native';
 
 const IndicatorWrapper = React.forwardRef<
   React.ComponentRef<typeof View>,
@@ -23,7 +23,7 @@ const LabelWrapper = React.forwardRef<
   React.ComponentRef<typeof Text>,
   TextProps
 >(function LabelWrapper({ ...props }, ref) {
-  return <Text {...props} ref={ref} />;
+  return <ThemedText {...props} ref={ref} />;
 });
 
 const IconWrapper = React.forwardRef<
@@ -230,9 +230,7 @@ CheckboxLabel.displayName = 'CheckboxLabel';
 CheckboxIcon.displayName = 'CheckboxIcon';
 
 export {
-  Checkbox,
-  CheckboxIndicator,
-  CheckboxLabel,
-  CheckboxIcon,
-  CheckboxGroup,
+  Checkbox, CheckboxGroup, CheckboxIcon, CheckboxIndicator,
+  CheckboxLabel
 };
+

@@ -6,10 +6,8 @@ import React from "react";
 import {
     ActivityIndicator,
     ScrollView,
-    Text,
     TextInput,
-    TouchableOpacity,
-    View,
+    TouchableOpacity
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useDispatch } from "react-redux";
@@ -23,7 +21,7 @@ import { useToast } from "../../../components/ui/toast";
 import { useEditProfileForm } from "../../../hooks/useRedux";
 import { ApiError } from "../../../models";
 import { AppDispatch, useAppSelector } from "../../../store";
-import { register, resetPassword } from "../../../store/slices/authSlice";
+import { resetPassword } from "../../../store/slices/authSlice";
 
 
 export default function ResetPassword() {
@@ -153,17 +151,17 @@ export default function ResetPassword() {
             {({ handleChange, handleSubmit, values, errors, touched }) => (
                 <SafeAreaView className="flex-1 bg-white">
                     {/* Header */}
-                    <View className="flex-row items-center justify-between px-6 py-4">
+                    <ThemedView className="flex-row items-center justify-between px-6 py-4">
                         <TouchableOpacity className="p-2" onPress={() => router.back()}>
                             <MaterialIcons name="chevron-left" size={48} color="#E75B3B" />
 
                         </TouchableOpacity>
 
-                        <Text className="text-lg font-semibold text-black">
+                        <ThemedText className="text-lg font-semibold text-black">
                             Reset Password
-                        </Text>
+                        </ThemedText>
 
-                    </View>
+                    </ThemedView>
 
                     <ScrollView
                         className="flex-1 px-6"
@@ -176,8 +174,8 @@ export default function ResetPassword() {
                         </ThemedView>
 
 
-                        <View className="mb-4">
-                            <Text className="text-sm text-gray-700 mb-2">Password</Text>
+                        <ThemedView className="mb-4">
+                            <ThemedText className="text-sm text-gray-700 mb-2">Password</ThemedText>
                             <TextInput
                                 placeholder="********"
                                 value={values.password}
@@ -186,11 +184,11 @@ export default function ResetPassword() {
                                 secureTextEntry
                             />
                             {touched.password && errors.password && (
-                                <Text style={{ color: "red", fontSize: 12 }}>{errors.password}</Text>
+                                <ThemedText style={{ color: "red", fontSize: 12 }}>{errors.password}</ThemedText>
                             )}
-                        </View>
+                        </ThemedView>
 
-                        <View className="mb-4">
+                        <ThemedView className="mb-4">
                             <InputLabelText>Confirm password</InputLabelText>
 
                             <TextInput
@@ -201,11 +199,11 @@ export default function ResetPassword() {
                                 secureTextEntry
                             />
                             {touched.confirmPassword && errors.confirmPassword && (
-                                <Text style={{ color: "red", fontSize: 12 }}>{errors.confirmPassword}</Text>
+                                <ThemedText style={{ color: "red", fontSize: 12 }}>{errors.confirmPassword}</ThemedText>
                             )}
-                        </View>
+                        </ThemedView>
 
-                        <View className="pb-8">
+                        <ThemedView className="pb-8">
                             <Button
                                 size="xl"
                                 className="bg-[#E75B3B] rounded-xl"
@@ -213,7 +211,7 @@ export default function ResetPassword() {
                             >
                                 <ButtonText className="text-white font-semibold">{loading ? <ActivityIndicator /> : 'Change Password'}</ButtonText>
                             </Button>
-                        </View>
+                        </ThemedView>
 
                     </ScrollView>
 

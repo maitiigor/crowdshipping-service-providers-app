@@ -4,9 +4,7 @@ import {
     Modal,
     ScrollView,
     StatusBar,
-    Text,
-    TouchableOpacity,
-    View
+    TouchableOpacity
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import PackageList from '../../../components/Custom/PackageList';
@@ -31,65 +29,65 @@ interface BidCardProps {
 }
 
 const BidCard: React.FC<BidCardProps> = ({ bid, onRenegotiate, onAccept }) => (
-    <View className="bg-white rounded-lg p-4 mb-4 shadow-sm border border-gray-100">
+    <ThemedView className="bg-white rounded-lg p-4 mb-4 shadow-sm border border-gray-100">
         {/* Bidder Info */}
-        <View className="flex-row items-center mb-3">
-            <View className="w-12 h-12 rounded-full mr-3 bg-[#E75B3B] items-center justify-center">
-                <Text className="text-white text-lg font-bold">
+        <ThemedView className="flex-row items-center mb-3">
+            <ThemedView className="w-12 h-12 rounded-full mr-3 bg-[#E75B3B] items-center justify-center">
+                <ThemedText className="text-white text-lg font-bold">
                     {bid.sender.fullName.charAt(0)}
-                </Text>
-            </View>
-            <View className="flex-1">
-                <Text className="text-lg font-semibold text-gray-900 mb-1">
+                </ThemedText>
+            </ThemedView>
+            <ThemedView className="flex-1">
+                <ThemedText className="text-lg font-semibold text-gray-900 mb-1">
                     {bid.sender.fullName}
-                </Text>
-                <View className="flex-row items-center">
+                </ThemedText>
+                <ThemedView className="flex-row items-center">
                     <Icon as={Location} size="sm" className="text-gray-500 mr-1" />
-                    <Text className="text-gray-600 text-sm">{bid.dropOffLocation.address}</Text>
-                </View>
-            </View>
-        </View>
+                    <ThemedText className="text-gray-600 text-sm">{bid.dropOffLocation.address}</ThemedText>
+                </ThemedView>
+            </ThemedView>
+        </ThemedView>
 
         {/* Bid Details */}
-        <View className="mb-4">
-            <Text className="text-gray-700 mb-1">
-                <Text className="font-medium">Space:</Text> N/A
-            </Text>
-            <Text className="text-gray-700">
-                <Text className="font-medium">Amount:</Text> ${bid.finalPrice}
-            </Text>
-        </View>
+        <ThemedView className="mb-4">
+            <ThemedText className="text-gray-700 mb-1">
+                <ThemedText className="font-medium">Space:</ThemedText> N/A
+            </ThemedText>
+            <ThemedText className="text-gray-700">
+                <ThemedText className="font-medium">Amount:</ThemedText> ${bid.finalPrice}
+            </ThemedText>
+        </ThemedView>
 
         {/* Packages Section */}
         {bid.packages && bid.packages.length > 0 && (
-            <View className="mb-4">
-                <Text className="text-lg font-semibold text-gray-900 mb-3">
+            <ThemedView className="mb-4">
+                <ThemedText className="text-lg font-semibold text-gray-900 mb-3">
                     Packages ({bid.packages.length})
-                </Text>
+                </ThemedText>
                 <PackageList
                     packages={bid.packages}
                     showTitle={false}
                 />
-            </View>
+            </ThemedView>
         )}
 
         {/* Action Buttons */}
-        <View className="flex-row space-x-3 gap-3">
+        <ThemedView className="flex-row space-x-3 gap-3">
             <TouchableOpacity
                 onPress={() => onRenegotiate(bid._id)}
                 className="flex-1 border-[#E75B3B] border-[1.5px] rounded-xl py-3 items-center"
             >
-                <Text className="text-[#E75B3B] font-medium">Renegotiate</Text>
+                <ThemedText className="text-[#E75B3B] font-medium">Renegotiate</ThemedText>
             </TouchableOpacity>
 
             <TouchableOpacity
                 onPress={() => onAccept(bid._id)}
                 className="flex-1 bg-[#E75B3B] rounded-xl py-3 items-center"
             >
-                <Text className="text-white font-medium">Accept</Text>
+                <ThemedText className="text-white font-medium">Accept</ThemedText>
             </TouchableOpacity>
-        </View>
-    </View>
+        </ThemedView>
+    </ThemedView>
 );
 
 interface SuccessModalProps {
@@ -104,20 +102,20 @@ const SuccessModal: React.FC<SuccessModalProps> = ({ visible, onClose }) => (
         animationType="fade"
         onRequestClose={onClose}
     >
-        <View className="flex-1 bg-black/50 items-center justify-center px-6">
-            <View className="bg-white rounded-2xl p-8 w-full max-w-sm items-center">
+        <ThemedView className="flex-1 bg-black/50 items-center justify-center px-6">
+            <ThemedView className="bg-white rounded-2xl p-8 w-full max-w-sm items-center">
                 {/* Success Icon */}
-                <View className="w-16 h-16 bg-white rounded-full items-center justify-center mb-6 border-4 border-green-500">
+                <ThemedView className="w-16 h-16 bg-white rounded-full items-center justify-center mb-6 border-4 border-green-500">
                     <Icon as={CheckCircleIcon} size="xl" className="text-green-500" />
-                </View>
+                </ThemedView>
 
                 {/* Success Message */}
-                <Text className="text-xl font-semibold text-gray-900 text-center mb-2">
+                <ThemedText className="text-xl font-semibold text-gray-900 text-center mb-2">
                     Success
-                </Text>
-                <Text className="text-gray-500 text-center mb-8 text-base">
+                </ThemedText>
+                <ThemedText className="text-gray-500 text-center mb-8 text-base">
                     Air booking #ID230297 accepted!
-                </Text>
+                </ThemedText>
 
                 {/* Close Button */}
                 <Button
@@ -129,8 +127,8 @@ const SuccessModal: React.FC<SuccessModalProps> = ({ visible, onClose }) => (
                         Close
                     </ButtonText>
                 </Button>
-            </View>
-        </View>
+            </ThemedView>
+        </ThemedView>
     </Modal>
 );
 
@@ -156,7 +154,7 @@ export default function ReviewBidsScreen() {
     }
 
     if (type == 'Air' && tripId) {
-     
+
         useEffect(() => {
             dispatch(fetchAirTripById(tripId));
         }, [dispatch]);
@@ -247,7 +245,7 @@ export default function ReviewBidsScreen() {
 
         dispatch(acceptBid({ bidId }))
             .then((res) => {
-             
+                console.log("🚀 ~ handleAccept ~ res:", res);
                 setShowSuccessModal(true);
 
             })
@@ -274,24 +272,24 @@ export default function ReviewBidsScreen() {
             ))
         );
         const bids = airTrip.bids_recieved || [];
-      
+
         return (
 
             <ScrollView className="flex-1" showsVerticalScrollIndicator={false}>
                 {/* Trip Info Card */}
-                <View className="mx-4 mt-4 mb-6">
-                    <View className="bg-[#FDEFEB] rounded-2xl my-3 p-5 shadow-sm border border-[#FDEFEB]">
-                        <Text className="text-lg font-semibold text-gray-900 mb-1">
+                <ThemedView className="mx-4 mt-4 mb-6">
+                    <ThemedView className="bg-[#FDEFEB] rounded-2xl my-3 p-5 shadow-sm border border-[#FDEFEB]">
+                        <ThemedText className="text-lg font-semibold text-gray-900 mb-1">
                             {`${airTrip.departureAirport.city} (${airTrip.departureAirport.iata}) → ${airTrip.arrivalAirport.city} (${airTrip.arrivalAirport.iata})`}
-                        </Text>
-                        <Text className="text-gray-700">
+                        </ThemedText>
+                        <ThemedText className="text-gray-700">
                             Date: {new Date(airTrip.departureDate).toLocaleDateString()}
-                        </Text>
-                    </View>
-                </View>
+                        </ThemedText>
+                    </ThemedView>
+                </ThemedView>
 
                 {/* Bids List */}
-                <View className="px-4">
+                <ThemedView className="px-4">
                     {Array.isArray(bids) && bids.length > 0 ? (
                         bids.map((bid) => (
                             <BidCard
@@ -302,18 +300,18 @@ export default function ReviewBidsScreen() {
                             />
                         ))
                     ) : null}
-                </View>
+                </ThemedView>
 
                 {/* Empty State - Show when no bids */}
                 {Array.isArray(bids) && bids.length === 0 && (
-                    <View className="flex-1 items-center justify-center px-4 py-20">
-                        <Text className="text-gray-500 text-center text-lg mb-2">
+                    <ThemedView className="flex-1 items-center justify-center px-4 py-20">
+                        <ThemedText className="text-gray-500 text-center text-lg mb-2">
                             No bids received yet
-                        </Text>
-                        <Text className="text-gray-400 text-center">
+                        </ThemedText>
+                        <ThemedText className="text-gray-400 text-center">
                             Bids will appear here when travelers are interested in your trip
-                        </Text>
-                    </View>
+                        </ThemedText>
+                    </ThemedView>
                 )}
             </ScrollView>
         );
@@ -340,24 +338,24 @@ export default function ReviewBidsScreen() {
             typeof marineTrip.bids_recieved === 'number'
                 ? []
                 : marineTrip.bids_recieved || [];
-      
+
         return (
 
             <ScrollView className="flex-1" showsVerticalScrollIndicator={false}>
                 {/* Trip Info Card */}
-                <View className="mx-4 mt-4 mb-6">
-                    <View className="bg-[#FEF7E6] rounded-lg p-4 border border-[#F5E6A3]">
-                        <Text className="text-lg font-semibold text-gray-900 mb-1">
+                <ThemedView className="mx-4 mt-4 mb-6">
+                    <ThemedView className="bg-[#FEF7E6] rounded-lg p-4 border border-[#F5E6A3]">
+                        <ThemedText className="text-lg font-semibold text-gray-900 mb-1">
                             {marineTrip.containerNumber}  {marineTrip.departurePort} → {marineTrip.arrivalPort}
-                        </Text>
-                        <Text className="text-gray-700">
+                        </ThemedText>
+                        <ThemedText className="text-gray-700">
                             Date: {new Date(marineTrip.departureDate).toLocaleDateString()}
-                        </Text>
-                    </View>
-                </View>
+                        </ThemedText>
+                    </ThemedView>
+                </ThemedView>
 
                 {/* Bids List */}
-                <View className="px-4">
+                <ThemedView className="px-4">
                     {bids.map((bid) => (
                         <BidCard
                             key={bid._id}
@@ -366,18 +364,18 @@ export default function ReviewBidsScreen() {
                             onAccept={handleAccept}
                         />
                     ))}
-                </View>
+                </ThemedView>
 
                 {/* Empty State - Show when no bids */}
                 {bids.length === 0 && (
-                    <View className="flex-1 items-center justify-center px-4 py-20">
-                        <Text className="text-gray-500 text-center text-lg mb-2">
+                    <ThemedView className="flex-1 items-center justify-center px-4 py-20">
+                        <ThemedText className="text-gray-500 text-center text-lg mb-2">
                             No bids received yet
-                        </Text>
-                        <Text className="text-gray-400 text-center">
+                        </ThemedText>
+                        <ThemedText className="text-gray-400 text-center">
                             Bids will appear here when travelers are interested in your trip
-                        </Text>
-                    </View>
+                        </ThemedText>
+                    </ThemedView>
                 )}
             </ScrollView>
         );
@@ -389,11 +387,11 @@ export default function ReviewBidsScreen() {
 
 
             {type === 'Air' ? renderAirTripDetails() : type === 'Maritime' ? renderMarineTripDetails() : (
-                <View className="flex-1 items-center justify-center px-4 py-20">
-                    <Text className="text-gray-500 text-center text-lg mb-2">
+                <ThemedView className="flex-1 items-center justify-center px-4 py-20">
+                    <ThemedText className="text-gray-500 text-center text-lg mb-2">
                         No bids available for this trip type
-                    </Text>
-                </View>
+                    </ThemedText>
+                </ThemedView>
             )}
 
             {/* Success Modal */}

@@ -6,13 +6,9 @@ import {
     Image,
     KeyboardAvoidingView,
     Platform,
-    ScrollView,
     StatusBar,
-    Text,
-    TouchableOpacity,
-    View,
+    TouchableOpacity
 } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
 import * as Yup from 'yup';
 
 // UI Components
@@ -23,10 +19,13 @@ import { CircleCheckIcon, HelpCircleIcon, LucideIcon } from 'lucide-react-native
 import { useDispatch } from 'react-redux';
 import CustomToast from '../../../components/Custom/CustomToast';
 import InputLabelText from '../../../components/Custom/InputLabelText';
+import ParallaxScrollView from '../../../components/ParallaxScrollView';
+import { ThemedView } from '../../../components/ThemedView';
 import { useToast } from '../../../components/ui/toast';
 import { ApiError } from '../../../models';
 import { AppDispatch, useAppSelector } from '../../../store';
 import { forgotPassword } from '../../../store/slices/authSlice';
+import { ThemedText } from '../../../components/ThemedText';
 
 // Validation Schema
 const forgotPasswordSchema = Yup.object().shape({
@@ -131,124 +130,120 @@ export default function ForgotPasswordScreen() {
     };
 
     return (
-        <SafeAreaView className="flex-1 bg-white">
+        <ParallaxScrollView headerBackgroundColor={{ light: "white", dark: "#353636" }}>
             <StatusBar barStyle="dark-content" backgroundColor="white" />
 
             <KeyboardAvoidingView
                 behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
                 className="flex-1"
             >
-                <ScrollView
-                    className="flex-1"
-                    showsVerticalScrollIndicator={false}
-                    keyboardShouldPersistTaps="handled"
-                >
-                    {/* Header */}
-                    <View className="flex-row items-center justify-between px-6 py-4">
-                        <TouchableOpacity
-                            onPress={() => router.back()}
-                            className="p-2 -ml-2"
-                        >
-                            <Icon as={ArrowLeftIcon} size="lg" className="text-gray-700" />
-                        </TouchableOpacity>
 
-                        <Text className="text-lg font-semibold text-gray-900">
-                            Forgot Password
-                        </Text>
+                {/* Header */}
+                <ThemedView className="flex-row items-center justify-between px-6 py-4">
+                    <TouchableOpacity
+                        onPress={() => router.back()}
+                        className="p-2 -ml-2"
+                    >
+                        <Icon as={ArrowLeftIcon} size="lg" className="text-gray-700" />
+                    </TouchableOpacity>
 
-                        <View className="w-8" />
-                    </View>
+                    <ThemedText className="text-lg font-semibold text-gray-900">
+                        Forgot Password
+                    </ThemedText>
 
-                    {/* Content */}
-                    <View className="flex-1 px-6 pt-8">
-                        {/* Icon */}
-                        <View className="items-center mb-8">
-                            <Image
-                                alt="Lock"
-                                source={require("@/assets/images/onboarding/lock.png")}
-                                className="w-auto h-[100px]"
-                                resizeMode="contain"
-                            />
-                        </View>
+                    <ThemedView className="w-8" />
+                </ThemedView>
 
-                        {/* Title and Description */}
-                        <View className="mb-8">
-                            <Text className="text-2xl font-bold text-gray-900 mb-4 text-center">
-                                Forgot your password?
-                            </Text>
-                            <Text className="text-base text-gray-600 leading-6 text-center px-4">
-                                Enter your registered email below to receive password reset instruction
-                            </Text>
-                        </View>
+                {/* Content */}
+                <ThemedView className="flex-1 px-6 pt-8">
+                    {/* Icon */}
+                    <ThemedView className="items-center mb-8">
+                        <Image
+                            alt="Lock"
+                            source={require("@/assets/images/onboarding/lock.png")}
+                            className="w-auto h-[100px]"
+                            resizeMode="contain"
+                        />
+                    </ThemedView>
 
-                        {/* Forgot Password Form */}
-                        <Formik
-                            initialValues={{ email: '' }}
-                            validationSchema={forgotPasswordSchema}
-                            onSubmit={handleForgotPassword}
-                        >
-                            {({ handleChange, handleBlur, handleSubmit, values, errors, touched }) => (
-                                <View className="space-y-6">
-                                    {/* Email Input */}
-                                    <View>
-                                        <InputLabelText>
-                                            Email address
-                                        </InputLabelText>
-                                        <Input
-                                            variant="outline"
-                                            size="lg"
-                                            className={`${errors.email && touched.email
-                                                ? 'border-red-500'
-                                                : 'border-gray-300'
-                                                } bg-rose-50 rounded-lg border-0 min-h-[54px]`}
-                                        >
-                                            <InputField
-                                                placeholder="user@gmail.com"
-                                                value={values.email}
-                                                onChangeText={handleChange('email')}
-                                                onBlur={handleBlur('email')}
-                                                keyboardType="email-address"
-                                                autoCapitalize="none"
-                                                autoComplete="email"
-                                                className="text-gray-80"
-                                            />
-                                        </Input>
-                                        {errors.email && touched.email && (
-                                            <Text className="text-red-500 text-sm mt-1">
-                                                {errors.email}
-                                            </Text>
-                                        )}
-                                    </View>
+                    {/* Title and Description */}
+                    <ThemedView className="mb-8">
+                        <ThemedText className="text-2xl font-bold text-gray-900 mb-4 text-center">
+                            Forgot your password?
+                        </ThemedText>
+                        <ThemedText className="text-base text-gray-600 leading-6 text-center px-4">
+                            Enter your registered email below to receive password reset instruction
+                        </ThemedText>
+                    </ThemedView>
 
-                                    {/* Send Button */}
-                                    <Button
+                    {/* Forgot Password Form */}
+                    <Formik
+                        initialValues={{ email: '' }}
+                        validationSchema={forgotPasswordSchema}
+                        onSubmit={handleForgotPassword}
+                    >
+                        {({ handleChange, handleBlur, handleSubmit, values, errors, touched }) => (
+                            <ThemedView className="space-y-6">
+                                {/* Email Input */}
+                                <ThemedView>
+                                    <InputLabelText>
+                                        Email address
+                                    </InputLabelText>
+                                    <Input
+                                        variant="outline"
                                         size="lg"
-                                        className="bg-[#E75B3B] mt-12 h-[48px] rounded-xl"
-                                        onPress={() => handleSubmit()}
-                                        disabled={loading}
+                                        className={`${errors.email && touched.email
+                                            ? 'border-red-500'
+                                            : 'border-gray-300'
+                                            } bg-rose-50 rounded-lg border-0 min-h-[54px]`}
                                     >
-                                        <ButtonText className="text-white font-semibold text-base">
-                                            {loading ? <ActivityIndicator /> : 'Send'}
-                                        </ButtonText>
-                                    </Button>
-                                </View>
-                            )}
-                        </Formik>
-                    </View>
-                </ScrollView>
+                                        <InputField
+                                            placeholder="user@gmail.com"
+                                            value={values.email}
+                                            onChangeText={handleChange('email')}
+                                            onBlur={handleBlur('email')}
+                                            keyboardType="email-address"
+                                            autoCapitalize="none"
+                                            autoComplete="email"
+                                            className="text-gray-80"
+                                        />
+                                    </Input>
+                                    {errors.email && touched.email && (
+                                        <ThemedText className="text-red-500 text-sm mt-1">
+                                            {errors.email}
+                                        </ThemedText>
+                                    )}
+                                </ThemedView>
+
+                                {/* Send Button */}
+                                <Button
+                                    size="lg"
+                                    className="bg-[#E75B3B] mt-12 h-[48px] rounded-xl"
+                                    onPress={() => handleSubmit()}
+                                    disabled={loading}
+                                >
+                                    <ButtonText className="text-white font-semibold text-base">
+                                        {loading ? <ActivityIndicator /> : 'Send'}
+                                    </ButtonText>
+                                </Button>
+                            </ThemedView>
+                        )}
+                    </Formik>
+                </ThemedView>
+
 
                 {/* Bottom Login Link */}
-                <View className="px-6 py-6">
-                    <View className="flex-row justify-center items-center">
-                        <Text className="text-gray-600">You remember your password? </Text>
+                <ThemedView className="px-6 py-6">
+                    <ThemedView className="flex-row justify-center items-center">
+                        <ThemedText className="text-gray-600">You remember your password? </ThemedText>
                         <TouchableOpacity
                             onPress={() => router.back()}
                         >
-                            <Text className="text-[#E75B3B] font-semibold">Login</Text>
+                            <ThemedText className="text-[#E75B3B] font-semibold">Login</ThemedText>
                         </TouchableOpacity>
-                    </View>
-                </View>
-            </KeyboardAvoidingView>
-        </SafeAreaView>
+                    </ThemedView>
+                </ThemedView>
+            </KeyboardAvoidingView >
+        </ParallaxScrollView >
     );
 }

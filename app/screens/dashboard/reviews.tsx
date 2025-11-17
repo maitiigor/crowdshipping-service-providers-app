@@ -74,104 +74,104 @@ export default function ReviewsScreen() {
 
     const renderReview = (review: Review) => (
         <View key={review.id} className="bg-white rounded-2xl p-6 mb-4">
-            <View className="flex-row items-center justify-between mb-3">
-                <View className="flex-row items-center">
-                    <View className="w-10 h-10 bg-gray-300 rounded-full items-center justify-center mr-3">
-                        <Text className="text-gray-600 font-semibold">
+            <ThemedView className="flex-row items-center justify-between mb-3">
+                <ThemedView className="flex-row items-center">
+                    <ThemedView className="w-10 h-10 bg-gray-300 rounded-full items-center justify-center mr-3">
+                        <ThemedText className="text-gray-600 font-semibold">
                             {review.customerName.charAt(0)}
-                        </Text>
-                    </View>
-                    <View>
-                        <Text className="text-gray-900 font-semibold text-base">
+                        </ThemedText>
+                    </ThemedView>
+                    <ThemedView>
+                        <ThemedText className="text-gray-900 font-semibold text-base">
                             {review.customerName}
-                        </Text>
-                        <Text className="text-gray-500 text-sm">{review.date}</Text>
-                    </View>
-                </View>
-                <View className="flex-row">
+                        </ThemedText>
+                        <ThemedText className="text-gray-500 text-sm">{review.date}</ThemedText>
+                    </ThemedView>
+                </ThemedView>
+                <ThemedView className="flex-row">
                     {renderStars(review.rating)}
-                </View>
-            </View>
+                </ThemedView>
+            </ThemedView>
 
-            <Text className="text-gray-700 text-sm leading-6 mb-3">
+            <ThemedText className="text-gray-700 text-sm leading-6 mb-3">
                 {review.comment}
-            </Text>
+            </ThemedText>
 
-            <View className="flex-row items-center">
-                <Text className="text-gray-500 text-xs">Trip: </Text>
-                <Text className="text-gray-600 text-xs font-medium">{review.tripRoute}</Text>
-            </View>
-        </View>
+            <ThemedView className="flex-row items-center">
+                <ThemedText className="text-gray-500 text-xs">Trip: </ThemedText>
+                <ThemedText className="text-gray-600 text-xs font-medium">{review.tripRoute}</ThemedText>
+            </ThemedView>
+        </View >
     );
 
     return (
         <SafeAreaView className="flex-1 bg-gray-50">
             {/* Header */}
-            <View className="flex-row items-center justify-between px-4 py-3 bg-white border-b border-gray-100">
+            <ThemedView className="flex-row items-center justify-between px-4 py-3 bg-white border-b border-gray-100">
                 <TouchableOpacity onPress={() => router.back()}>
                     <Icon as={ArrowLeftIcon} size="md" className="text-gray-700" />
                 </TouchableOpacity>
 
-                <Text className="text-xl font-semibold text-gray-900">Reviews & Ratings</Text>
+                <ThemedText className="text-xl font-semibold text-gray-900">Reviews & Ratings</ThemedText>
 
                 <TouchableOpacity onPress={() => router.push('/screens/notifications')}>
                     <Icon as={BellIcon} size="md" className="text-gray-700" />
                 </TouchableOpacity>
-            </View>
+            </ThemedView>
 
             <ScrollView className="flex-1 px-4 py-6">
                 {/* Rating Summary */}
-                <View className="bg-white rounded-2xl p-6 mb-6">
-                    <View className="items-center">
-                        <Text className="text-4xl font-bold text-gray-900 mb-2">
+                <ThemedView className="bg-white rounded-2xl p-6 mb-6">
+                    <ThemedView className="items-center">
+                        <ThemedText className="text-4xl font-bold text-gray-900 mb-2">
                             {averageRating}
-                        </Text>
-                        <View className="flex-row mb-2">
+                        </ThemedText>
+                        <ThemedView className="flex-row mb-2">
                             {renderStars(Math.floor(averageRating))}
-                        </View>
-                        <Text className="text-gray-500 text-base">
+                        </ThemedView>
+                        <ThemedText className="text-gray-500 text-base">
                             Based on {totalReviews} reviews
-                        </Text>
-                    </View>
+                        </ThemedText>
+                    </ThemedView>
 
                     {/* Rating Breakdown */}
-                    <View className="mt-6 pt-6 border-t border-gray-100">
+                    <ThemedView className="mt-6 pt-6 border-t border-gray-100">
                         {[5, 4, 3, 2, 1].map((stars) => {
                             const count = mockReviews.filter(r => r.rating === stars).length;
                             const percentage = (count / totalReviews) * 100;
-                            
+
                             return (
                                 <View key={stars} className="flex-row items-center mb-2">
-                                    <Text className="text-gray-600 text-sm w-8">{stars}</Text>
+                                    <ThemedText className="text-gray-600 text-sm w-8">{stars}</ThemedText>
                                     <Icon as={StarIcon} size="sm" className="text-yellow-500 mr-2" />
-                                    <View className="flex-1 bg-gray-200 rounded-full h-2 mr-3">
-                                        <View 
+                                    <ThemedView className="flex-1 bg-gray-200 rounded-full h-2 mr-3">
+                                        <View
                                             className="bg-yellow-500 h-2 rounded-full"
                                             style={{ width: `${percentage}%` }}
                                         />
-                                    </View>
-                                    <Text className="text-gray-500 text-sm w-8">{count}</Text>
-                                </View>
+                                    </ThemedView>
+                                    <ThemedText className="text-gray-500 text-sm w-8">{count}</ThemedText>
+                                </ThemedView>
                             );
                         })}
-                    </View>
-                </View>
+                    </ThemedView>
+                </ThemedView>
 
                 {/* Reviews List */}
-                <View className="mb-6">
-                    <Text className="text-gray-900 font-semibold text-lg mb-4">
+                <ThemedView className="mb-6">
+                    <ThemedText className="text-gray-900 font-semibold text-lg mb-4">
                         Recent Reviews
-                    </Text>
+                    </ThemedText>
                     {mockReviews.map(renderReview)}
-                </View>
+                </ThemedView>
 
                 {/* Load More Button */}
                 <TouchableOpacity className="bg-white border border-gray-200 py-4 rounded-2xl mb-6">
-                    <Text className="text-gray-700 font-semibold text-center">
+                    <ThemedText className="text-gray-700 font-semibold text-center">
                         Load More Reviews
-                    </Text>
+                    </ThemedText>
                 </TouchableOpacity>
             </ScrollView>
-        </SafeAreaView>
+        </SafeAreaView >
     );
 }

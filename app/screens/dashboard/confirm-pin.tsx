@@ -4,7 +4,7 @@ import OTPVerification from '@/components/ui/otp-verification';
 import SuccessModal from '@/components/ui/success-modal';
 import { router, useLocalSearchParams } from 'expo-router';
 import React, { useState } from 'react';
-import { Text, TouchableOpacity, View } from 'react-native';
+import { TouchableOpacity } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 export default function ConfirmPinScreen() {
@@ -46,17 +46,17 @@ export default function ConfirmPinScreen() {
     return (
         <SafeAreaView className="flex-1 bg-white">
             {/* Header */}
-            <View className="flex-row items-center justify-between px-4 py-3 border-b border-gray-100">
+            <ThemedView className="flex-row items-center justify-between px-4 py-3 border-b border-gray-100">
                 <TouchableOpacity onPress={() => router.back()}>
                     <Icon as={ArrowLeftIcon} size="md" className="text-gray-700" />
                 </TouchableOpacity>
 
-                <Text className="text-xl font-semibold text-gray-900">Confirm Pin</Text>
+                <ThemedText className="text-xl font-semibold text-gray-900">Confirm Pin</ThemedText>
 
                 <TouchableOpacity>
                     <Icon as={BellIcon} size="md" className="text-gray-700" />
                 </TouchableOpacity>
-            </View>
+            </ThemedView>
 
             {/* OTP Verification Component */}
             <OTPVerification

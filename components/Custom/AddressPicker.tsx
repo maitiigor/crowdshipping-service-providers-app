@@ -168,7 +168,7 @@ export function AddressPicker({
 
   return (
     <ThemedView>
-      <View>
+      <ThemedView>
         <ThemedView className="flex-row gap-2">
           <Input
             size="xl"
@@ -229,7 +229,7 @@ export function AddressPicker({
             </Button>
           </ThemedView>
         )}
-      </View>
+      </ThemedView>
 
       <Modal isOpen={mapOpen} onClose={() => setMapOpen(false)} size="full">
         <ModalBackdrop />
@@ -265,7 +265,7 @@ export function AddressPicker({
                   console.warn("WebView error: ", nativeEvent);
                 }}
               />
-            </View>
+            </ThemedView>
           </ModalBody>
           <ModalFooter>
             <Button
@@ -281,7 +281,7 @@ export function AddressPicker({
           </ModalFooter>
         </ModalContent>
       </Modal>
-    </ThemedView>
+    </ThemedView >
   );
 }
 

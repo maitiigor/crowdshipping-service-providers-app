@@ -1,5 +1,5 @@
 import React from 'react';
-import { Modal, Text, TouchableOpacity, View } from 'react-native';
+import { Modal, TouchableOpacity } from 'react-native';
 
 interface LogoutModalProps {
     visible: boolean;
@@ -15,7 +15,7 @@ export const LogoutModal: React.FC<LogoutModalProps> = ({ visible, onClose, onCo
             animationType="slide"
             onRequestClose={onClose}
         >
-            <View className="flex-1 bg-black/50 justify-end">
+            <ThemedView className="flex-1 bg-black/50 justify-end">
                 {/* Overlay */}
                 <TouchableOpacity
                     className="flex-1"
@@ -24,27 +24,27 @@ export const LogoutModal: React.FC<LogoutModalProps> = ({ visible, onClose, onCo
                 />
 
                 {/* Bottom Panel */}
-                <View className="bg-white rounded-t-3xl px-6 py-8">
+                <ThemedView className="bg-white rounded-t-3xl px-6 py-8">
                     {/* Title */}
-                    <Text className="text-2xl font-bold text-center text-[#FE0F00] mb-4">
+                    <ThemedText className="text-2xl font-bold text-center text-[#FE0F00] mb-4">
                         Log out
-                    </Text>
+                    </ThemedText>
 
                     {/* Message */}
-                    <Text className="text-base text-gray-700 text-center mb-8">
+                    <ThemedText className="text-base text-gray-700 text-center mb-8">
                         Are you sure you want to log out?
-                    </Text>
+                    </ThemedText>
 
                     {/* Buttons */}
-                    <View className="flex-row gap-3">
+                    <ThemedView className="flex-row gap-3">
                         {/* Cancel Button */}
                         <TouchableOpacity
                             className="flex-1 py-3 px-6 border border-orange-500 rounded-xl"
                             onPress={onClose}
                         >
-                            <Text className="text-orange-500 font-medium text-center">
+                            <ThemedText className="text-orange-500 font-medium text-center">
                                 Cancel
-                            </Text>
+                            </ThemedText>
                         </TouchableOpacity>
 
                         {/* Confirm Button */}
@@ -52,13 +52,13 @@ export const LogoutModal: React.FC<LogoutModalProps> = ({ visible, onClose, onCo
                             className="flex-1 py-3 px-6 bg-orange-500 rounded-xl"
                             onPress={onConfirm}
                         >
-                            <Text className="text-white font-medium text-center">
+                            <ThemedText className="text-white font-medium text-center">
                                 Yes, Logout
-                            </Text>
+                            </ThemedText>
                         </TouchableOpacity>
-                    </View>
-                </View>
-            </View>
+                    </ThemedView>
+                </ThemedView>
+            </ThemedView>
         </Modal>
     );
 };

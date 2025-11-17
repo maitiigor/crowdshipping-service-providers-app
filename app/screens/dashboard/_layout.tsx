@@ -17,6 +17,8 @@ export default function DashboardLayout() {
             <Stack.Screen name="depart-port" />
             <Stack.Screen name="arrived-location" />
             <Stack.Screen name="driver-feedback" />
+            <Stack.Screen name="air-trip-management" />
+            <Stack.Screen name="trip-status-management" />
         </Stack>
     );
 }

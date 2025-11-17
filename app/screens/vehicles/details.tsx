@@ -1,13 +1,15 @@
-import { AntDesign, MaterialIcons } from '@expo/vector-icons';
-import { router, useLocalSearchParams } from 'expo-router';
+import { router, useLocalSearchParams, useNavigation } from 'expo-router';
+import { ChevronLeft } from 'lucide-react-native';
 import React, { useEffect, useState } from 'react';
 import {
     ActivityIndicator,
-    ScrollView,
-    Text,
-    TouchableOpacity,
-    View
+    TouchableOpacity
 } from 'react-native';
+import NotificationIconComponent from '../../../components/NotificationIconComponent';
+import ParallaxScrollView from '../../../components/ParallaxScrollView';
+import { ThemedText } from '../../../components/ThemedText';
+import { ThemedView } from '../../../components/ThemedView';
+import { Icon } from '../../../components/ui/icon';
 import { Vehicle } from '../../../models';
 import { useAppDispatch, useAppSelector } from '../../../store';
 
@@ -68,25 +70,25 @@ const DocumentStatusCard: React.FC<DocumentStatusCardProps> = ({
     const config = getStatusConfig();
 
     return (
-        <View className={`${config.bgColor} ${config.borderColor} border-2 border-dashed rounded-lg p-4 mb-4`}>
-            <View className="flex-row justify-between items-start mb-2">
-                <View className="flex-1">
-                    <Text className="text-lg font-semibold text-gray-900 mb-1">{title}</Text>
+        <ThemedView className={`${config.bgColor} ${config.borderColor} border-2 border-dashed rounded-lg p-4 mb-4`}>
+            <ThemedView className="flex-row justify-between items-start mb-2">
+                <ThemedView className="flex-1">
+                    <ThemedText className="text-lg font-semibold text-gray-900 mb-1">{title}</ThemedText>
 
                     {/* {expiryDate && (
-                        <Text className="text-gray-600 text-base mt-1">Expires: {expiryDate}</Text>
+                        <ThemedText className="text-gray-600 text-base mt-1">Expires: {expiryDate}</ThemedText>
                     )}
                     {errorMessage && (
-                        <Text className="text-red-600 text-base mt-1">{errorMessage}</Text>
+                        <ThemedText className="text-red-600 text-base mt-1">{errorMessage}</ThemedText>
                     )} */}
-                </View>
-                <View className={`${config.badgeBg} px-3 py-1 rounded-full`}>
-                    <Text className={`${config.badgeText} text-xs font-medium`}>
+                </ThemedView>
+                <ThemedView className={`${config.badgeBg} px-3 py-1 rounded-full`}>
+                    <ThemedText className={`${config.badgeText} text-xs font-medium`}>
                         {config.statusText}
-                    </Text>
-                </View>
-            </View>
-        </View>
+                    </ThemedText>
+                </ThemedView>
+            </ThemedView>
+        </ThemedView>
     );
 };
 
@@ -117,74 +119,110 @@ export default function VehicleDetailScreen() {
 
     if (loading) {
         return (
-            <View className="flex-1 bg-white justify-center items-center">
+            <ThemedView className="flex-1 bg-white justify-center items-center">
                 <ActivityIndicator size="large" color="#E75B3B" />
-                <Text className="text-gray-500 mt-2">Loading vehicle details...</Text>
-            </View>
+                <ThemedText className="text-gray-500 mt-2">Loading vehicle details...</ThemedText>
+            </ThemedView>
         );
     }
 
     if (!vehicle) {
         return (
-            <View className="flex-1 bg-white justify-center items-center px-6">
-                <Text className="text-xl font-semibold text-gray-900 mb-2">Vehicle Not Found</Text>
-                <Text className="text-gray-600 text-center mb-6">
+            <ThemedView className="flex-1 bg-white justify-center items-center px-6">
+                <ThemedText className="text-xl font-semibold text-gray-900 mb-2">Vehicle Not Found</ThemedText>
+                <ThemedText className="text-gray-600 text-center mb-6">
                     The vehicle you're looking for could not be found.
-                </Text>
+                </ThemedText>
                 <TouchableOpacity
                     onPress={handleGoBack}
                     className="bg-[#E75B3B] px-6 py-3 rounded-lg"
                 >
-                    <Text className="text-white font-medium">Go Back</Text>
+                    <ThemedText className="text-white font-medium">Go Back</ThemedText>
                 </TouchableOpacity>
-            </View>
+            </ThemedView>
         );
     }
 
+    const navigation = useNavigation();
+
+    useEffect(() => {
+        navigation.setOptions({
+            headerShown: true,
+            headerTitle: () => {
+                return (
+                    <ThemedText type="s1_subtitle" className="text-center">
+                        Notifications
+                    </ThemedText>
+                );
+            },
+            headerTitleAlign: "center",
+            headerTitleStyle: { fontSize: 20 }, // Increased font size
+            headerShadowVisible: false,
+            headerStyle: {
+                backgroundColor: "#FFFFFF",
+                elevation: 0, // Android
+                shadowOpacity: 0, // iOS
+                shadowColor: "transparent", // iOS
+                borderBottomWidth: 0,
+            },
+            headerLeft: () => (
+                <ThemedView
+                    style={{
+                        shadowColor: "#FDEFEB1A",
+                        shadowOffset: { width: 0, height: 1 },
+                        shadowOpacity: 0.102,
+                        shadowRadius: 3,
+                        elevation: 4,
+                    }}
+                >
+                    <ThemedView
+                        style={{
+                            shadowColor: "#0000001A",
+                            shadowOffset: { width: 0, height: 1 },
+                            shadowOpacity: 0.102,
+                            shadowRadius: 2,
+                            elevation: 2,
+                        }}
+                    >
+                        <TouchableOpacity
+                            onPress={() => navigation.goBack()}
+                            className="p-2 rounded   flex justify-center items-center"
+                        >
+                            <Icon
+                                as={ChevronLeft}
+                                size="3xl"
+                                className="text-typography-900"
+                            />
+                        </TouchableOpacity>
+                    </ThemedView>
+                </ThemedView>
+            ),
+            headerRight: () => <NotificationIconComponent />,
+        });
+    }, [navigation, router]);
+
+
 
     return (
-        <View className="flex-1 bg-white">
-            {/* Header */}
-            <View className="flex-row items-center justify-between px-6 pt-12 pb-6 bg-white">
-                <TouchableOpacity
-                    onPress={handleGoBack}
-                    className="w-10 h-10 rounded-full bg-gray-100 items-center justify-center"
-                >
-                    <AntDesign name="arrowleft" size={24} color="#000" />
-                </TouchableOpacity>
+        <ThemedView className="flex-1 bg-white">
 
-                <Text className="text-xl font-semibold text-gray-900">My Vehicle</Text>
 
-                <TouchableOpacity
-                    onPress={handleNotificationPress}
-                    className="w-10 h-10 rounded-full bg-gray-100 items-center justify-center relative"
-                >
-                    <TouchableOpacity className="p-2">
-                        <MaterialIcons name="notifications-none" size={24} color="#000" />
-                    </TouchableOpacity>
-                    {/* Notification badge */}
-                    <View className="absolute -top-1 -right-1 w-5 h-5 bg-red-500 rounded-full items-center justify-center">
-                        <Text className="text-white text-xs font-bold">3</Text>
-                    </View>
-                </TouchableOpacity>
-            </View>
-
-            <ScrollView className="flex-1 px-6" showsVerticalScrollIndicator={false}>
+            <ParallaxScrollView headerBackgroundColor={{ light: "#FFFFFF", dark: "#353636" }}>
                 {/* Vehicle Info */}
-                <View className="items-center mb-8">
-                    <Text className="text-2xl font-bold text-gray-900 mb-2">
+                <ThemedView className="items-center mb-8">
+                    <ThemedText className="text-2xl font-bold text-gray-900 mb-2">
                         {vehicle.make} {vehicle.model}
-                    </Text>
-                    <Text className="text-gray-500 text-lg mb-1">
+                    </ThemedText>
+                    <ThemedText className="text-gray-500 text-lg mb-1">
                         Car Model: {vehicle.model}-{vehicle.make.substring(0, 3).toUpperCase()}
-                    </Text>
-                    <Text className="text-gray-500 text-lg">
+                    </ThemedText>
+                    <ThemedText className="text-gray-500 text-lg">
                         {vehicle.licensePlate}
-                    </Text>
-                </View>
+                    </ThemedText>
+                </ThemedView>
 
                 {/* Document Status Cards */}
-                <View className="mb-6">
+                <ThemedView className="mb-6">
                     {vehicle.vehicleDocuments.map((doc, index) => (
                         <DocumentStatusCard
                             key={index}
@@ -194,11 +232,11 @@ export default function VehicleDetailScreen() {
                         // errorMessage={doc.errorMessage}
                         />
                     ))}
-                </View>
+                </ThemedView>
 
                 {/* Bottom spacing */}
-                <View className="h-20" />
-            </ScrollView>
-        </View>
+                <ThemedView className="h-20" />
+            </ParallaxScrollView>
+        </ThemedView>
     );
 }

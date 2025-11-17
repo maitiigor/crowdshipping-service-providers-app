@@ -1,14 +1,18 @@
 'use client';
-import { ArrowLeftIcon, BellIcon, Icon } from '@/components/ui/icon';
-import { router } from 'expo-router';
-import { Box, ChevronRight, SearchIcon } from 'lucide-react-native';
+import { Icon } from '@/components/ui/icon';
+import { router, useNavigation } from 'expo-router';
+import { Box, ChevronLeft, ChevronRight, SearchIcon } from 'lucide-react-native';
 import React, { useEffect, useState } from 'react';
-import { ActivityIndicator, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import { ActivityIndicator, Text, TextInput, TouchableOpacity } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { Booking } from '../../../models';
+import GroundTripCard from '../../../components/Custom/GroundTripCard';
+import NotificationIconComponent from '../../../components/NotificationIconComponent';
+import { ThemedText } from '../../../components/ThemedText';
+import { ThemedView } from '../../../components/ThemedView';
+import { Booking, GroundTrip } from '../../../models';
 import { useAppDispatch, useAppSelector } from '../../../store';
 import { fetchAirBookings } from '../../../store/slices/airTripSlice';
-import { fetchDeliveryBookings } from '../../../store/slices/groundTripSlice';
+import { fetchActiveDeliveryBookings } from '../../../store/slices/groundTripSlice';
 import { fetchMarineBookings } from '../../../store/slices/marineTripSlice';
 import { AirIcon, GroundIcon, MaritimeIcon } from '../dashboard';
 
@@ -75,7 +79,7 @@ export default function BookingHistoryScreen() {
     useEffect(() => {
         dispatch(fetchAirBookings());
         dispatch(fetchMarineBookings());
-        dispatch(fetchDeliveryBookings());
+        dispatch(fetchActiveDeliveryBookings());
     }, [dispatch]);
 
     // Get active tab dynamically
@@ -128,39 +132,93 @@ export default function BookingHistoryScreen() {
         (trip) => mapStatusToDisplayStatus(trip.status) === activeGroundTab
     );
 
+
+
+
     // Render individual booking item
     const renderBookingHistoryItem = (booking: Booking, type: string) => {
         const displayStatus = mapStatusToDisplayStatus(booking.status);
-
+        console.log('render booking history item', booking, type);
         return (
             <TouchableOpacity
                 key={booking._id}
+                onPress={() => {
+                    if (type == 'Ground') {
+                        router.push({
+                            pathname:
+                                displayStatus === 'In Progress' || displayStatus === 'Pending'
+                                    ? '/screens/dashboard/trip-status-management'
+                                    : '/screens/bookings/booking-detail',
+                            params: { bookingId: booking._id, type: type },
+                        })
+                    } else if (type == 'Maritime') {
+                        router.push({
+                            pathname:
+                                displayStatus === 'In Progress' || displayStatus === 'Pending'
+                                    ? '/screens/dashboard/marine-trip-management'
+                                    : '/screens/bookings/booking-detail' as any,
+                            params: { bookingId: booking._id, type: type },
+                        })
+                    } else {
+
+                        router.push({
+                            pathname: (displayStatus === 'In Progress' || displayStatus === 'Pending'
+                                ? '/screens/dashboard/air-trip-management'
+                                : '/screens/bookings/booking-detail') as any,
+                            params: { bookingId: booking._id, type: type },
+                        });
+                    }
+                }
+                }
+                className="bg-white flex flex-row rounded-xl p-6 mb-4 shadow-sm border border-gray-100"
+            >
+                <ThemedView className="border border-gray-200 w-12 h-12 rounded-full items-center justify-center p-3">
+                    <Box />
+                </ThemedView>
+                <ThemedView className="flex-1 self-center">
+                    <ThemedText className="text-gray-900 font-semibold text-base ml-4">{booking._id}</ThemedText>
+                    <ThemedText className="text-gray-500 text-sm ml-4">
+                        {booking.status} - {formatDate(booking.createdAt)}
+                    </ThemedText>
+                </ThemedView>
+                <ThemedView className="self-center">
+                    <Icon as={ChevronRight} size="md" className="text-gray-700" />
+                </ThemedView>
+            </TouchableOpacity>
+        );
+    };
+
+    const renderGroundBookingHistoryItem = (booking: GroundTrip, type: string) => {
+        const displayStatus = mapStatusToDisplayStatus(booking.status);
+        return (
+            <TouchableOpacity
+                key={booking.id}
                 onPress={() =>
                     router.push({
                         pathname:
                             displayStatus === 'In Progress'
                                 ? '/screens/dashboard/trip-status-management'
                                 : '/screens/bookings/booking-detail',
-                        params: { bookingId: booking._id },
+                        params: { bookingId: booking.id, type: 'Ground' },
                     })
                 }
                 className="bg-white flex flex-row rounded-xl p-6 mb-4 shadow-sm border border-gray-100"
             >
-                <View className="border border-gray-200 w-12 h-12 rounded-full items-center justify-center p-3">
+                <ThemedView className="border border-gray-200 w-12 h-12 rounded-full items-center justify-center p-3">
                     <Box />
-                </View>
-                <View className="flex-1 self-center">
-                    <Text className="text-gray-900 font-semibold text-base ml-4">{booking._id}</Text>
-                    <Text className="text-gray-500 text-sm ml-4">
-                        {booking.status} - {formatDate(booking.createdAt)}
-                    </Text>
-                </View>
-                <View className="self-center">
+                </ThemedView>
+                <ThemedView className="flex-1 self-center">
+                    <ThemedText className="text-gray-900 font-semibold text-base ml-4">{booking.trackingId}</ThemedText>
+                    <ThemedText className="text-gray-500 text-sm ml-4">
+                        {booking.status} - {formatDate(booking.dateOfBooking)}
+                    </ThemedText>
+                </ThemedView>
+                <ThemedView className="self-center">
                     <Icon as={ChevronRight} size="md" className="text-gray-700" />
-                </View>
+                </ThemedView>
             </TouchableOpacity>
         );
-    };
+    }
 
     const transportTypes = [
         { type: 'Ground', IconComponent: GroundIcon },
@@ -168,24 +226,70 @@ export default function BookingHistoryScreen() {
         { type: 'Air', IconComponent: AirIcon },
     ];
 
+    const navigation = useNavigation();
+
+
+    useEffect(() => {
+        navigation.setOptions({
+            headerShown: true,
+            headerTitle: () => {
+                return (
+                    <ThemedText type="s1_subtitle" className="text-center">
+                        Notifications
+                    </ThemedText>
+                );
+            },
+            headerTitleAlign: "center",
+            headerTitleStyle: { fontSize: 20 }, // Increased font size
+            headerShadowVisible: false,
+            headerStyle: {
+                backgroundColor: "#FFFFFF",
+                elevation: 0, // Android
+                shadowOpacity: 0, // iOS
+                shadowColor: "transparent", // iOS
+                borderBottomWidth: 0,
+            },
+            headerLeft: () => (
+                <ThemedView
+                    style={{
+                        shadowColor: "#FDEFEB1A",
+                        shadowOffset: { width: 0, height: 1 },
+                        shadowOpacity: 0.102,
+                        shadowRadius: 3,
+                        elevation: 4,
+                    }}
+                >
+                    <ThemedView
+                        style={{
+                            shadowColor: "#0000001A",
+                            shadowOffset: { width: 0, height: 1 },
+                            shadowOpacity: 0.102,
+                            shadowRadius: 2,
+                            elevation: 2,
+                        }}
+                    >
+                        <TouchableOpacity
+                            onPress={() => navigation.goBack()}
+                            className="p-2 rounded   flex justify-center items-center"
+                        >
+                            <Icon
+                                as={ChevronLeft}
+                                size="3xl"
+                                className="text-typography-900"
+                            />
+                        </TouchableOpacity>
+                    </ThemedView>
+                </ThemedView>
+            ),
+            headerRight: () => <NotificationIconComponent />,
+        });
+    }, [navigation, router]);
     return (
         <SafeAreaView className="flex-1 bg-gray-50">
-            {/* Header */}
-            <View className="flex-row items-center justify-between px-4 py-3 bg-white border-b border-gray-100">
-                <TouchableOpacity onPress={() => router.back()}>
-                    <Icon as={ArrowLeftIcon} size="md" className="text-gray-700" />
-                </TouchableOpacity>
-
-                <Text className="text-xl font-semibold text-gray-900">Booking History</Text>
-
-                <TouchableOpacity>
-                    <Icon as={BellIcon} size="md" className="text-gray-700" />
-                </TouchableOpacity>
-            </View>
 
             {/* Transport Type Tabs */}
-            <View className="px-4">
-                <View className="mt-2 flex-row justify-between items-center mb-4 gap-3">
+            <ThemedView className="px-4">
+                <ThemedView className="mt-2 flex-row justify-between items-center mb-4 gap-3">
                     {transportTypes.map((transport) => {
                         const isActive = selectedTransportType === transport.type;
                         const IconComponent = transport.IconComponent;
@@ -197,23 +301,23 @@ export default function BookingHistoryScreen() {
                                     }`}
                                 activeOpacity={isActive ? 0.8 : 1}
                             >
-                                <View className="items-center">
+                                <ThemedView className="items-center">
                                     <IconComponent isActive={isActive} />
                                     <Text
                                         className={`mt-2 text-sm capitalize ${isActive ? 'text-white font-medium' : 'text-gray-700'
                                             }`}
                                     >
                                         {transport.type}
-                                    </Text>
-                                </View>
+                                    </ThemedText>
+                                </ThemedView>
                             </TouchableOpacity>
                         );
                     })}
-                </View>
+                </ThemedView>
 
                 {/* Status Tabs */}
-                <View className="flex-row gap-3">
-                    {['In Progress', 'Pending', 'Delivered', 'Completed'].map((status) => (
+                <ThemedView className="flex-row gap-3">
+                    {['Pending', 'In Progress', 'Delivered', 'Completed'].map((status) => (
                         <TouchableOpacity
                             key={status}
                             className={`flex-1 items-center justify-center py-3 rounded-lg ${getTabStyle(
@@ -226,12 +330,12 @@ export default function BookingHistoryScreen() {
                                     } text-sm font-medium`}
                             >
                                 {status}
-                            </Text>
+                            </ThemedText>
                         </TouchableOpacity>
                     ))}
-                </View>
+                </ThemedView>
 
-                <View className="flex-row items-center border border-gray-300 rounded-lg px-3 py-2 bg-gray-50 mt-3">
+                <ThemedView className="flex-row items-center border border-gray-300 rounded-lg px-3 py-2 bg-gray-50 mt-3">
                     <SearchIcon size={18} color="#888" />
                     <TextInput
                         className="ml-2 flex-1 text-base"
@@ -239,20 +343,20 @@ export default function BookingHistoryScreen() {
                         value={searchQuery}
                         onChangeText={setSearchQuery}
                     />
-                </View>
+                </ThemedView>
 
 
                 {/* Booking List */}
-                <View className="px-4 mt-4">
+                <ThemedView className="px-4 mt-4">
                     {selectedTransportType === 'Air' ? (
                         airLoadingBookings ? (
                             <ActivityIndicator />
                         ) : filteredAirBookings.length > 0 ? (
                             filteredAirBookings.map((booking) => renderBookingHistoryItem(booking, 'Air'))
                         ) : (
-                            <View className="bg-white rounded-xl p-6 mb-4 shadow-sm border border-gray-100">
-                                <Text className="text-gray-500 text-center">No Air bookings found</Text>
-                            </View>
+                            <ThemedView className="bg-white rounded-xl p-6 mb-4 shadow-sm border border-gray-100">
+                                <ThemedText className="text-gray-500 text-center">No Air bookings found</ThemedText>
+                            </ThemedView>
                         )
                     ) : selectedTransportType === 'Maritime' ? (
                         marineLoadingBookings ? (
@@ -262,21 +366,23 @@ export default function BookingHistoryScreen() {
                                 renderBookingHistoryItem(booking, 'Maritime')
                             )
                         ) : (
-                            <View className="bg-white rounded-xl p-6 mb-4 shadow-sm border border-gray-100">
-                                <Text className="text-gray-500 text-center">No Maritime bookings found</Text>
-                            </View>
+                            <ThemedView className="bg-white rounded-xl p-6 mb-4 shadow-sm border border-gray-100">
+                                <ThemedText className="text-gray-500 text-center">No Maritime bookings found</ThemedText>
+                            </ThemedView>
                         )
                     ) : groundTripLoading ? (
                         <ActivityIndicator />
                     ) : filteredGroundBookings.length > 0 ? (
-                       null
+                        filteredGroundBookings.map((booking) =>
+                            <GroundTripCard trip={booking} onAccept={() => null} onReject={() => null} showActions={true} />
+                        )
                     ) : (
-                        <View className="bg-white rounded-xl p-6 mb-4 shadow-sm border border-gray-100">
-                            <Text className="text-gray-500 text-center">No Ground bookings found</Text>
-                        </View>
+                        <ThemedView className="bg-white rounded-xl p-6 mb-4 shadow-sm border border-gray-100">
+                            <ThemedText className="text-gray-500 text-center">No Ground bookings found</ThemedText>
+                        </ThemedView>
                     )}
-                </View>
-            </View>
+                </ThemedView>
+            </ThemedView>
         </SafeAreaView>
     );
 }

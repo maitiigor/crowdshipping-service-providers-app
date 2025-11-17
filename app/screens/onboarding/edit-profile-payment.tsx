@@ -5,9 +5,7 @@ import React, { useState } from "react";
 import {
     ActivityIndicator,
     ScrollView,
-    Text,
-    TouchableOpacity,
-    View
+    TouchableOpacity
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useDispatch } from "react-redux";
@@ -23,7 +21,6 @@ import { useEditProfileForm } from "../../../hooks/useRedux";
 import { ApiError, Bank, CompleteProfilePayload } from "../../../models";
 import { AppDispatch, useAppSelector } from "../../../store";
 import { completeProfile, setDocument } from "../../../store/slices/profileSlice";
-import BankDropdown from "../../../components/Custom/BankDropdown";
 
 export default function EditProfilePayment() {
     const [showModal, setShowModal] = React.useState(false);
@@ -78,6 +75,7 @@ export default function EditProfilePayment() {
             accountName: values.accountName,
             accountNumber: values.accountNumber,
         };
+        console.log("formData:", formData);
         dispatch(setDocument(formData));
 
 
@@ -143,36 +141,36 @@ export default function EditProfilePayment() {
             }) => (
                 <SafeAreaView className="flex-1 bg-white">
                     {/* Header */}
-                    <View className="flex-row items-center justify-between px-6 py-4">
+                    <ThemedView className="flex-row items-center justify-between px-6 py-4">
                         <TouchableOpacity className="p-2" onPress={() => router.back()}>
                             <AntDesign name="arrowleft" size={24} color="#000" />
                         </TouchableOpacity>
 
-                        <Text className="text-lg font-semibold text-black">
+                        <ThemedText className="text-lg font-semibold text-black">
                             Edit Profile
-                        </Text>
+                        </ThemedText>
 
                         <TouchableOpacity className="p-2">
                             <MaterialIcons name="notifications-none" size={24} color="#000" />
                         </TouchableOpacity>
-                    </View>
+                    </ThemedView>
 
                     {/* Progress Indicator */}
-                    <View className="flex-row items-center justify-center px-6 py-6">
-                        <View className="flex-row items-center">
-                            <View className="w-16 h-1 bg-[#E75B3B] rounded-full" />
-                            <View className="w-4" />
-                            <View className="w-16 h-1 bg-[#E75B3B] rounded-full" />
-                            <View className="w-4" />
-                            <View className="w-16 h-1 bg-[#E75B3B] rounded-full" />
-                        </View>
-                    </View>
+                    <ThemedView className="flex-row items-center justify-center px-6 py-6">
+                        <ThemedView className="flex-row items-center">
+                            <ThemedView className="w-16 h-1 bg-[#E75B3B] rounded-full" />
+                            <ThemedView className="w-4" />
+                            <ThemedView className="w-16 h-1 bg-[#E75B3B] rounded-full" />
+                            <ThemedView className="w-4" />
+                            <ThemedView className="w-16 h-1 bg-[#E75B3B] rounded-full" />
+                        </ThemedView>
+                    </ThemedView>
 
                     {/* Form */}
                     <ScrollView className="flex-1 px-6" showsVerticalScrollIndicator={false}>
-                        <Text className="text-xl font-semibold text-black mb-6">
+                        <ThemedText className="text-xl font-semibold text-black mb-6">
                             Payment Information
-                        </Text>
+                        </ThemedText>
 
                         {/* Bank Name */}
                         {/* <BankDropdown values={values} errors={errors} touched={touched} handleChange={ () => setFieldValue} handleBankChange={setBank} > 
@@ -266,7 +264,7 @@ export default function EditProfilePayment() {
                     </ScrollView>
 
                     {/* Submit Button */}
-                    <View className="px-6 pb-8">
+                    <ThemedView className="px-6 pb-8">
                         <Button
                             size="xl"
                             className="bg-[#E75B3B] rounded-xl"
@@ -276,7 +274,7 @@ export default function EditProfilePayment() {
                                 {loading ? <ActivityIndicator color="white" /> : "Update"}
                             </ThemedText>
                         </Button>
-                    </View>
+                    </ThemedView>
 
                     {/* Success Modal */}
                     <CustomModal

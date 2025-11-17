@@ -1,6 +1,6 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import apiClient from "../../lib/api/client";
-import { ApiError, ApiResponse, MarineTrip, MarineTripRequest } from "../../models";
+import { ApiError, ApiResponse, MarineTrip } from "../../models";
 
 
 
@@ -27,10 +27,11 @@ export const acceptBid = createAsyncThunk<ApiResponse<MarineTrip>, { bidId: stri
     "bid/acceptBid",
     async ({ bidId }, { rejectWithValue }) => {
         try {
-            const response = await apiClient.post<null, ApiResponse<any>>(
+            const response = await apiClient.patch<null, ApiResponse<any>>(
                 `/trip/accept/bid/${bidId}`
             );
-            return response;
+        
+            return response.data;
         } catch (error: any) {
             return rejectWithValue(error.response.data as ApiError);
         }

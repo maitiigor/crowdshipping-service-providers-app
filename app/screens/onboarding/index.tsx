@@ -13,6 +13,9 @@ import {
   View,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
+import ParallaxScrollView from "../../../components/ParallaxScrollView";
+import { ThemedView } from "../../../components/ThemedView";
+import { ThemedText } from "../../../components/ThemedText";
 
 const { width } = Dimensions.get("window");
 
@@ -58,7 +61,7 @@ export default function Onboarding() {
   };
 
   const renderItem: ListRenderItem<Slide> = ({ item }) => (
-    <View
+    <ThemedView
       className="flex-1 items-center justify-center px-6"
       style={{ width }}
     >
@@ -67,13 +70,13 @@ export default function Onboarding() {
         className="flex-1 items-baseline h-full w-full max-w-sm"
         resizeMode="contain"
       />
-    </View>
+    </ThemedView>
   );
 
   return (
-    <SafeAreaView className="flex h-100 bg-white">
+    <ParallaxScrollView headerBackgroundColor={{ light: "white", dark: "#353636" }}>
       {/* TOP (slides) */}
-      <View className="h-1/2">
+      <ThemedView className="h-1/2">
         <FlatList
           ref={flatListRef}
           data={slides}
@@ -84,21 +87,21 @@ export default function Onboarding() {
           showsHorizontalScrollIndicator={false}
           onMomentumScrollEnd={handleScrollEnd}
         />
-      </View>
+      </ThemedView>
 
       {/* BOTTOM (content + buttons + terms) */}
-      <View className="h-1/2 px-6 pb-2 ">
+      <ThemedView className="h-1/2 px-6 pb-2 ">
         {/* Title and Description */}
-        <View className="items-center pt-4">
-          <Text className="text-[26px] font-poppins-light text-center mb-4">
+        <ThemedView className="items-center pt-4">
+          <ThemedText className="text-[26px] font-poppins-light text-center mb-4">
             {slides[currentSlide].title}
-          </Text>
-          <Text className="text-base text-gray-600 text-center px-2 leading-6 mb-6">
+          </ThemedText>
+          <ThemedText className="text-base text-gray-600 text-center px-2 leading-6 mb-6">
             {slides[currentSlide].description}
-          </Text>
+          </ThemedText>
 
           {/* Dot indicators */}
-          <View className="flex-row justify-center mt-6 gap-1 mb-6 space-x-2">
+          <ThemedView className="flex-row justify-center mt-6 gap-1 mb-6 space-x-2">
             {slides.map((_, index) => (
               <View
                 key={index}
@@ -106,34 +109,34 @@ export default function Onboarding() {
                   }`}
               />
             ))}
-          </View>
-        </View>
+          </ThemedView>
+        </ThemedView>
 
         {/* Bottom Section */}
-        <View>
+        <ThemedView>
           {/* Buttons */}
-          <View className="space-y-4 gap-3 mb-4">
+          <ThemedView className="space-y-4 gap-3 mb-4">
             <TouchableOpacity
               className="bg-[#E75B3B] py-4 rounded-xl"
               onPress={() => router.push("/screens/onboarding/login")}
             >
-              <Text className="text-white text-center font-semibold text-base">
+              <ThemedText className="text-white text-center font-semibold text-base">
                 Login
-              </Text>
+              </ThemedText>
             </TouchableOpacity>
 
             <TouchableOpacity
               className="bg-white border border-[#E75B3B] py-4 rounded-xl"
               onPress={() => router.push("/screens/onboarding/welcome")}
             >
-              <Text className="text-[#E75B3B] text-center font-semibold text-base">
+              <ThemedText className="text-[#E75B3B] text-center font-semibold text-base">
                 Get Started
-              </Text>
+              </ThemedText>
             </TouchableOpacity>
-          </View>
+          </ThemedView>
 
           {/* Terms with checkbox */}
-          <View className="flex-row items-start px-2">
+          <ThemedView className="flex-row items-start px-2">
             <TouchableOpacity
               onPress={() => setIsTermsAccepted(!isTermsAccepted)}
               className="w-4 h-4 border border-gray-400 rounded mr-3 mt-0.5 items-center justify-center"
@@ -143,28 +146,28 @@ export default function Onboarding() {
               }}
             >
               {isTermsAccepted && (
-                <Text className="text-white text-xs font-bold">✓</Text>
+                <ThemedText className="text-white text-xs font-bold">✓</ThemedText>
               )}
             </TouchableOpacity>
-            <Text className="text-xs text-gray-500 flex-1 leading-4">
+            <ThemedText className="text-xs text-gray-500 flex-1 leading-4">
               By signing up, you consent to our{" "}
-              <Text
+              <ThemedText
                 className="text-gray-700 underline"
                 onPress={() => router.push("/screens/onboarding/terms-conditions")}
               >
                 Terms
-              </Text> and how we use
-              your data in our{" "}
-              <Text
-                className="text-gray-700 underline"
-                onPress={() => router.push("/screens/onboarding/privacy-policy")}
-              >
-                Privacy Policy
-              </Text>.
-            </Text>
-          </View>
-        </View>
-      </View>
-    </SafeAreaView>
+            </ThemedText> and how we use
+            your data in our{" "}
+            <ThemedText
+              className="text-gray-700 underline"
+              onPress={() => router.push("/screens/onboarding/privacy-policy")}
+            >
+              Privacy Policy
+            </ThemedText>.
+          </ThemedText>
+        </ThemedView>
+      </ThemedView>
+    </ThemedView>
+    </ParallaxScrollView >
   );
 }

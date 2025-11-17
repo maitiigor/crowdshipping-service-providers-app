@@ -1,6 +1,9 @@
 import { router, useLocalSearchParams } from 'expo-router';
+import { FieldArray, Formik } from 'formik';
+import { CheckCircleIcon } from 'lucide-react-native';
 import React, { useState } from 'react';
 import {
+    ActivityIndicator,
     Alert,
     Dimensions,
     ScrollView,
@@ -10,14 +13,24 @@ import {
     View
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import * as Yup from 'yup';
+import ImageUploader from '../../../components/Custom/ImageUploader';
+import InputLabelText from '../../../components/Custom/InputLabelText';
+import { ThemedView } from '../../../components/ThemedView';
 import { Button, ButtonText } from '../../../components/ui/button';
-import { AlertCircleIcon, ArrowLeftIcon, Icon, UploadIcon } from '../../../components/ui/icon';
+import { AlertCircleIcon, ArrowLeftIcon, Icon } from '../../../components/ui/icon';
 import { Input, InputField } from '../../../components/ui/input';
+import { useShowToast } from '../../../hooks/useShowToast';
+import { useAppDispatch, useAppSelector } from '../../../store';
+import { updateTripStatus } from '../../../store/slices/groundTripSlice';
+import { uploadDocument } from '../../../store/slices/profileSlice';
+import { resendDeliveryOtp } from '../../../store/slices/tripManagementSlice';
 
 const { width, height } = Dimensions.get('window');
 
 interface TollEntry {
     id: string;
+    description?: string;
     amount: string;
     receipt?: string;
 }
@@ -27,18 +40,25 @@ export default function AddTollsExpensesScreen() {
     const [tollEntries, setTollEntries] = useState<TollEntry[]>([
         { id: '1', amount: '50.00' }
     ]);
+    const dispatch = useAppDispatch();
+    const [isUpdating, setIsUpdating] = useState<boolean>(false);
 
-    // Mock data - in real app this would come from props or API
+    const { groundTrip } = useAppSelector((state) => state.groundTrip);
+    const showToast = useShowToast();
+    const [isUploading, setIsUploading] = useState(false);
+
+
+    // Use actual trip data or fallback
     const bookingData = {
-        id: 'ID2350847391',
-        date: 'June 12, 2025 | 10:00 am',
-        departureAirport: 'Tangerang City, Banten 138',
-        arrivalAirport: 'Tangerang City, Banten 15138',
-        airline: 'SkyCargo',
-        flight: 'F1315',
-        parcel: 'Sensitive Documents',
-        fare: '₦13,500',
-        status: 'Delivering'
+        id: groundTrip?.trackingId || 'ID2350847391',
+        date: groundTrip?.dateOfBooking || 'June 12, 2025 | 10:00 am',
+        departureAirport: groundTrip.pickUpLocation.address || 'Tangerang City, Banten 138',
+        arrivalAirport: groundTrip?.dropOffLocation.address || 'Tangerang City, Banten 15138',
+        airline: 'Ground Transport', // For ground trips, this would be transport type
+        flight: groundTrip?.trackingId || 'GT1315', // Use tracking ID as reference
+        parcel: groundTrip?.packages?.[0]?.productType || 'Sensitive Documents',
+        fare: `₦${groundTrip?.price?.toLocaleString() || '13,500'}`,
+        status: groundTrip?.status || 'Delivering'
     };
 
     const calculateTotal = () => {
@@ -69,20 +89,102 @@ export default function AddTollsExpensesScreen() {
         setTollEntries(prev => [...prev, { id: newId, amount: '0.00' }]);
     };
 
-    const handleSkip = () => {
-        router.push({
-            pathname: '/screens/dashboard/complete-delivery-otp',
-            params: { tripId: tripId }
-        });
+    const handleSkip = async () => {
+        // Navigate directly to OTP screen without saving charges
+        setIsUpdating(true);
+
+        try {
+            await dispatch(resendDeliveryOtp({
+                tripId
+            })).unwrap();
+
+            showToast({
+                title: "OTP Sent",
+                description: "OTP has been sent to recipient to complete delivery",
+                icon: CheckCircleIcon,
+                action: "success"
+            });
+
+            router.push({
+                pathname: '/screens/dashboard/complete-delivery-otp',
+                params: { tripId: tripId }
+            });
+
+        } catch (error: any) {
+
+            showToast({
+                title: "Update Failed",
+                description: error.message || "Failed to update delivery status",
+                icon: ArrowLeftIcon,
+                action: "error"
+            });
+
+        } finally {
+            setIsUpdating(false);
+        }
+
+
+
+
     };
 
-    const handleSaveCharges = () => {
+    const handleRecieptUpload = async (file: string) => {
+
+        // Upload image to server
+        setIsUploading(true);
+        try {
+
+            const resultAction = await dispatch(uploadDocument({ documentType: 'Toll Reciept', file }));
+
+            if (uploadDocument.fulfilled.match(resultAction)) {
+                const uploadedUrl = resultAction.payload.url;
+                return uploadedUrl;
+            }
+        } catch (error) {
+            console.log("upload error:", error);
+            return "";
+        }
+    }
+
+    const handleSaveCharges = async (values: any) => {
         // In real app, save toll charges to backend first
-        console.log('Saving toll charges:', tollEntries);
-        router.push({
-            pathname: '/screens/dashboard/complete-delivery-otp',
-            params: { tripId: tripId }
-        });
+        try {
+            setIsUpdating(true);
+
+            await dispatch(updateTripStatus({
+                id: tripId,
+                status: 'TOLL_BILL_PENDING',
+                expenses: values.tolls.map((toll: any) => ({
+                    amount: parseFloat(toll.amount),
+                    receipt: toll.receipt || '',
+                    description: toll.description || ''
+
+
+                }))
+
+            })).unwrap();
+            showToast({
+                title: "Status Updated",
+                description: "Trip marked as toll bill paid successfully",
+                icon: CheckCircleIcon,
+                action: "success"
+            });
+
+            // Navigate to toll expenses screen
+            router.push({
+                pathname: '/screens/dashboard/complete-delivery-otp',
+                params: { tripId: tripId }
+            });
+        } catch (error: any) {
+            showToast({
+                title: "Update Failed",
+                description: error.message || "Failed to update delivery status",
+                icon: ArrowLeftIcon,
+                action: "error"
+            });
+        } finally {
+            setIsUpdating(false);
+        }
     };
 
     return (
@@ -90,7 +192,7 @@ export default function AddTollsExpensesScreen() {
             <StatusBar barStyle="dark-content" backgroundColor="white" />
 
             {/* Header */}
-            <View className="flex-row items-center justify-between px-4 py-4 border-b border-gray-100">
+            <ThemedView className="flex-row items-center justify-between px-4 py-4 border-b border-gray-100">
                 <TouchableOpacity
                     className="w-10 h-10 items-center justify-center"
                     onPress={() => router.back()}
@@ -98,12 +200,12 @@ export default function AddTollsExpensesScreen() {
                     <Icon as={ArrowLeftIcon} size="md" className="text-gray-700" />
                 </TouchableOpacity>
 
-                <Text className="text-lg font-semibold text-gray-900">
+                <ThemedText className="text-lg font-semibold text-gray-900">
                     Add Tolls & Expenses
-                </Text>
+                </ThemedText>
 
-                <View className="w-10 h-10" />
-            </View>
+                <ThemedView className="w-10 h-10" />
+            </ThemedView>
 
             {/* Content */}
             <ScrollView
@@ -112,165 +214,250 @@ export default function AddTollsExpensesScreen() {
                 showsVerticalScrollIndicator={false}
             >
                 {/* Booking Summary */}
-                <View className="mb-6">
-                    <Text className="text-lg font-semibold text-gray-900 mb-4">
+                <ThemedView className="mb-6">
+                    <ThemedText className="text-lg font-semibold text-gray-900 mb-4">
                         Booking Summary:
-                    </Text>
+                    </ThemedText>
 
-                    <View className="space-y-2">
-                        <View className="flex-row justify-between items-center mb-4">
-                            <Text className="text-gray-400 text-lg">Booking ID</Text>
-                            <Text className="text-[#2A2A2A] text-xl font-normal">{bookingData.id}</Text>
-                        </View>
+                    <ThemedView className="space-y-2">
+                        <ThemedView className="flex-row justify-between items-center mb-4">
+                            <ThemedText className="text-gray-400 text-lg">Booking ID</ThemedText>
+                            <ThemedText className="text-[#2A2A2A] text-xl font-normal">{bookingData.id}</ThemedText>
+                        </ThemedView>
 
-                        <View className="flex-row justify-between items-center mb-4">
-                            <Text className="text-gray-400 text-lg">Date of Booking</Text>
-                            <Text className="text-[#2A2A2A] font-normal">{bookingData.date}</Text>
-                        </View>
+                        <ThemedView className="flex-row justify-between items-center mb-4">
+                            <ThemedText className="text-gray-400 text-lg">Date of Booking</ThemedText>
+                            <ThemedText className="text-[#2A2A2A] font-normal">{bookingData.date}</ThemedText>
+                        </ThemedView>
 
-                        <View className="flex-row justify-between items-center mb-4">
-                            <Text className="text-gray-400 text-lg">Departure Airport</Text>
-                            <Text className="text-[#2A2A2A] font-normal text-right flex-1 ml-4">
+                        <ThemedView className="flex-row justify-between items-center mb-4">
+                            <ThemedText className="text-gray-400 text-lg">Departure Airport</ThemedText>
+                            <ThemedText className="text-[#2A2A2A] font-normal text-right flex-1 ml-4">
                                 {bookingData.departureAirport}
-                            </Text>
-                        </View>
+                            </ThemedText>
+                        </ThemedView>
 
-                        <View className="flex-row justify-between items-center mb-4">
-                            <Text className="text-gray-400 text-lg">Arrival Airport</Text>
-                            <Text className="text-[#2A2A2A] font-normal text-right flex-1 ml-4">
+                        <ThemedView className="flex-row justify-between items-center mb-4">
+                            <ThemedText className="text-gray-400 text-lg">Arrival Airport</ThemedText>
+                            <ThemedText className="text-[#2A2A2A] font-normal text-right flex-1 ml-4">
                                 {bookingData.arrivalAirport}
-                            </Text>
-                        </View>
+                            </ThemedText>
+                        </ThemedView>
 
-                        <View className="flex-row justify-between items-center mb-4">
-                            <Text className="text-gray-400 text-lg">Airline</Text>
-                            <Text className="text-[#2A2A2A] font-normal">{bookingData.airline}</Text>
-                        </View>
+                        <ThemedView className="flex-row justify-between items-center mb-4">
+                            <ThemedText className="text-gray-400 text-lg">Airline</ThemedText>
+                            <ThemedText className="text-[#2A2A2A] font-normal">{bookingData.airline}</ThemedText>
+                        </ThemedView>
 
-                        <View className="flex-row justify-between items-center mb-4">
-                            <Text className="text-gray-400 text-lg">Flight</Text>
-                            <Text className="text-[#2A2A2A] font-normal">{bookingData.flight}</Text>
-                        </View>
+                        <ThemedView className="flex-row justify-between items-center mb-4">
+                            <ThemedText className="text-gray-400 text-lg">Flight</ThemedText>
+                            <ThemedText className="text-[#2A2A2A] font-normal">{bookingData.flight}</ThemedText>
+                        </ThemedView>
 
-                        <View className="flex-row justify-between items-center mb-4">
-                            <Text className="text-gray-400 text-lg">Parcel</Text>
-                            <Text className="text-[#2A2A2A] font-normal">{bookingData.parcel}</Text>
-                        </View>
+                        <ThemedView className="flex-row justify-between items-center mb-4">
+                            <ThemedText className="text-gray-400 text-lg">Parcel</ThemedText>
+                            <ThemedText className="text-[#2A2A2A] font-normal">{bookingData.parcel}</ThemedText>
+                        </ThemedView>
 
-                        <View className="flex-row justify-between items-center mb-4">
-                            <Text className="text-gray-400 text-lg">Fare</Text>
-                            <Text className="text-[#2A2A2A] font-normal">{bookingData.fare}</Text>
-                        </View>
+                        <ThemedView className="flex-row justify-between items-center mb-4">
+                            <ThemedText className="text-gray-400 text-lg">Fare</ThemedText>
+                            <ThemedText className="text-[#2A2A2A] font-normal">{bookingData.fare}</ThemedText>
+                        </ThemedView>
 
-                        <View className="flex-row justify-between items-center">
-                            <Text className="text-gray-400 text-lg">Current Status</Text>
-                            <View className="bg-orange-100 px-3 py-1 rounded-full">
-                                <Text className="text-orange-600 text-sm font-normal">
+                        <ThemedView className="flex-row justify-between items-center">
+                            <ThemedText className="text-gray-400 text-lg">Current Status</ThemedText>
+                            <ThemedView className="bg-orange-100 px-3 py-1 rounded-full">
+                                <ThemedText className="text-orange-600 text-sm font-normal">
                                     {bookingData.status}
-                                </Text>
-                            </View>
-                        </View>
-                    </View>
-                </View>
+                                </ThemedText>
+                            </ThemedView>
+                        </ThemedView>
+                    </ThemedView>
+                </ThemedView>
 
                 {/* Toll Entries */}
-                <View className="mb-6">
-                    {tollEntries.map((entry, index) => (
-                        <View key={entry.id} className="mb-4">
-                            <Text className="text-gray-700 font-medium mb-2">
-                                Toll Amount
-                            </Text>
+                <Formik
+                    initialValues={{ tolls: tollEntries }}
+                    validationSchema={Yup.object().shape({
+                        tolls: Yup.array().of(
+                            Yup.object().shape({
+                                amount: Yup.number()
+                                    .typeError('Amount must be a number')
+                                    .positive('Amount must be positive')
+                                    .required('Amount is required'),
+                                receipt: Yup.string().required('Receipt is required'),
+                            })
+                        ),
+                    })}
+                    onSubmit={handleSaveCharges}
+                >
+                    {({ values, errors, touched, setFieldValue, handleSubmit }) => (
+                        <>
+                            <FieldArray name="tolls">
+                                {({ push }) => (
+                                    <>
+                                        {values.tolls.map((entry, index) => (
+                                            <View key={entry.id} className="mb-4 bg-white p-4 rounded-xl border border-gray-200 shadow-sm">
+                                                <ThemedText className="text-gray-700 font-medium mb-2">
+                                                    Toll Amount
+                                                </ThemedText>
 
-                            <View className="flex-row items-center mb-3">
-                                <Input className="flex-1 mr-3 h-[50px] rounded-lg">
-                                    <InputField
-                                        placeholder="0.00"
-                                        value={entry.amount}
-                                        onChangeText={(text) => handleTollAmountChange(entry.id, text)}
-                                        keyboardType="numeric"
-                                    />
-                                </Input>
-                                <Text className="text-gray-700 absolute right-8">₦</Text>
-                            </View>
+                                                <ThemedView className="flex-row items-center mb-3">
+                                                    <Input className="flex-1 mr-3 h-[50px] rounded-lg">
+                                                        <InputField
+                                                            placeholder="0.00"
+                                                            value={entry.amount}
+                                                            onChangeText={(text) =>
+                                                                setFieldValue(`tolls[${index}].amount`, text)
+                                                            }
+                                                            keyboardType="numeric"
+                                                        />
+                                                    </Input>
+                                                    <ThemedText className="text-gray-700 absolute right-8">₦</ThemedText>
+                                                </ThemedView>
 
-                            {/* Add Receipt */}
-                            <TouchableOpacity
-                                className="border-2 border-dashed border-gray-300 rounded-lg p-4 items-center justify-center mb-4"
-                                onPress={() => handleAddReceipt(entry.id)}
+                                                {/* TS-safe Amount Error */}
+                                                {
+                                                    errors.tolls?.[index] &&
+                                                    typeof errors.tolls[index] === 'object' &&
+                                                    'amount' in errors.tolls[index] &&
+                                                    touched.tolls?.[index]?.amount && (
+                                                        <ThemedText className="text-red-500">
+                                                            {(errors.tolls[index] as any).amount}
+                                                        </ThemedText>
+                                                    )
+                                                }
+
+                                                < ThemedView >
+                                                    <InputLabelText className="text-sm text-gray-700 mb-2">
+                                                        Toll Receipt
+                                                    </InputLabelText>
+                                                    <ImageUploader
+                                                        uri={entry.receipt}
+                                                        allowsEditing
+                                                        size={80}
+                                                        aspect={[4, 3]}
+                                                        label='Upload Receipt'
+                                                        className="border-2 flex justify-center bg-rose-50 border-typography-300 items-center py-4 rounded border-dotted"
+                                                        shape="circle"
+                                                        onChange={async (uri) => {
+                                                            if (!uri) return;
+                                                            const uploadedUrl = await handleRecieptUpload(uri);
+                                                            setFieldValue(
+                                                                `tolls[${index}].receipt`,
+                                                                uploadedUrl
+                                                            );
+                                                        }}
+                                                        helperText="Toll Receipt Image"
+                                                    />
+                                                    {/* TS-safe Receipt Error */}
+                                                    {
+                                                        errors.tolls?.[index] &&
+                                                        typeof errors.tolls[index] === 'object' &&
+                                                        'receipt' in errors.tolls[index] &&
+                                                        touched.tolls?.[index]?.receipt && (
+                                                            <ThemedText className="text-red-500">
+                                                                {(errors.tolls[index] as any).receipt}
+                                                            </ThemedText>
+                                                        )
+                                                    }
+                                                </ThemedView>
+                                                <ThemedText className="text-gray-700 font-medium mb-2">
+                                                    Description
+                                                </ThemedText>
+
+                                                <Input className="flex-1 mr-3 h-[50px] rounded-lg">
+                                                    <InputField
+                                                        placeholder="Description"
+                                                        value={entry.description}
+                                                        onChangeText={(text) =>
+                                                            setFieldValue(`tolls[${index}].description`, text)
+                                                        }
+                                                    />
+                                                </Input>
+
+                                            </ThemedView>
+                                        ))}
+
+                                        {/* Add Another Toll Button */}
+                                        <Button
+                                            variant="outline"
+                                            className="border-[#E75B3B] rounded-xl w-full h-[47px] mb-6"
+                                            onPress={() =>
+
+                                                push({ id: `${values.tolls.length + 1}`, amount: '', receipt: '' })
+
+                                            }
+                                        >
+                                            <ButtonText className="text-[#E75B3B] font-semibold text-lg">
+                                                Add Another Toll
+                                            </ButtonText>
+                                        </Button>
+                                    </>
+                                )}
+                            </FieldArray>
+
+                            {/* Submit Button (kept in your Bottom Buttons section) */}
+                            <Button
+                                size="xl"
+                                className="bg-[#E75B3B] rounded-xl flex-1 h-[47px]"
+                                onPress={() => handleSubmit()}
                             >
-                                <View className="items-center">
-                                    <View className="w-8 h-8 bg-gray-100 rounded-full items-center justify-center mb-2">
-                                        <Icon as={UploadIcon} size="sm" className="text-gray-400" />
-                                    </View>
-                                    <Text className="text-gray-700 font-medium">
-                                        Add Receipt
-                                    </Text>
-                                </View>
-                            </TouchableOpacity>
-                        </View>
-                    ))}
+                                <ButtonText className="text-white font-semibold text-lg">
+                                    {isUpdating ? <ActivityIndicator></ActivityIndicator> : 'Save Charges'}
+                                </ButtonText>
+                            </Button>
 
-                    {/* Add Another Toll Button */}
-                    <Button
-                        variant="outline"
-                        className="border-[#E75B3B] rounded-xl w-full h-[47px] mb-6"
-                        onPress={handleAddAnotherToll}
-                    >
-                        <ButtonText className="text-[#E75B3B] font-semibold text-lg">
-                            Add Another Toll
-                        </ButtonText>
-                    </Button>
-                </View>
+                            {/* Total Additional Charges */}
+                            <ThemedView className="my-6">
+                                <ThemedText className="text-lg font-semibold text-gray-900 mb-4">
+                                    Total Additional Charges
+                                </ThemedText>
+                                <ThemedView className="space-y-2">
+                                    {values.tolls.map((entry, index) => (
+                                        <View key={entry.id} className="flex-row justify-between items-center">
+                                            <ThemedText className="text-gray-600">Toll {index + 1}</ThemedText>
+                                            <ThemedText className="text-gray-900 font-medium">
+                                                ₦{parseFloat(entry.amount || '0').toLocaleString()}
+                                            </ThemedText>
+                                        </ThemedView>
+                                    ))}
 
-                {/* Total Additional Charges */}
-                <View className="mb-6">
-                    <Text className="text-lg font-semibold text-gray-900 mb-4">
-                        Total Additional Charges
-                    </Text>
 
-                    <View className="space-y-2">
-                        <View className="flex-row justify-between items-center">
-                            <Text className="text-gray-600">Xyz Charges</Text>
-                            <Text className="text-gray-900 font-medium">
-                                ₦{tollEntries.reduce((sum, entry) => sum + (parseFloat(entry.amount) || 0), 0).toLocaleString()}
-                            </Text>
-                        </View>
+                                    <ThemedView className="border-t border-gray-200 pt-2 mt-2">
+                                        <ThemedView className="flex-row justify-between items-center">
+                                            <ThemedText className="text-lg font-semibold text-gray-900">
+                                                Calculated Total
+                                            </ThemedText>
+                                            <ThemedText className="text-lg font-semibold text-[#E75B3B]">
+                                                ₦{values.tolls.reduce((total, entry) => total + parseFloat(entry.amount), 0) + parseFloat(bookingData.fare.replace('₦', '').replace(',', ''))}
+                                            </ThemedText>
+                                        </ThemedView>
+                                    </ThemedView>
+                                </ThemedView>
+                            </ThemedView>
+                        </>
+                    )}
+                </Formik>
 
-                        <View className="flex-row justify-between items-center">
-                            <Text className="text-gray-600">Xyz Charges</Text>
-                            <Text className="text-gray-900 font-medium">
-                                ₦{tollEntries.reduce((sum, entry) => sum + (parseFloat(entry.amount) || 0), 0).toLocaleString()}
-                            </Text>
-                        </View>
 
-                        <View className="border-t border-gray-200 pt-2 mt-2">
-                            <View className="flex-row justify-between items-center">
-                                <Text className="text-lg font-semibold text-gray-900">
-                                    Calculated Total
-                                </Text>
-                                <Text className="text-lg font-semibold text-[#E75B3B]">
-                                    ₦{calculateTotal().toLocaleString()}
-                                </Text>
-                            </View>
-                        </View>
-                    </View>
-                </View>
+
 
                 {/* Warning Notice */}
-                <View className="mb-6">
-                    <View className="bg-red-50 border border-red-200 rounded-lg p-4 flex-row items-start">
-                        <View className="mr-3 mt-0.5">
+                <ThemedView className="mb-6">
+                    <ThemedView className="bg-red-50 border border-red-200 rounded-lg p-4 flex-row items-start">
+                        <ThemedView className="mr-3 mt-0.5">
                             <Icon as={AlertCircleIcon} size="lg" className="text-red-500" />
-                        </View>
-                        <View className="flex-1">
-                            <Text className="text-red-600 text-sm leading-normal font-medium">
+                        </ThemedView>
+                        <ThemedView className="flex-1">
+                            <ThemedText className="text-red-600 text-sm leading-normal font-medium">
                                 Please note: These charges will be added to the customer's final bill
-                            </Text>
-                        </View>
-                    </View>
-                </View>
+                            </ThemedText>
+                        </ThemedView>
+                    </ThemedView>
+                </ThemedView>
                 {/* Bottom Buttons */}
-                <View className="px-4 pb-6 flex-row gap-x-3">
+                <ThemedView className="px-4 pb-6 flex-row gap-x-3">
                     <Button
                         variant="outline"
                         className="border-[#E75B3B] rounded-xl flex-1 h-[47px]"
@@ -287,13 +474,13 @@ export default function AddTollsExpensesScreen() {
                         onPress={handleSaveCharges}
                     >
                         <ButtonText className="text-white font-semibold text-lg">
-                            Save Charges
+                            {isUpdating ? <ActivityIndicator></ActivityIndicator> : 'Save Charges'}
                         </ButtonText>
                     </Button>
-                </View>
-            </ScrollView>
+                </ThemedView>
+            </ScrollView >
 
 
-        </SafeAreaView>
+        </SafeAreaView >
     );
 }

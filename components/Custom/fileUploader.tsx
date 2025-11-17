@@ -352,10 +352,10 @@ const FileUploader: React.FC<FileUploaderProps> = ({
               <Icon as={VideoIcon} className="text-primary-500" size="2xl" />
             </ThemedView>
           )}
-          <View className="absolute inset-0 bg-black/30 items-center justify-center">
+          <ThemedView className="absolute inset-0 bg-black/30 items-center justify-center">
             <ThemedText className="text-white text-xs">Video</ThemedText>
-          </View>
-        </View>
+          </ThemedView>
+        </View >
       );
     }
 
@@ -404,11 +404,11 @@ const FileUploader: React.FC<FileUploaderProps> = ({
           </Pressable>
         ) : null}
         {loading && (
-          <View className="absolute inset-0 bg-black/30 items-center justify-center">
+          <ThemedView className="absolute inset-0 bg-black/30 items-center justify-center">
             <ActivityIndicator color="#fff" />
-          </View>
+          </ThemedView>
         )}
-      </View>
+      </ThemedView>
       {!!helperText && (
         <ThemedText type="s2_subtitle" className="mt-2 text-typography-800 text-center">
           {helperText}
@@ -425,10 +425,10 @@ const FileUploader: React.FC<FileUploaderProps> = ({
           className="flex-1 bg-black/40"
           onPress={() => setSheetOpen(false)}
         >
-          <View className="mt-auto bg-white rounded-t-3xl p-4">
-            <View className="items-center">
-              <View className="w-12 h-1.5 bg-background-300 rounded-full mb-3" />
-            </View>
+          <ThemedView className="mt-auto bg-white rounded-t-3xl p-4">
+            <ThemedView className="items-center">
+              <ThemedView className="w-12 h-1.5 bg-background-300 rounded-full mb-3" />
+            </ThemedView>
             {(allowImages || allowVideos) && (
               <Pressable
                 className="h-12 rounded-lg bg-primary-600 items-center justify-center mb-3"
@@ -470,7 +470,7 @@ const FileUploader: React.FC<FileUploaderProps> = ({
                 <ThemedText className="text-error-600">Remove file</ThemedText>
               </Pressable>
             ) : null}
-          </View>
+          </ThemedView>
         </Pressable>
       </Modal>
     </AnimatedPressable>

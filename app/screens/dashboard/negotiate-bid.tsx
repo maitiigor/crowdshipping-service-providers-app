@@ -6,10 +6,8 @@ import {
     Modal,
     ScrollView,
     StatusBar,
-    Text,
     TextInput,
-    TouchableOpacity,
-    View
+    TouchableOpacity
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import * as Yup from "yup";
@@ -25,7 +23,7 @@ import { negotiateBid } from '../../../store/slices/bidSlice';
 
 interface SuccessModalProps {
     visible: boolean;
-    onClose: ()  => void;
+    onClose: () => void;
 }
 
 const SuccessModal: React.FC<SuccessModalProps> = ({ visible, onClose }) => (
@@ -35,27 +33,27 @@ const SuccessModal: React.FC<SuccessModalProps> = ({ visible, onClose }) => (
         animationType="fade"
         onRequestClose={onClose}
     >
-        <View className="flex-1 bg-black/50 items-center justify-center px-6">
-            <View className="bg-white rounded-2xl p-8 w-full max-w-sm items-center">
+        <ThemedView className="flex-1 bg-black/50 items-center justify-center px-6">
+            <ThemedView className="bg-white rounded-2xl p-8 w-full max-w-sm items-center">
                 {/* Success Icon with Animation */}
-                <View className="relative mb-6">
+                <ThemedView className="relative mb-6">
                     {/* Outer circles for animation effect */}
-                    <View className="absolute w-20 h-20 rounded-full bg-orange-100 opacity-30 animate-pulse" />
-                    <View className="absolute w-16 h-16 top-2 left-2 rounded-full bg-orange-200 opacity-50 animate-pulse" />
+                    <ThemedView className="absolute w-20 h-20 rounded-full bg-orange-100 opacity-30 animate-pulse" />
+                    <ThemedView className="absolute w-16 h-16 top-2 left-2 rounded-full bg-orange-200 opacity-50 animate-pulse" />
 
                     {/* Main success icon */}
-                    <View className="w-12 h-12 top-4 left-4 bg-[#E75B3B] rounded-full items-center justify-center">
+                    <ThemedView className="w-12 h-12 top-4 left-4 bg-[#E75B3B] rounded-full items-center justify-center">
                         <Icon as={CheckCircleIcon} size="lg" className="text-white" />
-                    </View>
-                </View>
+                    </ThemedView>
+                </ThemedView>
 
                 {/* Success Message */}
-                <Text className="text-xl font-semibold text-gray-900 text-center mb-2">
+                <ThemedText className="text-xl font-semibold text-gray-900 text-center mb-2">
                     Price sent
-                </Text>
-                <Text className="text-gray-500 text-center mb-8 text-base px-4">
+                </ThemedText>
+                <ThemedText className="text-gray-500 text-center mb-8 text-base px-4">
                     Offer sent to User, you will see a notification when they accept th price
-                </Text>
+                </ThemedText>
 
                 {/* Close Button */}
                 <Button
@@ -67,8 +65,8 @@ const SuccessModal: React.FC<SuccessModalProps> = ({ visible, onClose }) => (
                         Okay
                     </ButtonText>
                 </Button>
-            </View>
-        </View>
+            </ThemedView>
+        </ThemedView>
     </Modal>
 );
 
@@ -98,52 +96,52 @@ export default function NegotiateBidScreen() {
                 : airTrip.bids_recieved || [];
         const bid = bids.find(b => b._id === bidId);
 
-        return (<View className="bg-white my-4 rounded-xl mb-3 shadow-lg px-4">
-            <Text className="text-lg font-semibold text-gray-900 mb-3">Bid Summary</Text>
+        return (<ThemedView className="bg-white my-4 rounded-xl mb-3 shadow-lg px-4">
+            <ThemedText className="text-lg font-semibold text-gray-900 mb-3">Bid Summary</ThemedText>
 
-            <View className="flex-row space-between items-center mb-3">
-                <Text className="text-gray-600 text-lg flex-1 w-1/3" >Trip ID</Text>
-                <Text className="text-gray-600 font-bold ml-1 text-lg w-2/3 text-right ">{airTrip.tripId}</Text>
-            </View>
-
-
-            <View className="flex-row space-between items-center mb-3">
-                <Text className="text-gray-500 text-lg w-1/3">Date of Trip</Text>
-                <Text className="text-gray-700 font-bold ml-1 text-lg w-2/3 text-right ">{airTrip.departureDate}</Text>
-            </View>
+            <ThemedView className="flex-row space-between items-center mb-3">
+                <ThemedText className="text-gray-600 text-lg flex-1 w-1/3" >Trip ID</ThemedText>
+                <ThemedText className="text-gray-600 font-bold ml-1 text-lg w-2/3 text-right ">{airTrip.tripId}</ThemedText>
+            </ThemedView>
 
 
-            <View className="flex-row space-between items-center mb-3">
-                <Text className="text-gray-500 text-lg w-1/3">Pickup Location</Text>
-                <Text className="text-gray-700 font-bold ml-1 text-lg  w-2/3 text-right">{bid?.pickUpLocation.address}</Text>
-            </View>
+            <ThemedView className="flex-row space-between items-center mb-3">
+                <ThemedText className="text-gray-500 text-lg w-1/3">Date of Trip</ThemedText>
+                <ThemedText className="text-gray-700 font-bold ml-1 text-lg w-2/3 text-right ">{airTrip.departureDate}</ThemedText>
+            </ThemedView>
 
-            <View className="flex-row space-between items-center mb-3">
-                <Text className="text-gray-500 text-lg w-1/3">Drop-off Location</Text>
-                <Text className="text-gray-700 font-bold ml-1 text-lg w-2/3 text-right ">{bid?.dropOffLocation.address}</Text>
-            </View>
 
-            <View className="flex-row space-between items-center mb-3">
-                <Text className="text-gray-500 text-lg w-1/3">Aiport</Text>
-                <Text className="text-gray-700 font-bold ml-1 text-lg w-2/3 text-right ">{airTrip.arrivalAirport.city}</Text>
-            </View>
+            <ThemedView className="flex-row space-between items-center mb-3">
+                <ThemedText className="text-gray-500 text-lg w-1/3">Pickup Location</ThemedText>
+                <ThemedText className="text-gray-700 font-bold ml-1 text-lg  w-2/3 text-right">{bid?.pickUpLocation.address}</ThemedText>
+            </ThemedView>
 
-            <View className="flex-row space-between items-center mb-3">
-                <Text className="text-gray-500 text-lg flex-1 w-1/3">Flight Number</Text>
-                <Text className="text-gray-700 font-bold ml-1 text-lg w-2/3 text-right ">{airTrip.flightNumber}</Text>
-            </View>
+            <ThemedView className="flex-row space-between items-center mb-3">
+                <ThemedText className="text-gray-500 text-lg w-1/3">Drop-off Location</ThemedText>
+                <ThemedText className="text-gray-700 font-bold ml-1 text-lg w-2/3 text-right ">{bid?.dropOffLocation.address}</ThemedText>
+            </ThemedView>
 
-            <View className="flex-row space-between items-center mb-3">
-                <Text className="text-gray-500 text-lg w-1/3">Weight</Text>
-                <Text className="text-gray-700 font-bold ml-1 text-lg w-2/3 text-right ">{marineTrip.capacity.dimension}</Text>
-            </View>
+            <ThemedView className="flex-row space-between items-center mb-3">
+                <ThemedText className="text-gray-500 text-lg w-1/3">Aiport</ThemedText>
+                <ThemedText className="text-gray-700 font-bold ml-1 text-lg w-2/3 text-right ">{airTrip.arrivalAirport.city}</ThemedText>
+            </ThemedView>
 
-            <View className="flex-row space-between items-center mb-3">
-                <Text className="text-gray-500 text-lg w-1/3">Fare</Text>
-                <Text className="text-gray-700 font-bold ml-1 text-lg w-2/3 text-right ">${bid?.finalPrice}</Text>
-            </View>
+            <ThemedView className="flex-row space-between items-center mb-3">
+                <ThemedText className="text-gray-500 text-lg flex-1 w-1/3">Flight Number</ThemedText>
+                <ThemedText className="text-gray-700 font-bold ml-1 text-lg w-2/3 text-right ">{airTrip.flightNumber}</ThemedText>
+            </ThemedView>
 
-        </View>);
+            <ThemedView className="flex-row space-between items-center mb-3">
+                <ThemedText className="text-gray-500 text-lg w-1/3">Weight</ThemedText>
+                <ThemedText className="text-gray-700 font-bold ml-1 text-lg w-2/3 text-right ">{marineTrip.capacity.dimension}</ThemedText>
+            </ThemedView>
+
+            <ThemedView className="flex-row space-between items-center mb-3">
+                <ThemedText className="text-gray-500 text-lg w-1/3">Fare</ThemedText>
+                <ThemedText className="text-gray-700 font-bold ml-1 text-lg w-2/3 text-right ">${bid?.finalPrice}</ThemedText>
+            </ThemedView>
+
+        </ThemedView>);
     }
 
     const renderAirTripPackages = () => {
@@ -174,52 +172,52 @@ export default function NegotiateBidScreen() {
                 : marineTrip.bids_recieved || [];
         const bid = bids.find(b => b._id === bidId);
 
-        return (<View className="bg-white my-4 rounded-xl mb-3 shadow-lg px-4">
-            <Text className="text-lg font-semibold text-gray-900 mb-3">Bid Summary</Text>
+        return (<ThemedView className="bg-white my-4 rounded-xl mb-3 shadow-lg px-4">
+            <ThemedText className="text-lg font-semibold text-gray-900 mb-3">Bid Summary</ThemedText>
 
-            <View className="flex-row space-between items-center mb-3">
-                <Text className="text-gray-600 text-lg flex-1">Trip ID</Text>
-                <Text className="text-gray-600 font-bold ml-1 text-lg ">{marineTrip.tripId}</Text>
-            </View>
-
-
-            <View className="flex-row space-between items-center mb-3">
-                <Text className="text-gray-500 text-lg flex-1">Date of Trip</Text>
-                <Text className="text-gray-700 font-bold ml-1 text-lg ">{marineTrip.departureDate}</Text>
-            </View>
+            <ThemedView className="flex-row space-between items-center mb-3">
+                <ThemedText className="text-gray-600 text-lg flex-1">Trip ID</ThemedText>
+                <ThemedText className="text-gray-600 font-bold ml-1 text-lg ">{marineTrip.tripId}</ThemedText>
+            </ThemedView>
 
 
-            <View className="flex-row space-between items-center mb-3">
-                <Text className="text-gray-500 text-lg flex-1">Pickup Location</Text>
-                <Text className="text-gray-700 font-bold ml-1 text-lg ">{bid?.pickUpLocation.address}</Text>
-            </View>
+            <ThemedView className="flex-row space-between items-center mb-3">
+                <ThemedText className="text-gray-500 text-lg flex-1">Date of Trip</ThemedText>
+                <ThemedText className="text-gray-700 font-bold ml-1 text-lg ">{marineTrip.departureDate}</ThemedText>
+            </ThemedView>
 
-            <View className="flex-row space-between items-center mb-3">
-                <Text className="text-gray-500 text-lg flex-1">Drop-off Location</Text>
-                <Text className="text-gray-700 font-bold ml-1 text-lg ">{bid?.dropOffLocation.address}</Text>
-            </View>
 
-            <View className="flex-row space-between items-center mb-3">
-                <Text className="text-gray-500 text-lg flex-1">Vessel</Text>
-                <Text className="text-gray-700 font-bold ml-1 text-lg ">{marineTrip.vesselName}</Text>
-            </View>
+            <ThemedView className="flex-row space-between items-center mb-3">
+                <ThemedText className="text-gray-500 text-lg flex-1">Pickup Location</ThemedText>
+                <ThemedText className="text-gray-700 font-bold ml-1 text-lg ">{bid?.pickUpLocation.address}</ThemedText>
+            </ThemedView>
 
-            <View className="flex-row space-between items-center mb-3">
-                <Text className="text-gray-500 text-lg flex-1">Container</Text>
-                <Text className="text-gray-700 font-bold ml-1 text-lg ">{marineTrip.containerNumber}</Text>
-            </View>
+            <ThemedView className="flex-row space-between items-center mb-3">
+                <ThemedText className="text-gray-500 text-lg flex-1">Drop-off Location</ThemedText>
+                <ThemedText className="text-gray-700 font-bold ml-1 text-lg ">{bid?.dropOffLocation.address}</ThemedText>
+            </ThemedView>
 
-            <View className="flex-row space-between items-center mb-3">
-                <Text className="text-gray-500 text-lg flex-1">Weight</Text>
-                <Text className="text-gray-700 font-bold ml-1 text-lg ">{marineTrip.capacity.dimension}</Text>
-            </View>
+            <ThemedView className="flex-row space-between items-center mb-3">
+                <ThemedText className="text-gray-500 text-lg flex-1">Vessel</ThemedText>
+                <ThemedText className="text-gray-700 font-bold ml-1 text-lg ">{marineTrip.vesselName}</ThemedText>
+            </ThemedView>
 
-            <View className="flex-row space-between items-center mb-3">
-                <Text className="text-gray-500 text-lg flex-1">Fare</Text>
-                <Text className="text-gray-700 font-bold ml-1 text-lg ">${bid?.finalPrice}</Text>
-            </View>
+            <ThemedView className="flex-row space-between items-center mb-3">
+                <ThemedText className="text-gray-500 text-lg flex-1">Container</ThemedText>
+                <ThemedText className="text-gray-700 font-bold ml-1 text-lg ">{marineTrip.containerNumber}</ThemedText>
+            </ThemedView>
 
-        </View>);
+            <ThemedView className="flex-row space-between items-center mb-3">
+                <ThemedText className="text-gray-500 text-lg flex-1">Weight</ThemedText>
+                <ThemedText className="text-gray-700 font-bold ml-1 text-lg ">{marineTrip.capacity.dimension}</ThemedText>
+            </ThemedView>
+
+            <ThemedView className="flex-row space-between items-center mb-3">
+                <ThemedText className="text-gray-500 text-lg flex-1">Fare</ThemedText>
+                <ThemedText className="text-gray-700 font-bold ml-1 text-lg ">${bid?.finalPrice}</ThemedText>
+            </ThemedView>
+
+        </ThemedView>);
     }
 
     const renderMarineTripPackages = () => {
@@ -258,11 +256,11 @@ export default function NegotiateBidScreen() {
     const handleSuccessModalClose = (type: string, tripId: string) => {
         setShowSuccessModal(false);
         // Navigate back to review bids screen
-       
+
         router.push({
             pathname: '/screens/dashboard/review-bids',
             params: {
-                tripId: tripId ,
+                tripId: tripId,
                 type: type
             }
         })
@@ -321,20 +319,20 @@ export default function NegotiateBidScreen() {
             <StatusBar barStyle="dark-content" backgroundColor="white" />
 
             {/* Header */}
-            <View className="bg-white h-16 px-4 flex-row items-center justify-between border-b border-gray-200">
+            <ThemedView className="bg-white h-16 px-4 flex-row items-center justify-between border-b border-gray-200">
                 <TouchableOpacity className="p-2" onPress={handleGoBack}>
                     <Icon as={ArrowLeftIcon} size="lg" className="text-gray-700" />
                 </TouchableOpacity>
 
-                <Text className="text-lg font-semibold text-gray-900">Renegotiate Bid</Text>
+                <ThemedText className="text-lg font-semibold text-gray-900">Renegotiate Bid</ThemedText>
 
                 <TouchableOpacity className="p-2" onPress={handleNotificationPress}>
-                    <View className="relative">
+                    <ThemedView className="relative">
                         <Icon as={BellIcon} size="lg" className="text-[#E75B3B]" />
-                        <View className="absolute -top-1 -right-1 w-2 h-2 bg-red-500 rounded-full" />
-                    </View>
+                        <ThemedView className="absolute -top-1 -right-1 w-2 h-2 bg-red-500 rounded-full" />
+                    </ThemedView>
                 </TouchableOpacity>
-            </View>
+            </ThemedView>
 
             <ScrollView className="flex-1 px-4 bg-white " showsVerticalScrollIndicator={false}>
                 {/* Trip Details Card */}
@@ -346,7 +344,7 @@ export default function NegotiateBidScreen() {
                 <Formik initialValues={initialValues} validationSchema={validationSchema} onSubmit={subbmitBid}>
                     {({ handleChange, handleSubmit, values, errors, touched }) => (
 
-                        <View className="mt-4">
+                        <ThemedView className="mt-4">
 
                             {/* Bid Form */}
                             <ThemedView>
@@ -359,9 +357,9 @@ export default function NegotiateBidScreen() {
                                     className="bg-[#FDF2F0] rounded-lg h-[55px] mb-2 px-4 py-4 text-base"
                                 />
                                 {touched.note && errors.amount && (
-                                    <Text style={{ color: "red", fontSize: 12 }}>
+                                    <ThemedText style={{ color: "red", fontSize: 12 }}>
                                         {errors.amount}
-                                    </Text>
+                                    </ThemedText>
                                 )}
                             </ThemedView>
 
@@ -375,9 +373,9 @@ export default function NegotiateBidScreen() {
                                     className="bg-[#FDF2F0] rounded-lg h-[55px] mb-3 px-4 py-4 text-base"
                                 />
                                 {touched.note && errors.note && (
-                                    <Text style={{ color: "red", fontSize: 12 }}>
+                                    <ThemedText style={{ color: "red", fontSize: 12 }}>
                                         {errors.note}
-                                    </Text>
+                                    </ThemedText>
                                 )}
                             </ThemedView>
                             {/* Submit Button */}
@@ -387,11 +385,11 @@ export default function NegotiateBidScreen() {
                                 className={`rounded-lg py-4 mt-3 items-center ${isSubmitting ? 'bg-gray-400' : 'bg-[#E75B3B]'
                                     }`}
                             >
-                                <Text className="text-white font-semibold text-lg">
+                                <ThemedText className="text-white font-semibold text-lg">
                                     {isSubmitting ? 'Submitting...' : 'Submit Bid'}
-                                </Text>
+                                </ThemedText>
                             </TouchableOpacity>
-                        </View>
+                        </ThemedView>
                     )}
                 </Formik>
 
@@ -399,13 +397,13 @@ export default function NegotiateBidScreen() {
 
 
                 {/* Bottom spacing */}
-                <View className="h-20" />
+                <ThemedView className="h-20" />
             </ScrollView >
 
             {/* Success Modal */}
             < SuccessModal
                 visible={showSuccessModal}
-                onClose={() =>handleSuccessModalClose(type, tripId)}
+                onClose={() => handleSuccessModalClose(type, tripId)}
             />
         </SafeAreaView >
     );
