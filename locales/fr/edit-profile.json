@@ -1,0 +1,42 @@
+{
+  "header": {
+    "editProfile": "Modifier le Profil",
+    "notifications": "Notifications"
+  },
+  "progress": {
+    "step1": "Étape 1",
+    "step2": "Étape 2",
+    "step3": "Étape 3"
+  },
+  "titles": {
+    "personalInformation": "Informations Personnelles"
+  },
+  "fields": {
+    "fullName": "Nom Complet",
+    "emailAddress": "Adresse Email",
+    "phoneNumber": "Numéro de Téléphone",
+    "country": "Pays",
+    "gender": "Sexe",
+    "state": "État",
+    "city": "Ville",
+    "pickupAddress": "Adresse de Réception"
+  },
+  "placeholders": {
+    "fullName": "Nom Complet",
+    "email": "Email"
+  },
+  "buttons": {
+    "next": "Suivant"
+  },
+  "errors": {
+    "fullNameRequired": "Le nom complet est requis",
+    "emailRequired": "L'email est requis",
+    "invalidEmail": "Email invalide",
+    "phoneRequired": "Le numéro de téléphone est requis",
+    "countryRequired": "Le pays est requis",
+    "genderRequired": "Le sexe est requis",
+    "stateRequired": "L'état est requis",
+    "cityRequired": "La ville est requise",
+    "locationRequired": "L’emplacement est requis"
+  }
+}

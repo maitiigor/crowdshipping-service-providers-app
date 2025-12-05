@@ -3,6 +3,7 @@ import { router } from "expo-router";
 import { Formik } from "formik";
 import { CircleCheckIcon, HelpCircleIcon, LucideIcon } from 'lucide-react-native';
 import React from "react";
+import { useTranslation } from 'react-i18next';
 import {
     ActivityIndicator,
     ScrollView,
@@ -25,21 +26,21 @@ import { resetPassword } from "../../../store/slices/authSlice";
 
 
 export default function ResetPassword() {
-
+    const { t } = useTranslation();
     const { dropdownOptions, editProfile, nextStep } = useEditProfileForm();
 
     const toast = useToast();
     const validationSchema = Yup.object().shape({
         password: Yup.string()
-            .required("Password is required")
+            .required(t('reset-password.validation.password_required'))
             .matches(
                 /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*]).{8,}$/,
-                "Password must be at least 8 characters and include upper case, lower case, a number and a special character (!@#$%^&*)"
+                t('reset-password.password_complex')
             ),
 
         confirmPassword: Yup.string()
-            .oneOf([Yup.ref("password")], "Passwords must match")
-            .required("Confirm password is required"),
+            .oneOf([Yup.ref("password")], t('reset-password.validation.confirm_password_match'))
+            .required(t('reset-password.validation.confirm_password_required')),
     });
 
 
@@ -96,8 +97,8 @@ export default function ResetPassword() {
             const resultAction = await dispatch(resetPassword(formData));
             if (resetPassword.fulfilled.match(resultAction)) {
                 showNewToast({
-                    title: "Password Reset Successful",
-                    description: "Your password has been reset",
+                    title: t('reset-password.toast.success_title'),
+                    description: t('reset-password.toast.success_description'),
                     icon: CircleCheckIcon,
                     action: "success",
                     variant: "solid",
@@ -111,7 +112,7 @@ export default function ResetPassword() {
                     (resultAction.payload as ApiError) || { code: 0, message: "Something went wrong" } as ApiError;
                 console.log("Registration failed:", errorMessage);
                 showNewToast({
-                    title: "Registration Failed",
+                    title: t('reset-password.toast.failed_title'),
                     description: errorMessage.message,
                     icon: HelpCircleIcon,
                     action: "error",
@@ -122,8 +123,8 @@ export default function ResetPassword() {
         } catch (error) {
             console.error("🚨 Error dispatching register:", error);
             showNewToast({
-                title: "Unexpected Error 🚨",
-                description: "Please try again later",
+                title: t('reset-password.toast.unexpected_error_title'),
+                description: t('reset-password.toast.unexpected_error_description'),
                 icon: HelpCircleIcon,
                 action: "error",
                 variant: "solid",
@@ -158,7 +159,7 @@ export default function ResetPassword() {
                         </TouchableOpacity>
 
                         <ThemedText className="text-lg font-semibold text-black">
-                            Reset Password
+                            {t('reset-password.header_title')}
                         </ThemedText>
 
                     </ThemedView>
@@ -169,13 +170,13 @@ export default function ResetPassword() {
                     >
                         <ThemedView className="flex-1 ">
                             <ThemedText type="h4_header" className="my-2">
-                                Reset Account
+                                {t('reset-password.title')}
                             </ThemedText>
                         </ThemedView>
 
 
                         <ThemedView className="mb-4">
-                            <ThemedText className="text-sm text-gray-700 mb-2">Password</ThemedText>
+                            <ThemedText className="text-sm text-gray-700 mb-2">{t('reset-password.password_label')}</ThemedText>
                             <TextInput
                                 placeholder="********"
                                 value={values.password}
@@ -189,7 +190,7 @@ export default function ResetPassword() {
                         </ThemedView>
 
                         <ThemedView className="mb-4">
-                            <InputLabelText>Confirm password</InputLabelText>
+                            <InputLabelText>{t('reset-password.confirm_password_label')}</InputLabelText>
 
                             <TextInput
                                 placeholder="********"
@@ -209,7 +210,7 @@ export default function ResetPassword() {
                                 className="bg-[#E75B3B] rounded-xl"
                                 onPress={() => loading == false ? handleSubmit() : null}
                             >
-                                <ButtonText className="text-white font-semibold">{loading ? <ActivityIndicator /> : 'Change Password'}</ButtonText>
+                                <ButtonText className="text-white font-semibold">{loading ? <ActivityIndicator /> : t('reset-password.reset_button')}</ButtonText>
                             </Button>
                         </ThemedView>
 

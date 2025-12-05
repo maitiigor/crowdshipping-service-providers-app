@@ -1,0 +1,20 @@
+{
+  "header_title": "OTP Verification",
+  "title": "OTP Verification",
+  "subtitle": "Enter the 5-digit code sent to your email at",
+  "verify_button": "Verify",
+  "verifying": "Verifying...",
+  "resend_code": "Send code again",
+  "resend_link": "Resend",
+  "resending": "Resending...",
+  "no_code": "I didn't receive a code",
+  "toast": {
+    "email_verified_title": "Email Verified",
+    "email_verified_description": "Your email has been verified",
+    "verification_failed_title": "Verification Failed",
+    "otp_resent_title": "OTP Resent",
+    "otp_resent_description": "A new OTP has been sent to your email",
+    "unexpected_error_title": "Unexpected Error 🚨",
+    "unexpected_error_description": "Please try again later"
+  }
+}

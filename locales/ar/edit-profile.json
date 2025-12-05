@@ -1,0 +1,42 @@
+{
+  "header": {
+    "editProfile": "تعديل الملف الشخصي",
+    "notifications": "الإشعارات"
+  },
+  "progress": {
+    "step1": "الخطوة 1",
+    "step2": "الخطوة 2",
+    "step3": "الخطوة 3"
+  },
+  "titles": {
+    "personalInformation": "المعلومات الشخصية"
+  },
+  "fields": {
+    "fullName": "الاسم الكامل",
+    "emailAddress": "البريد الإلكتروني",
+    "phoneNumber": "رقم الهاتف",
+    "country": "الدولة",
+    "gender": "الجنس",
+    "state": "الولاية",
+    "city": "المدينة",
+    "pickupAddress": "عنوان الاستلام"
+  },
+  "placeholders": {
+    "fullName": "الاسم الكامل",
+    "email": "البريد الإلكتروني"
+  },
+  "buttons": {
+    "next": "التالي"
+  },
+  "errors": {
+    "fullNameRequired": "الاسم الكامل مطلوب",
+    "emailRequired": "البريد الإلكتروني مطلوب",
+    "invalidEmail": "بريد إلكتروني غير صالح",
+    "phoneRequired": "رقم الهاتف مطلوب",
+    "countryRequired": "الدولة مطلوبة",
+    "genderRequired": "الجنس مطلوب",
+    "stateRequired": "الولاية مطلوبة",
+    "cityRequired": "المدينة مطلوبة",
+    "locationRequired": "العنوان مطلوب"
+  }
+}

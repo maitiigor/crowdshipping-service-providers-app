@@ -1,5 +1,6 @@
 import { useNavigation, useRouter } from "expo-router";
 import React, { useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { FlatList, TouchableOpacity, View } from "react-native";
 
 import { EmptyState } from "@/components/Custom/EmptyState";
@@ -54,6 +55,7 @@ const mockCalls = [
 
 // CallsList component
 const CallsList = () => {
+    const { t } = useTranslation();
     const router = useRouter();
 
     const getCallIcon = (type: string) => {
@@ -87,8 +89,8 @@ const CallsList = () => {
             data={mockCalls}
             ListEmptyComponent={
                 <EmptyState
-                    title="No calls"
-                    description="You have no call history at the moment."
+                    title={t('inbox.empty_state.title')}
+                    description={t('inbox.empty_state.description')}
                     icon={Phone}
                     className="mt-10"
                 />
@@ -180,6 +182,7 @@ const CallsList = () => {
     );
 };
 export default function ChatScreen() {
+    const { t } = useTranslation();
     const navigation = useNavigation();
     const router = useRouter();
     const [selectedFilter, setSelectedFilter] = useState("chats");
@@ -194,7 +197,7 @@ export default function ChatScreen() {
             headerTitle: () => {
                 return (
                     <ThemedText type="s1_subtitle" className="text-center">
-                        Inbox
+                        {t('inbox.header.title')}
                     </ThemedText>
                 );
             },
@@ -264,14 +267,14 @@ export default function ChatScreen() {
     }, [navigation, refetch]);
     const filterList = [
         {
-            label: "Chats",
+            label: t('inbox.filters.chats'),
             value: "chats",
             onPress: () => {
                 setSelectedFilter("chats");
             },
         },
         {
-            label: "Calls",
+            label: t('inbox.filters.calls'),
             value: "calls",
             onPress: () => {
                 setSelectedFilter("calls");
@@ -338,8 +341,8 @@ export default function ChatScreen() {
                                 }}
                                 ListEmptyComponent={
                                     <EmptyState
-                                        title="No chats"
-                                        description="You have no chats at the moment. Start a conversation to get started."
+                                        title={t('inbox.empty_state.title')}
+                                        description={t('inbox.empty_state.description')}
                                         icon={MessageCircle}
                                         className="mt-10"
                                     />
@@ -398,7 +401,7 @@ export default function ChatScreen() {
                                                     >
                                                         {item.lastMessage.length > 30
                                                             ? item.lastMessage.substring(0, 30) + "..."
-                                                            : item.lastMessage || "No messages yet"}
+                                                            : item.lastMessage || t('inbox.labels.no_messages')}
                                                     </ThemedText>
 
                                                     {item.unreadCount > 0 && (

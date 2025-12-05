@@ -1,0 +1,26 @@
+{
+  "header_title": "लॉगिन",
+  "welcome_back": "स्वागत है",
+  "subtitle": "कृपया अपने Crowdshipping खाते में प्रवेश करें और अपनी डिलीवरी प्रबंधित करें।",
+  "email_label": "ईमेल पता",
+  "email_placeholder": "user@gmail.com",
+  "password_label": "पासवर्ड",
+  "password_placeholder": "अपना पासवर्ड दर्ज करें",
+  "login_button": "लॉगिन करें",
+  "forgot_password": "पासवर्ड भूल गए?",
+  "or_divider": "या",
+  "no_account": "क्या आपका खाता नहीं है?",
+  "sign_up_link": "साइन अप करें",
+  "validation": {
+    "invalid_email": "अमान्य ईमेल",
+    "email_required": "ईमेल आवश्यक है",
+    "password_min": "पासवर्ड कम से कम 6 वर्ण का होना चाहिए",
+    "password_required": "पासवर्ड आवश्यक है"
+  },
+  "toast": {
+    "success_title": "सफलता",
+    "success_description": "सफलतापूर्वक लॉगिन किया गया!",
+    "failed_title": "लॉगिन विफल",
+    "default_error": "लॉगिन विफल"
+  }
+}

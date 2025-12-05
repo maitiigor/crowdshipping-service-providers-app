@@ -1,0 +1,22 @@
+{
+  "welcome_back": "다시 오신 것을 환영합니다,",
+  "view_profile": "프로필 보기",
+  "availability": "사용 가능 여부",
+  "online": "온라인",
+  "offline": "오프라인",
+  "logout": "로그아웃",
+  "menu": {
+    "home": "홈",
+    "my_vehicles": "내 차량",
+    "booking_history": "예약 내역",
+    "trips_jobs": "여행/작업",
+    "inbox": "받은 편지함",
+    "payment_logs": "결제 기록",
+    "complaints": "불만",
+    "support": "지원",
+    "notifications": "알림",
+    "terms_conditions": "약관",
+    "privacy_policy": "개인정보 처리방침",
+    "app_settings": "앱 설정"
+  }
+}

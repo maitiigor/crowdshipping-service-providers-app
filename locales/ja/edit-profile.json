@@ -1,0 +1,42 @@
+{
+  "header": {
+    "editProfile": "プロフィール編集",
+    "notifications": "通知"
+  },
+  "progress": {
+    "step1": "ステップ 1",
+    "step2": "ステップ 2",
+    "step3": "ステップ 3"
+  },
+  "titles": {
+    "personalInformation": "個人情報"
+  },
+  "fields": {
+    "fullName": "氏名",
+    "emailAddress": "メールアドレス",
+    "phoneNumber": "電話番号",
+    "country": "国",
+    "gender": "性別",
+    "state": "州",
+    "city": "市",
+    "pickupAddress": "受取住所"
+  },
+  "placeholders": {
+    "fullName": "氏名",
+    "email": "メール"
+  },
+  "buttons": {
+    "next": "次へ"
+  },
+  "errors": {
+    "fullNameRequired": "氏名は必須です",
+    "emailRequired": "メールアドレスは必須です",
+    "invalidEmail": "無効なメールアドレスです",
+    "phoneRequired": "電話番号は必須です",
+    "countryRequired": "国は必須です",
+    "genderRequired": "性別は必須です",
+    "stateRequired": "州は必須です",
+    "cityRequired": "市は必須です",
+    "locationRequired": "住所は必須です"
+  }
+}

@@ -1,0 +1,12 @@
+{
+  "header": { "title": "Editar Perfil" },
+  "steps": { "step1": "Información Personal", "step2": "Documentos", "step3": "Información de Pago" },
+  "identificationType": { "label": "Tipo de Identificación", "placeholder": "Seleccione Tipo de Identificación", "error": "El tipo de identificación es obligatorio" },
+  "idNumber": { "label": "Número de ID", "placeholder": "Número de ID", "error": "El número de ID es obligatorio" },
+  "idFrontImage": { "label": "Imagen Frontal del ID", "helper": "Una foto del documento de identificación", "error": "La imagen frontal del ID es obligatoria" },
+  "proofOfAddress": { "label": "Comprobante de Domicilio", "helper": "Una foto del comprobante de domicilio", "error": "El comprobante de domicilio es obligatorio" },
+  "insuranceResidenceProof": { "label": "Prueba de Residencia del Seguro", "helper": "Una foto de su prueba de seguro", "error": "La prueba de residencia del seguro es obligatoria" },
+  "driverPassport": { "label": "Pasaporte del Conductor", "helper": "Una foto de su pasaporte de conductor", "error": "El pasaporte del conductor es obligatorio" },
+  "buttons": { "next": "Siguiente" },
+  "actionSheet": { "selectIdentificationType": "Seleccionar Tipo de Identificación" }
+}

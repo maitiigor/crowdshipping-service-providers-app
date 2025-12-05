@@ -1,0 +1,42 @@
+{
+  "header": {
+    "editProfile": "Edit Profile",
+    "notifications": "Notifications"
+  },
+  "progress": {
+    "step1": "Step 1",
+    "step2": "Step 2",
+    "step3": "Step 3"
+  },
+  "titles": {
+    "personalInformation": "Personal Information"
+  },
+  "fields": {
+    "fullName": "Full Name",
+    "emailAddress": "Email Address",
+    "phoneNumber": "Phone Number",
+    "country": "Country",
+    "gender": "Gender",
+    "state": "State",
+    "city": "City",
+    "pickupAddress": "Pickup Address"
+  },
+  "placeholders": {
+    "fullName": "Full Name",
+    "email": "Email"
+  },
+  "buttons": {
+    "next": "Next"
+  },
+  "errors": {
+    "fullNameRequired": "Full name is required",
+    "emailRequired": "Email is required",
+    "invalidEmail": "Invalid email",
+    "phoneRequired": "Phone number is required",
+    "countryRequired": "Country is required",
+    "genderRequired": "Gender is required",
+    "stateRequired": "State is required",
+    "cityRequired": "City is required",
+    "locationRequired": "Location is required"
+  }
+}

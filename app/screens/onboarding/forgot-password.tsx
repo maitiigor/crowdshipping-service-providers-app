@@ -1,6 +1,7 @@
 import { router } from 'expo-router';
 import { Formik } from 'formik';
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import {
     ActivityIndicator,
     Image,
@@ -20,28 +21,30 @@ import { useDispatch } from 'react-redux';
 import CustomToast from '../../../components/Custom/CustomToast';
 import InputLabelText from '../../../components/Custom/InputLabelText';
 import ParallaxScrollView from '../../../components/ParallaxScrollView';
+import { ThemedText } from '../../../components/ThemedText';
 import { ThemedView } from '../../../components/ThemedView';
 import { useToast } from '../../../components/ui/toast';
 import { ApiError } from '../../../models';
 import { AppDispatch, useAppSelector } from '../../../store';
 import { forgotPassword } from '../../../store/slices/authSlice';
-import { ThemedText } from '../../../components/ThemedText';
 
-// Validation Schema
-const forgotPasswordSchema = Yup.object().shape({
-    email: Yup.string()
-        .email('Please enter a valid email address')
-        .required('Email is required'),
-});
+
 
 interface ForgotPasswordFormValues {
     email: string;
 }
 
 export default function ForgotPasswordScreen() {
+    const { t } = useTranslation();
     const { loading } = useAppSelector((state) => state.auth);
     const dispatch = useDispatch<AppDispatch>();
     const toast = useToast();
+    
+    const forgotPasswordSchema = Yup.object().shape({
+        email: Yup.string()
+            .email(t('forget-password.validation.invalid_email'))
+            .required(t('forget-password.validation.email_required')),
+    });
     const showNewToast = ({
         title,
         description,
@@ -88,8 +91,8 @@ export default function ForgotPasswordScreen() {
                 console.log("Forgot password success:", resultAction.payload);
 
                 showNewToast({
-                    title: "Password Reset Email Sent",
-                    description: "Please check your email for the reset link",
+                    title: t('forget-password.toast.success_title'),
+                    description: t('forget-password.toast.success_description'),
                     icon: CircleCheckIcon,
                     action: "success",
                     variant: "solid",
@@ -108,7 +111,7 @@ export default function ForgotPasswordScreen() {
                 const errorMessage =
                     (resultAction.payload as ApiError) || { code: 0, message: "Something went wrong" } as ApiError;
                 showNewToast({
-                    title: "Password Reset Failed",
+                    title: t('forget-password.toast.failed_title'),
                     description: errorMessage.message,
                     icon: HelpCircleIcon,
                     action: "error",
@@ -118,8 +121,8 @@ export default function ForgotPasswordScreen() {
 
         } catch (error) {
             showNewToast({
-                title: "Unexpected Error 🚨",
-                description: "Please try again later",
+                title: t('forget-password.toast.unexpected_error_title'),
+                description: t('forget-password.toast.unexpected_error_description'),
                 icon: HelpCircleIcon,
                 action: "error",
                 variant: "solid",
@@ -148,7 +151,7 @@ export default function ForgotPasswordScreen() {
                     </TouchableOpacity>
 
                     <ThemedText className="text-lg font-semibold text-gray-900">
-                        Forgot Password
+                        {t('forget-password.header_title')}
                     </ThemedText>
 
                     <ThemedView className="w-8" />
@@ -169,10 +172,10 @@ export default function ForgotPasswordScreen() {
                     {/* Title and Description */}
                     <ThemedView className="mb-8">
                         <ThemedText className="text-2xl font-bold text-gray-900 mb-4 text-center">
-                            Forgot your password?
+                            {t('forget-password.title')}
                         </ThemedText>
                         <ThemedText className="text-base text-gray-600 leading-6 text-center px-4">
-                            Enter your registered email below to receive password reset instruction
+                            {t('forget-password.subtitle')}
                         </ThemedText>
                     </ThemedView>
 
@@ -187,7 +190,7 @@ export default function ForgotPasswordScreen() {
                                 {/* Email Input */}
                                 <ThemedView>
                                     <InputLabelText>
-                                        Email address
+                                        {t('forget-password.email_label')}
                                     </InputLabelText>
                                     <Input
                                         variant="outline"
@@ -198,7 +201,7 @@ export default function ForgotPasswordScreen() {
                                             } bg-rose-50 rounded-lg border-0 min-h-[54px]`}
                                     >
                                         <InputField
-                                            placeholder="user@gmail.com"
+                                            placeholder={t('forget-password.email_placeholder')}
                                             value={values.email}
                                             onChangeText={handleChange('email')}
                                             onBlur={handleBlur('email')}
@@ -223,7 +226,7 @@ export default function ForgotPasswordScreen() {
                                     disabled={loading}
                                 >
                                     <ButtonText className="text-white font-semibold text-base">
-                                        {loading ? <ActivityIndicator /> : 'Send'}
+                                        {loading ? <ActivityIndicator /> : t('forget-password.send_button')}
                                     </ButtonText>
                                 </Button>
                             </ThemedView>
@@ -235,11 +238,11 @@ export default function ForgotPasswordScreen() {
                 {/* Bottom Login Link */}
                 <ThemedView className="px-6 py-6">
                     <ThemedView className="flex-row justify-center items-center">
-                        <ThemedText className="text-gray-600">You remember your password? </ThemedText>
+                        <ThemedText className="text-gray-600">{t('forget-password.remember_password')} </ThemedText>
                         <TouchableOpacity
                             onPress={() => router.back()}
                         >
-                            <ThemedText className="text-[#E75B3B] font-semibold">Login</ThemedText>
+                            <ThemedText className="text-[#E75B3B] font-semibold">{t('forget-password.login_link')}</ThemedText>
                         </TouchableOpacity>
                     </ThemedView>
                 </ThemedView>

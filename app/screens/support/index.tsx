@@ -6,15 +6,17 @@ import { ThemedView } from "@/components/ThemedView";
 import { Icon } from "@/components/ui/icon";
 import { useThemeColor } from "@/hooks/useThemeColor";
 import {
-  Link,
-  useLocalSearchParams,
-  useNavigation,
-  useRouter,
+    Link,
+    useLocalSearchParams,
+    useNavigation,
+    useRouter,
 } from "expo-router";
 import { ChevronLeft, ChevronRight } from "lucide-react-native";
 import React, { useEffect } from "react";
+import { useTranslation } from "react-i18next";
 import { Pressable, TouchableOpacity } from "react-native";
 export default function TravelerDetail() {
+  const { t } = useTranslation();
   const navigation = useNavigation();
   const backroundTopNav = useThemeColor({}, "background");
   const router = useRouter();
@@ -25,7 +27,7 @@ export default function TravelerDetail() {
       headerTitle: () => {
         return (
           <ThemedText type="s1_subtitle" className="text-center">
-            Support
+            {t('sidebar.menu.support')}
           </ThemedText>
         );
       },

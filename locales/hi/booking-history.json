@@ -1,0 +1,45 @@
+{
+  "header": {
+    "title": "बुकिंग इतिहास",
+    "details_title": "बुकिंग विवरण"
+  },
+  "filters": {
+    "all": "सभी",
+    "in_progress": "चालू",
+    "pending": "लंबित",
+    "delivered": "डिलीवर",
+    "cancelled": "रद्द"
+  },
+  "empty_state": {
+    "title": "कोई बुकिंग उपलब्ध नहीं",
+    "description": "इस समय कोई बुकिंग उपलब्ध नहीं है। कृपया बाद में पुनः जाँच करें।"
+  },
+  "labels": {
+    "booking_summary": "बुकिंग सारांश",
+    "booking_id": "बुकिंग आईडी",
+    "tracking_id": "ट्रैकिंग आईडी",
+    "pickup_location": "पिकअप स्थान",
+    "dropoff_location": "ड्रॉपऑफ़ स्थान",
+    "product_type": "उत्पाद का प्रकार",
+    "weight": "वज़न",
+    "current_status": "वर्तमान स्थिति",
+    "payment_status": "भुगतान स्थिति",
+    "receiver_information": "रिसीवर की जानकारी",
+    "name": "नाम",
+    "phone_number": "फ़ोन नंबर",
+    "alternative_phone": "वैकल्पिक फ़ोन",
+    "sender_information": "सेंडर की जानकारी",
+    "user_id": "यूज़र आईडी",
+    "location": "स्थान",
+    "traveller_information": "यात्री की जानकारी",
+    "expected_arrival_time": "अनुमानित आगमन समय",
+    "loading": "बुकिंग विवरण लोड हो रहा है..."
+  },
+  "buttons": {
+    "rate_driver": "ड्राइवर को रेट करें",
+    "report_driver": "ड्राइवर की शिकायत करें",
+    "file_claim": "दावा दर्ज करें",
+    "back": "वापस",
+    "cancel_booking": "बुकिंग रद्द करें"
+  }
+}

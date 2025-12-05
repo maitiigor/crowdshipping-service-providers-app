@@ -1,0 +1,81 @@
+{
+  "header": {
+    "title": "दावे",
+    "new_claim": "नया दावा",
+    "details_title": "दावा विवरण"
+  },
+  "search_placeholder": "खोजें...",
+  "filters": {
+    "pending": "लंबित",
+    "resolved": "सुलझाया गया"
+  },
+  "empty_state": {
+    "title": "कोई {{filter}} दावे नहीं",
+    "description": "इस समय आपके पास कोई {{filter}} दावे नहीं हैं। कृपया बाद में पुनः जाँच करें।"
+  },
+  "buttons": {
+    "close": "बंद करें",
+    "details": "विवरण",
+    "add_new": "नया जोड़ें",
+    "cancel": "रद्द करें",
+    "submit_claim": "दावा सबमिट करें",
+    "open_attachment": "संलग्नक खोलें"
+  },
+  "labels": {
+    "claim_id": "दावा आईडी",
+    "last_updated_date": "अंतिम अपडेट की तारीख",
+    "current_status": "वर्तमान स्थिति",
+    "brief_description": "संक्षिप्त विवरण",
+    "nature_of_claims": "दावों की प्रकृति",
+    "other_options": "अन्य विकल्प",
+    "claim_amount": "दावा राशि",
+    "tracking_id": "ट्रैकिंग आईडी",
+    "detailed_description": "विस्तृत विवरण",
+    "summary": "सारांश",
+    "report_id": "रिपोर्ट आईडी",
+    "claim_reference": "दावा संदर्भ",
+    "nature_of_claim": "दावे की प्रकृति",
+    "description": "विवरण",
+    "raised_by": "दावा उठाने वाला",
+    "raised_by_id": "उठाने वाले की आईडी",
+    "support_team": "सपोर्ट टीम",
+    "timeline": "समयरेखा",
+    "created": "निर्मित",
+    "updated": "अपडेटेड",
+    "evidence": "सबूत",
+    "status": "स्थिति",
+    "under_review": "समीक्षा में",
+    "resolved": "सुलझाया गया",
+    "no_attachment": "इस दावे के लिए कोई संलग्नक प्रदान नहीं किया गया है।",
+    "load_error": "इस दावे को लोड नहीं किया जा सका। कृपया वापस जाएँ और फिर से प्रयास करें।"
+  },
+  "validation": {
+    "nature_required": "दावे की प्रकृति आवश्यक है",
+    "other_required": "अन्य विकल्प आवश्यक हैं",
+    "other_min": "अन्य विकल्प कम से कम 5 वर्णों के होने चाहिए",
+    "other_max": "अन्य विकल्प 100 वर्णों से अधिक नहीं हो सकते",
+    "amount_number": "रिपोर्ट की राशि एक संख्या होनी चाहिए",
+    "amount_required": "रिपोर्ट राशि आवश्यक है",
+    "amount_positive": "रिपोर्ट राशि सकारात्मक होनी चाहिए",
+    "tracking_required": "ट्रैकिंग आईडी आवश्यक है",
+    "description_required": "विवरण आवश्यक है",
+    "description_min": "विवरण कम से कम 20 वर्णों का होना चाहिए",
+    "description_max": "विवरण 500 वर्णों से अधिक नहीं हो सकता"
+  },
+  "toast": {
+    "submitted_title": "दावा सबमिट किया गया",
+    "submitted_desc": "आपका दावा सफलतापूर्वक सबमिट कर दिया गया है।",
+    "failed_title": "दावा अनुरोध विफल",
+    "file_uploaded_title": "फ़ाइल अपलोड हुई",
+    "file_uploaded_desc": "आपका संलग्नक तैयार है।",
+    "upload_failed_title": "अपलोड विफल",
+    "invalid_amount_title": "अमान्य राशि",
+    "invalid_amount_desc": "कृपया सही दावा राशि दर्ज करें।"
+  },
+  "placeholders": {
+    "enter_other": "अन्य विकल्प दर्ज करें",
+    "enter_amount": "राशि दर्ज करें",
+    "enter_tracking": "ट्रैकिंग आईडी दर्ज करें",
+    "enter_description": "उत्पाद विवरण दर्ज करें"
+  }
+}

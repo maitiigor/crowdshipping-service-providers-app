@@ -1,0 +1,112 @@
+{
+  "header": {
+    "title": "Detalles del viaje"
+  },
+  "loading": {
+    "trip_details": "Cargando detalles del viaje...",
+    "no_data": "No hay datos de viaje disponibles",
+    "go_back": "Volver"
+  },
+  "status": {
+    "going_to_pickup": "Yendo a recoger",
+    "picked_up": "Recogido",
+    "in_progress": "En progreso",
+    "in_transit": "En camino",
+    "arrived_destination": "Llegó al destino",
+    "delivered": "Entregado",
+    "toll_bill_pending": "Factura de peaje pendiente",
+    "completed": "Completado",
+    "pending": "Pendiente",
+    "cancelled": "Cancelado"
+  },
+  "banner": {
+    "in_transit": "Tu paquete está en camino",
+    "completed": "Paquete entregado",
+    "delivered": "Paquete entregado",
+    "pending_driver": "Esperando al conductor",
+    "pending_pathfinder": "Esperando al guía",
+    "cancelled": "Pedido cancelado",
+    "going_to_pickup_driver": "El conductor está en camino para recoger tu paquete",
+    "going_to_pickup_pathfinder": "El guía está en camino para recoger tu paquete",
+    "picked_up": "Paquete recogido",
+    "arrived_destination": "Llegó al destino",
+    "in_progress": "Paquete en progreso",
+    "toll_bill_pending": "Factura de peaje pendiente"
+  },
+  "driver": {
+    "driver": "Conductor",
+    "pathfinder": "Guía",
+    "loading": "Cargando...",
+    "current_location": "Ubicación actual del {{role}}",
+    "location": "Ubicación del {{role}}"
+  },
+  "info": {
+    "estimated_time": "Tiempo estimado",
+    "package_weight": "Peso del paquete",
+    "track_id": "ID de seguimiento"
+  },
+  "location": {
+    "no_data": "No hay datos de ubicación disponibles aún",
+    "speed": "Velocidad: {{speed}} km/h"
+  },
+  "button": {
+    "waiting_driver": "Esperando al conductor...",
+    "waiting_pathfinder": "Esperando al guía...",
+    "tracking_active": "Seguimiento activo"
+  },
+  "modal": {
+    "title": "Envío completado",
+    "review_prompt": "Por favor, deja una reseña con estrellas para tu mensajero",
+    "thank_you": "Gracias, calificaste a nuestro {{role}} con {{rating}} estrella",
+    "write_review": "Escribir una reseña",
+    "cancel": "Cancelar"
+  },
+  "rating": {
+    "one": "una",
+    "two": "dos",
+    "three": "tres",
+    "four": "cuatro",
+    "five": "cinco"
+  },
+  "toast": {
+    "success": "Éxito",
+    "review_success": "¡{{name}} calificado con éxito!",
+    "review_failed": "Falló la calificación de {{name}}",
+    "failed_default": "Falló la actualización de la cuenta"
+  },
+  "feedback": {
+    "title": "Comentarios del conductor",
+    "validation": {
+      "review_min": "La reseña debe tener al menos 10 caracteres",
+      "review_max": "La reseña no puede exceder los 500 caracteres",
+      "review_required": "La reseña es obligatoria",
+      "rating_min": "La calificación debe ser de al menos 1 estrella",
+      "rating_max": "La calificación no puede exceder las 5 estrellas",
+      "rating_required": "La calificación es obligatoria"
+    },
+    "comment_label": "comentario",
+    "review_placeholder": "Ingrese su reseña",
+    "submit_button": "Enviar reseña",
+    "modal": {
+      "title": "Enviado",
+      "description": "Su calificación y reseña han sido enviadas",
+      "done": "Hecho"
+    }
+  },
+  "driver_details": {
+    "title": "Detalles del conductor",
+    "driver_info": "Información del conductor",
+    "vehicle_info": "Información del vehículo",
+    "tracking_link": "Enlace de seguimiento en vivo / Mapa",
+    "arrival_time": "Hora de llegada estimada",
+    "receiver_name": "Nombre del receptor",
+    "receiver_number": "Número del receptor",
+    "vehicle_type": "Tipo de vehículo",
+    "vehicle_model": "Marca/Modelo del vehículo",
+    "license_plate": "Placa de matrícula",
+    "navigate": "Navegar",
+    "cancel_booking": "Cancelar reserva",
+    "report_driver": "Reportar conductor",
+    "call_driver": "Llamar al conductor"
+  }
+}

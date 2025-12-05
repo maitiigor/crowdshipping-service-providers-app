@@ -1,0 +1,22 @@
+{
+  "welcome_back": "お帰りなさい、",
+  "view_profile": "プロフィールを見る",
+  "availability": "利用状況",
+  "online": "オンライン",
+  "offline": "オフライン",
+  "logout": "ログアウト",
+  "menu": {
+    "home": "ホーム",
+    "my_vehicles": "私の車両",
+    "booking_history": "予約履歴",
+    "trips_jobs": "旅行/仕事",
+    "inbox": "受信箱",
+    "payment_logs": "支払い履歴",
+    "complaints": "苦情",
+    "support": "サポート",
+    "notifications": "通知",
+    "terms_conditions": "利用規約",
+    "privacy_policy": "プライバシーポリシー",
+    "app_settings": "アプリ設定"
+  }
+}

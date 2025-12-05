@@ -1,0 +1,42 @@
+{
+  "header": {
+    "editProfile": "프로필 수정",
+    "notifications": "알림"
+  },
+  "progress": {
+    "step1": "1단계",
+    "step2": "2단계",
+    "step3": "3단계"
+  },
+  "titles": {
+    "personalInformation": "개인 정보"
+  },
+  "fields": {
+    "fullName": "전체 이름",
+    "emailAddress": "이메일 주소",
+    "phoneNumber": "전화번호",
+    "country": "국가",
+    "gender": "성별",
+    "state": "주",
+    "city": "도시",
+    "pickupAddress": "픽업 주소"
+  },
+  "placeholders": {
+    "fullName": "전체 이름",
+    "email": "이메일"
+  },
+  "buttons": {
+    "next": "다음"
+  },
+  "errors": {
+    "fullNameRequired": "전체 이름은 필수입니다",
+    "emailRequired": "이메일은 필수입니다",
+    "invalidEmail": "잘못된 이메일입니다",
+    "phoneRequired": "전화번호는 필수입니다",
+    "countryRequired": "국가는 필수입니다",
+    "genderRequired": "성별은 필수입니다",
+    "stateRequired": "주는 필수입니다",
+    "cityRequired": "도시는 필수입니다",
+    "locationRequired": "위치는 필수입니다"
+  }
+}

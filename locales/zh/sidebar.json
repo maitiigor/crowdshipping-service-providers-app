@@ -1,0 +1,22 @@
+{
+  "welcome_back": "欢迎回来，",
+  "view_profile": "查看资料",
+  "availability": "在线状态",
+  "online": "在线",
+  "offline": "离线",
+  "logout": "退出登录",
+  "menu": {
+    "home": "首页",
+    "my_vehicles": "我的车辆",
+    "booking_history": "预订记录",
+    "trips_jobs": "行程/工作",
+    "inbox": "收件箱",
+    "payment_logs": "付款记录",
+    "complaints": "投诉",
+    "support": "支持",
+    "notifications": "通知",
+    "terms_conditions": "条款与条件",
+    "privacy_policy": "隐私政策",
+    "app_settings": "应用设置"
+  }
+}

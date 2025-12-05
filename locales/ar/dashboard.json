@@ -1,0 +1,67 @@
+{
+  "header": {
+    "hello": "مرحباً، {{name}}",
+    "search_placeholder": "ابحث عن وظائف..."
+  },
+  "sidebar": {
+    "welcome_back": "مرحباً بعودتك،",
+    "view_profile": "عرض الملف الشخصي",
+    "availability": "التوفر",
+    "online": "متصل",
+    "offline": "غير متصل",
+    "logout": "تسجيل خروج",
+    "menu": {
+      "home": "الرئيسية",
+      "my_vehicles": "مركباتي",
+      "booking_history": "سجل الحجوزات",
+      "trips_jobs": "الرحلات/الوظائف",
+      "inbox": "البريد الوارد",
+      "payment_logs": "سجل المدفوعات",
+      "complaints": "الشكاوى",
+      "support": "الدعم",
+      "notifications": "الإشعارات",
+      "terms_conditions": "الشروط والأحكام",
+      "privacy_policy": "سياسة الخصوصية",
+      "app_settings": "إعدادات التطبيق"
+    }
+  },
+  "transport": {
+    "ground": "بري",
+    "maritime": "بحري",
+    "air": "جوي"
+  },
+  "sections": {
+    "ground_trips_near_you": "رحلات برية بالقرب منك",
+    "post_my_trip": "نشر رحلتي"
+  },
+  "loading": {
+    "maritime_trips": "جاري تحميل الرحلات البحرية بالقرب منك...",
+    "air_trips": "جاري تحميل رحلاتك الجوية...",
+    "ground_trips": "جاري تحميل رحلاتك البرية..."
+  },
+  "errors": {
+    "unable_to_load_maritime": "تعذر تحميل الرحلات البحرية",
+    "unable_to_load_air": "تعذر تحميل الرحلات الجوية",
+    "unable_to_load_ground": "تعذر تحميل الرحلات البرية",
+    "try_again": "أعد المحاولة"
+  },
+  "empty_states": {
+    "no_maritime_trip": "لا توجد رحلات بحرية بعد",
+    "no_maritime_trip_description": "انشر رحلة بحرية لعرضها هنا واستقبال العروض.",
+    "no_maritime_trips_near_you": "لا توجد رحلات بحرية بالقرب منك حالياً. تحقق لاحقاً.",
+    "no_ground_trips_near_you": "لا توجد رحلات برية بالقرب منك حالياً. تحقق لاحقاً.",
+    "no_available_trips": "لا توجد رحلات {{type}} متاحة نشرتها.",
+    "date_not_available": "التاريخ غير متاح"
+  },
+  "trip_card": {
+    "date": "التاريخ:",
+    "bids_received": "العروض المستلمة:"
+  },
+  "date_relative": {
+    "in_days": "خلال {{count}} يوم",
+    "tomorrow": "غداً",
+    "today": "اليوم",
+    "yesterday": "أمس",
+    "days_ago": "منذ {{count}} يوم"
+  }
+}

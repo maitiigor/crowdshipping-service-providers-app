@@ -1,0 +1,50 @@
+{
+  "header": {
+    "title": "बोली",
+    "air": "वायु",
+    "maritime": "समुद्री"
+  },
+  "search_placeholder": "उपलब्ध यात्राओं की खोज करें...",
+  "empty_state": {
+    "title": "कोई बोलियाँ उपलब्ध नहीं",
+    "description": "इस समय कोई बोलियाँ उपलब्ध नहीं हैं। कृपया बाद में फिर से जाँचें।"
+  },
+  "buttons": {
+    "view_bid": "बोली देखें",
+    "cancel_bid": "बोली रद्द करें",
+    "pay": "भुगतान करें",
+    "renegotiate": "पुनः बातचीत",
+    "retry": "फिर से प्रयास करें"
+  },
+  "labels": {
+    "from": "से:",
+    "to": "तक:",
+    "bid_amount": "बोली राशि",
+    "parcel_tracking_id": "पार्सल ट्रैकिंग आईडी",
+    "total_weight": "कुल वजन",
+    "parcel_group": "पार्सल समूह",
+    "trip_mode": "यात्रा मोड",
+    "air_freight": "वायु मालवाहक",
+    "maritime_freight": "समुद्री मालवाहक",
+    "bidder": "बोलीदाता",
+    "user_id": "यूज़र आईडी",
+    "city": "शहर",
+    "parcel_journey": "पार्सल यात्रा",
+    "pick_up": "पिक अप",
+    "distance": "दूरी",
+    "drop_off": "ड्रॉप ऑफ",
+    "trip_timeline": "यात्रा समयरेखा",
+    "departure": "प्रस्थान",
+    "arrival": "आगमन",
+    "trip_status": "यात्रा स्थिति",
+    "trip_created_by": "यात्रा बनाई गई द्वारा",
+    "bid_details": "बोली विवरण",
+    "bid_details_unavailable": "बोली विवरण उपलब्ध नहीं है",
+    "bid_details_error": "हम बोली विवरण लोड नहीं कर सके। कृपया पुनः प्रयास करें।"
+  },
+  "status": {
+    "accepted": "स्वीकृत",
+    "pending": "लंबित",
+    "cancelled": "रद्द"
+  }
+}

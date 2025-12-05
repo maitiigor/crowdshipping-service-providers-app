@@ -1,15 +1,10 @@
-import { AntDesign } from "@expo/vector-icons";
 import { router, useLocalSearchParams } from "expo-router";
 import { CircleCheckIcon, HelpCircleIcon, LucideIcon } from "lucide-react-native";
 import React, { useEffect, useState } from "react";
-import {
-    Text,
-    TouchableOpacity,
-    View,
-} from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
+import { useTranslation } from 'react-i18next';
 import { useDispatch } from "react-redux";
 import CustomToast from "../../../components/Custom/CustomToast";
+import ParallaxScrollView from "../../../components/ParallaxScrollView";
 import OTPVerification from "../../../components/ui/otp-verification";
 import RegistrationSuccessModal from "../../../components/ui/registration-success-modal";
 import { useToast } from "../../../components/ui/toast";
@@ -17,9 +12,9 @@ import { useAuth } from "../../../hooks/useRedux";
 import { ApiError, OTPVerificationRequest, ResendOTPRequest } from "../../../models";
 import { AppDispatch, useAppSelector } from "../../../store";
 import { resendOTP, verifyOTP } from "../../../store/slices/authSlice";
-import ParallaxScrollView from "../../../components/ParallaxScrollView";
 
 export default function CreatePin() {
+    const { t } = useTranslation();
     const { verificationCountdown, startCountdown } = useAuth();
     const [showSuccessModal, setShowSuccessModal] = useState(false);
     const toast = useToast();
@@ -83,8 +78,8 @@ export default function CreatePin() {
                 console.log("Verification success:", resultAction.payload);
                 if (resultAction.payload.data.user?.isVerified && type == "sign-up") {
                     showNewToast({
-                        title: "Email Verified",
-                        description: "Your email has been verified",
+                        title: t('signup-confirm-code.toast.email_verified_title'),
+                        description: t('signup-confirm-code.toast.email_verified_description'),
                         icon: CircleCheckIcon,
                         action: "success",
                         variant: "solid",
@@ -109,7 +104,7 @@ export default function CreatePin() {
                 const errorMessage =
                     (resultAction.payload as ApiError) || { code: 0, message: "Something went wrong" } as ApiError;
                 showNewToast({
-                    title: "Verification Failed",
+                    title: t('signup-confirm-code.toast.verification_failed_title'),
                     description: errorMessage.message,
                     icon: HelpCircleIcon,
                     action: "error",
@@ -120,8 +115,8 @@ export default function CreatePin() {
         } catch (error) {
 
             showNewToast({
-                title: "Unexpected Error 🚨",
-                description: "Please try again later",
+                title: t('signup-confirm-code.toast.unexpected_error_title'),
+                description: t('signup-confirm-code.toast.unexpected_error_description'),
                 icon: HelpCircleIcon,
                 action: "error",
                 variant: "solid",
@@ -147,8 +142,8 @@ export default function CreatePin() {
                     console.log("Resend success:", resultAction.payload);
 
                     showNewToast({
-                        title: "OTP Resent",
-                        description: "A new OTP has been sent to your email",
+                        title: t('signup-confirm-code.toast.otp_resent_title'),
+                        description: t('signup-confirm-code.toast.otp_resent_description'),
                         icon: CircleCheckIcon,
                         action: "success",
                         variant: "solid",
@@ -172,12 +167,12 @@ export default function CreatePin() {
 
             {/* OTP Verification Component */}
             <OTPVerification
-                title="OTP Verification"
-                subtitle={`Enter the 5-digit code sent to your email at ${email}`}
+                title={t('signup-confirm-code.title')}
+                subtitle={`${t('signup-confirm-code.subtitle')} ${email}`}
                 pinLength={5}
                 onVerify={handleVerifyOTP}
                 onResend={handleResendCode}
-                buttonText={loading ? "Verifying..." : "Verify"}
+                buttonText={loading ? t('signup-confirm-code.verifying') : t('signup-confirm-code.verify_button')}
                 showResend={true}
                 resendCountdown={verificationCountdown}
             />

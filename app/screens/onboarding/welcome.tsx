@@ -1,14 +1,18 @@
 import { AntDesign, MaterialIcons } from "@expo/vector-icons";
 import { router } from "expo-router";
 import React from "react";
+import { useTranslation } from 'react-i18next';
 import {
     TouchableOpacity
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import ReduxStateDebugger from "../../../components/ReduxStateDebugger";
+import { ThemedText } from "../../../components/ThemedText";
+import { ThemedView } from "../../../components/ThemedView";
 import { useEditProfileForm } from "../../../hooks/useRedux";
 
 export default function Welcome() {
+    const { t } = useTranslation();
     const { setStep } = useEditProfileForm();
 
     const handleRegisterPress = () => {
@@ -29,12 +33,12 @@ export default function Welcome() {
                 <ThemedView className="flex-1 justify-center">
                     {/* Welcome Title */}
                     <ThemedText className="text-4xl font-bold text-[#E75B3B] text-center mb-8 leading-tight">
-                        Welcome to{"\n"}Crowdshipping!
+                        {t('welcome.title')}
                     </ThemedText>
 
                     {/* Description */}
                     <ThemedText className="text-base text-gray-700 text-center mb-12 leading-6 px-4">
-                        We're excited to have you on board. Start your journey as a verified delivery partner by completing your registration. Let's get you moving!
+                        {t('welcome.description')}
                     </ThemedText>
 
                     {/* Info Items */}
@@ -45,7 +49,7 @@ export default function Welcome() {
                                 <MaterialIcons name="verified-user" size={20} color="#6B7280" />
                             </ThemedView>
                             <ThemedText className="text-sm text-gray-600 flex-1 leading-5">
-                                This helps us keep our community authentic, safe, and exclusive.
+                                {t('welcome.info_authentic')}
                             </ThemedText>
                         </ThemedView>
 
@@ -55,7 +59,7 @@ export default function Welcome() {
                                 <AntDesign name="clockcircleo" size={20} color="#6B7280" />
                             </ThemedView>
                             <ThemedText className="text-sm text-gray-600 flex-1 leading-5">
-                                Verification typically takes 24-48 hours.
+                                {t('welcome.info_verification_time')}
                             </ThemedText>
                         </ThemedView>
                     </ThemedView>
@@ -68,7 +72,7 @@ export default function Welcome() {
                         onPress={handleRegisterPress}
                     >
                         <ThemedText className="text-white text-center font-semibold text-base">
-                            Register
+                            {t('welcome.register_button')}
                         </ThemedText>
                     </TouchableOpacity>
                 </ThemedView>

@@ -1,0 +1,67 @@
+{
+  "header": {
+    "hello": "안녕하세요, {{name}}",
+    "search_placeholder": "일자리를 검색하세요..."
+  },
+  "sidebar": {
+    "welcome_back": "다시 오신 것을 환영합니다,",
+    "view_profile": "프로필 보기",
+    "availability": "가능 여부",
+    "online": "온라인",
+    "offline": "오프라인",
+    "logout": "로그아웃",
+    "menu": {
+      "home": "홈",
+      "my_vehicles": "내 차량",
+      "booking_history": "예약 내역",
+      "trips_jobs": "여행/작업",
+      "inbox": "받은편지함",
+      "payment_logs": "결제 기록",
+      "complaints": "불만사항",
+      "support": "지원",
+      "notifications": "알림",
+      "terms_conditions": "이용 약관",
+      "privacy_policy": "개인정보 보호정책",
+      "app_settings": "앱 설정"
+    }
+  },
+  "transport": {
+    "ground": "지상",
+    "maritime": "해상",
+    "air": "항공"
+  },
+  "sections": {
+    "ground_trips_near_you": "내 주변 지상 이동",
+    "post_my_trip": "내 여행 게시하기"
+  },
+  "loading": {
+    "maritime_trips": "주변 해상 이동을 불러오는 중...",
+    "air_trips": "항공 이동을 불러오는 중...",
+    "ground_trips": "지상 이동을 불러오는 중..."
+  },
+  "errors": {
+    "unable_to_load_maritime": "해상 이동을 불러올 수 없습니다",
+    "unable_to_load_air": "항공 이동을 불러올 수 없습니다",
+    "unable_to_load_ground": "지상 이동을 불러올 수 없습니다",
+    "try_again": "다시 시도"
+  },
+  "empty_states": {
+    "no_maritime_trip": "해상 이동이 아직 없습니다",
+    "no_maritime_trip_description": "해상 이동을 게시하면 여기에서 확인하고 입찰을 받을 수 있습니다.",
+    "no_maritime_trips_near_you": "주변 해상 이동이 없습니다. 나중에 다시 확인하세요.",
+    "no_ground_trips_near_you": "주변 지상 이동이 없습니다. 나중에 다시 확인하세요.",
+    "no_available_trips": "게시한 {{type}} 이동이 없습니다.",
+    "date_not_available": "날짜를 사용할 수 없습니다"
+  },
+  "trip_card": {
+    "date": "날짜:",
+    "bids_received": "입찰 수:"
+  },
+  "date_relative": {
+    "in_days": "{{count}}일 후",
+    "tomorrow": "내일",
+    "today": "오늘",
+    "yesterday": "어제",
+    "days_ago": "{{count}}일 전"
+  }
+}

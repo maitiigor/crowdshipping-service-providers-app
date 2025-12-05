@@ -1,7 +1,8 @@
 import { LogoutModal } from '@/components/ui/logout-modal';
 import { Href, router } from 'expo-router';
-import { Bell, Car, Headset, Home, LogOut, MailPlus, Menu, MessageCircleMore, NotepadText, Plus, RotateCw, ScrollText, Search, SettingsIcon, VectorSquare, Wallet } from 'lucide-react-native';
+import { Bell, Car, ChevronDown, Globe, Headset, Home, LogOut, MailPlus, Menu, MessageCircleMore, NotepadText, Plus, RotateCw, ScrollText, Search, SettingsIcon, VectorSquare, Wallet } from 'lucide-react-native';
 import React, { useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import {
   ActivityIndicator,
   ScrollView,
@@ -19,9 +20,8 @@ import {
   Aeroplane,
   Icon,
   Location,
-  MenuScale,
   Sharpship,
-  VechileCar,
+  VechileCar
 } from '../../../components/ui/icon';
 
 import ParallaxScrollView from '../../../components/Custom/ParallaxScrollView';
@@ -29,6 +29,7 @@ import NotificationIconComponent from '../../../components/NotificationIconCompo
 import { ThemedText } from '../../../components/ThemedText';
 import { ThemedView } from '../../../components/ThemedView';
 import { useShowToast } from '../../../hooks/useShowToast';
+import { useThemeColor } from '../../../hooks/useThemeColor';
 import { AirTrip, MarineTrip } from '../../../models';
 import { useAppDispatch, useAppSelector } from '../../../store';
 import { fetchAirTrips } from '../../../store/slices/airTripSlice';
@@ -36,7 +37,6 @@ import { logout } from '../../../store/slices/authSlice';
 import { acceptBooking, fetchDeliveryBookings, rejectBooking } from '../../../store/slices/groundTripSlice';
 import { fetchMarineTrips } from '../../../store/slices/marineTripSlice';
 import { fetchNotifications } from '../../../store/slices/notificationSlice';
-import { useThemeColor } from '../../../hooks/useThemeColor';
 import { getUserProfile } from '../../../store/slices/profileSlice';
 
 
@@ -78,11 +78,16 @@ interface MarineTripCardProps {
 }
 
 const Sidebar: React.FC<SidebarProps> = ({ isVisible, onClose, onEditProfile, onLogout }) => {
-  if (!isVisible) return null;
-
+  // All hooks must be called before any conditional returns
+  const { t, i18n } = useTranslation();
   const [isOnline, setIsOnline] = useState(false);
-
+  const [showLanguageMenu, setShowLanguageMenu] = useState(false);
   const user = useAppSelector((state) => state.auth.user);
+  const backgroundColor = useThemeColor({}, "background");
+  const color = useThemeColor({}, "text");
+
+  // Now we can do conditional rendering
+  if (!isVisible) return null;
 
   const firstName = user.fullName.split(' ')[0];
 
@@ -90,41 +95,58 @@ const Sidebar: React.FC<SidebarProps> = ({ isVisible, onClose, onEditProfile, on
     setIsOnline(!isOnline);
   };
 
-
-    const backgroundColor = useThemeColor({}, "background");
-  const color = useThemeColor({}, "text");
-
   const menuItems = [
-    { icon: <Home color={color} />, label: 'Home', active: true, onPress: () => {
+    { icon: <Home color={color} />, label: t('sidebar.menu.home'), active: true, onPress: () => {
         router.push('/screens/dashboard');
      } },
-    { icon: <Car color={color} />, label: 'My Vehicles', onPress: () => router.push('/screens/vehicles') },
+    { icon: <Car color={color} />, label: t('sidebar.menu.my_vehicles'), onPress: () => router.push('/screens/vehicles') },
 
-    { icon: <RotateCw color={color} />, label: 'Booking History', onPress: () => router.push('/screens/bookings') },
+    { icon: <RotateCw color={color} />, label: t('sidebar.menu.booking_history'), onPress: () => router.push('/screens/bookings') },
 
-    { icon: <VectorSquare color={color} />, label: 'Trips/Jobs', onPress: () => router.push('/screens/trips') },
+    { icon: <VectorSquare color={color} />, label: t('sidebar.menu.trips_jobs'), onPress: () => router.push('/screens/trips') },
 
-    { icon: <MailPlus color={color} />, label: 'Inbox', onPress: () => router.push('/screens/chats') },
-    { icon: <Wallet color={color} />, label: 'Payment logs', onPress: () => router.push('/screens/payments') },
-    { icon: <MessageCircleMore color={color} />, label: 'Complaints', onPress: () => { router.push('/screens/reports'); } },
-    { icon: <Headset color={color} />, label: 'Support', onPress: () => router.push('/screens/support') },
-    { icon: <Bell color={color} />, label: 'Notifications', onPress: () => router.push('/screens/notifications') },
+    { icon: <MailPlus color={color} />, label: t('sidebar.menu.inbox'), onPress: () => router.push('/screens/chats') },
+    { icon: <Wallet color={color} />, label: t('sidebar.menu.payment_logs'), onPress: () => router.push('/screens/payments') },
+    { icon: <MessageCircleMore color={color} />, label: t('sidebar.menu.complaints'), onPress: () => { router.push('/screens/reports'); } },
+    { icon: <Headset color={color} />, label: t('sidebar.menu.support'), onPress: () => router.push('/screens/support') },
+    { icon: <Bell color={color} />, label: t('sidebar.menu.notifications'), onPress: () => router.push('/screens/notifications') },
     {
-      icon: <NotepadText color={color} />, label: 'Terms & Conditions', onPress: () => {
+      icon: <NotepadText color={color} />, label: t('sidebar.menu.terms_conditions'), onPress: () => {
         router.push('/screens/onboarding/terms-conditions');
       },
     },
     {
-      icon: <ScrollText color={color} />, label: 'Privacy Policy', onPress: () => {
+      icon: <ScrollText color={color} />, label: t('sidebar.menu.privacy_policy'), onPress: () => {
         router.push('/screens/onboarding/privacy-policy');
       },
     },
     {
-      icon: <SettingsIcon color={color} />, label: 'App Settings', onPress: () => {
+      icon: <SettingsIcon color={color} />, label: t('sidebar.menu.app_settings'), onPress: () => {
         router.push('/screens/settings');
       },
     },
   ];
+
+  const languages = [
+    { code: 'en', name: 'English', flag: '🇬🇧' },
+    { code: 'es', name: 'Español', flag: '🇪🇸' },
+    { code: 'fr', name: 'Français', flag: '🇫🇷' },
+    { code: 'de', name: 'Deutsch', flag: '🇩🇪' },
+    { code: 'hi', name: 'हिन्दी', flag: '🇮🇳' },
+    { code: 'ko', name: '한국어', flag: '🇰🇷' },
+    { code: 'zh', name: '中文', flag: '🇨🇳' },
+    { code: 'ja', name: '日本語', flag: '🇯🇵' },
+    { code: 'ar', name: 'العربية', flag: '🇸🇦' },
+    { code: 'pt', name: 'Português', flag: '🇵🇹' },
+    { code: 'ru', name: 'Русский', flag: '🇷🇺' },
+  ];
+
+  const currentLanguage = languages.find(lang => lang.code === i18n.language) || languages[0];
+
+  const handleLanguageChange = (languageCode: string) => {
+    i18n.changeLanguage(languageCode);
+    setShowLanguageMenu(false);
+  };
 
   return (
 
@@ -144,7 +166,7 @@ const Sidebar: React.FC<SidebarProps> = ({ isVisible, onClose, onEditProfile, on
                   <ThemedText className="text-white text-lg font-bold">G</ThemedText>
                 </ThemedView>
                 <ThemedView>
-                  <ThemedText className="text-lg font-semibold text-gray-900">Welcome back,</ThemedText>
+                  <ThemedText className="text-lg font-semibold text-gray-900">{t('dashboard.sidebar.welcome_back')}</ThemedText>
                   <ThemedText className="text-lg font-semibold text-gray-900">{firstName}</ThemedText>
                 </ThemedView>
               </ThemedView>
@@ -153,14 +175,14 @@ const Sidebar: React.FC<SidebarProps> = ({ isVisible, onClose, onEditProfile, on
               </TouchableOpacity>
             </ThemedView>
             <TouchableOpacity className="mt-3" onPress={onEditProfile}>
-              <ThemedText className="text-[#E75B3B] font-medium">View Profile</ThemedText>
+              <ThemedText className="text-[#E75B3B] font-medium">{t('sidebar.view_profile')}</ThemedText>
             </TouchableOpacity>
           </ThemedView>
 
           {/* Menu Items */}
           <ScrollView className="flex-1 px-6 py-4">
             <ThemedView className="flex-row items-center justify-around bg-[#F5F5F5] rounded-full  h-12">
-              <ThemedText className="font-normal text-lg">Availability</ThemedText>
+              <ThemedText className="font-normal text-lg">{t('sidebar.availability')}</ThemedText>
               <Switch
                 value={isOnline}
                 onValueChange={setAvailablity}
@@ -168,7 +190,7 @@ const Sidebar: React.FC<SidebarProps> = ({ isVisible, onClose, onEditProfile, on
                 thumbColor="#FFFFFF"
                 style={{ transform: [{ scaleX: 1.5 }, { scaleY: 1.5 }] }}
               />
-              <ThemedText>{isOnline ? 'Online' : 'Offline'}</ThemedText>
+              <ThemedText>{isOnline ? t('sidebar.online') : t('sidebar.offline')}</ThemedText>
             </ThemedView>
             {menuItems.map((item, index) => (
               <TouchableOpacity
@@ -182,13 +204,59 @@ const Sidebar: React.FC<SidebarProps> = ({ isVisible, onClose, onEditProfile, on
                 </ThemedText>
               </TouchableOpacity>
             ))}
+
+            {/* Language Switcher */}
+            <ThemedView className="mt-4 pt-4 border-t border-gray-200">
+              <ThemedText className="text-xs text-gray-500 mb-2 uppercase">{t('settings.main.language_title')}</ThemedText>
+              <TouchableOpacity 
+                className="flex-row items-center justify-between py-3 px-4 bg-gray-100 rounded-lg"
+                onPress={() => setShowLanguageMenu(!showLanguageMenu)}
+              >
+                <ThemedView className="flex-row items-center" style={{ backgroundColor: 'transparent' }}>
+                  <ThemedText className="text-2xl mr-2">{currentLanguage.flag}</ThemedText>
+                  <ThemedText className="text-base font-medium text-gray-900">{currentLanguage.name}</ThemedText>
+                </ThemedView>
+                <ChevronDown color={color} size={20} />
+              </TouchableOpacity>
+              
+              {showLanguageMenu && (
+                <ThemedView className="mt-2 rounded-lg overflow-hidden" style={{ backgroundColor: '#ffffff', borderWidth: 1, borderColor: '#e5e7eb' }}>
+                  {languages.map((lang) => (
+                    <TouchableOpacity
+                      key={lang.code}
+                      className="flex-row items-center justify-between py-3 px-4"
+                      style={{
+                        backgroundColor: i18n.language === lang.code ? '#FEF2F2' : '#ffffff',
+                      }}
+                      onPress={() => handleLanguageChange(lang.code)}
+                    >
+                      <ThemedView className="flex-row items-center" style={{ backgroundColor: 'transparent' }}>
+                        <ThemedText className="text-2xl mr-3">{lang.flag}</ThemedText>
+                        <ThemedText 
+                          className="text-base"
+                          style={{
+                            fontWeight: i18n.language === lang.code ? '600' : '400',
+                            color: i18n.language === lang.code ? '#E75B3B' : '#374151',
+                          }}
+                        >
+                          {lang.name}
+                        </ThemedText>
+                      </ThemedView>
+                      {i18n.language === lang.code && (
+                        <Globe color="#E75B3B" size={18} />
+                      )}
+                    </TouchableOpacity>
+                  ))}
+                </ThemedView>
+              )}
+            </ThemedView>
           </ScrollView>
 
           {/* Logout */}
           <ThemedView className="px-6 py-4 border-t border-gray-200">
             <TouchableOpacity className="flex-row items-center py-3" onPress={onLogout}>
               <ThemedView className="w-6 mr-4"><LogOut color={color} /></ThemedView>
-              <ThemedText className="text-base text-red-500 font-medium">Log out</ThemedText>
+              <ThemedText className="text-base text-red-500 font-medium">{t('sidebar.logout')}</ThemedText>
             </TouchableOpacity>
           </ThemedView>
         </SafeAreaView>
@@ -347,8 +415,10 @@ export const AirTripSummaryCard: React.FC<{ trip?: AirTrip }> = ({ trip }) => {
   );
 };
 export default function DashboardScreen() {
+  const { t, i18n } = useTranslation();
+  const [selectedTransportType, setSelectedTransportType] = useState<'Maritime' | 'Air' | 'Ground'>('Ground');
   const [sidebarVisible, setSidebarVisible] = useState(false);
-  const [selectedTransportType, setSelectedTransportType] = useState('Ground');
+  const [showLanguageMenu, setShowLanguageMenu] = useState(false);
   const [showLogoutModal, setShowLogoutModal] = useState(false);
   const dispatch = useAppDispatch();
 
@@ -426,8 +496,27 @@ export default function DashboardScreen() {
 
   const handleLogout = () => {
     setShowLogoutModal(true);
+    setSidebarVisible(false);
   };
 
+  const languages = [
+    { code: 'en', name: 'English', flag: '🇬🇧' },
+    { code: 'es', name: 'Español', flag: '🇪🇸' },
+    { code: 'fr', name: 'Français', flag: '🇫🇷' },
+    { code: 'de', name: 'Deutsch', flag: '🇩🇪' },
+    { code: 'hi', name: 'हिन्दी', flag: '🇮🇳' },
+    { code: 'ko', name: '한국어', flag: '🇰🇷' },
+    { code: 'zh', name: '中文', flag: '🇨🇳' },
+    { code: 'ja', name: '日本語', flag: '🇯🇵' },
+    { code: 'ar', name: 'العربية', flag: '🇸🇦' },
+    { code: 'pt', name: 'Português', flag: '🇵🇹' },
+    { code: 'ru', name: 'Русский', flag: '🇷🇺' },
+  ];
+
+  const handleLanguageChange = (languageCode: string) => {
+    i18n.changeLanguage(languageCode);
+    setShowLanguageMenu(false);
+  };
   const confirmLogout = () => {
     setShowLogoutModal(false);
     setSidebarVisible(false);
@@ -455,7 +544,7 @@ export default function DashboardScreen() {
         return (
           <ThemedView className="items-center py-6">
             <ActivityIndicator size="small" color="#E75B3B" />
-            <ThemedText className="text-gray-500 mt-2">Loading maritime trips near you...</ThemedText>
+            <ThemedText className="text-gray-500 mt-2">{t('dashboard.loading.maritime_trips')}</ThemedText>
           </ThemedView>
         );
       }
@@ -463,13 +552,13 @@ export default function DashboardScreen() {
       if (marineTripsError) {
         return (
           <ThemedView className="bg-red-50 border border-red-100 rounded-2xl p-5">
-            <ThemedText className="text-red-600 font-medium mb-2">Unable to load maritime trips</ThemedText>
+            <ThemedText className="text-red-600 font-medium mb-2">{t('dashboard.errors.unable_to_load_maritime')}</ThemedText>
             <ThemedText className="text-red-600 mb-3">{marineTripsError.message}</ThemedText>
             <TouchableOpacity
               onPress={() => retryFetchTrips('Maritime')}
               className="self-start bg-[#E75B3B] px-5 py-2 rounded-lg"
             >
-              <ThemedText className="text-white font-medium">Try again</ThemedText>
+              <ThemedText className="text-white font-medium">{t('dashboard.errors.try_again')}</ThemedText>
             </TouchableOpacity>
           </ThemedView>
         );
@@ -479,7 +568,7 @@ export default function DashboardScreen() {
         return (
           <ThemedView className="bg-white border border-dashed border-gray-300 rounded-2xl p-6 items-center">
             <ThemedText className="text-gray-600 text-center">
-              No maritime trips near you yet. Check back soon.
+              {t('dashboard.empty_states.no_maritime_trips_near_you')}
             </ThemedText>
           </ThemedView>
         );
@@ -498,7 +587,7 @@ export default function DashboardScreen() {
         return (
           <ThemedView className="items-center py-6">
             <ActivityIndicator size="small" color="#E75B3B" />
-            <ThemedText className="text-gray-500 mt-2">Loading your air trips..</ThemedText>
+            <ThemedText className="text-gray-500 mt-2">{t('dashboard.loading.air_trips')}</ThemedText>
           </ThemedView>
         );
       }
@@ -506,13 +595,13 @@ export default function DashboardScreen() {
       if (airTripsError) {
         return (
           <ThemedView className="bg-red-50 border border-red-100 rounded-2xl p-5">
-            <ThemedText className="text-red-600 font-medium mb-2">Unable to load air trips</ThemedText>
+            <ThemedText className="text-red-600 font-medium mb-2">{t('dashboard.errors.unable_to_load_air')}</ThemedText>
             <ThemedText className="text-red-600 mb-3">{airTripsError.message}</ThemedText>
             <TouchableOpacity
               onPress={() => retryFetchTrips('Maritime')}
               className="self-start bg-[#E75B3B] px-5 py-2 rounded-lg"
             >
-              <ThemedText className="text-white font-medium">Try again</ThemedText>
+              <ThemedText className="text-white font-medium">{t('dashboard.errors.try_again')}</ThemedText>
             </TouchableOpacity>
           </ThemedView>
         );
@@ -522,7 +611,7 @@ export default function DashboardScreen() {
         return (
           <ThemedView className="bg-white border border-dashed border-gray-300 rounded-2xl p-6 items-center">
             <ThemedText className="text-gray-600 text-center">
-              No maritime trips near you yet. Check back soon.
+              {t('dashboard.empty_states.no_maritime_trips_near_you')}
             </ThemedText>
           </ThemedView>
         );
@@ -538,7 +627,7 @@ export default function DashboardScreen() {
         return (
           <ThemedView className="items-center py-6">
             <ActivityIndicator size="small" color="#E75B3B" />
-            <ThemedText className="text-gray-500 mt-2">Loading your ground trips..</ThemedText>
+            <ThemedText className="text-gray-500 mt-2">{t('dashboard.loading.ground_trips')}</ThemedText>
           </ThemedView>
         );
       }
@@ -546,13 +635,13 @@ export default function DashboardScreen() {
       if (groundTripError) {
         return (
           <ThemedView className="bg-red-50 border border-red-100 rounded-2xl p-5">
-            <ThemedText className="text-red-600 font-medium mb-2">Unable to load ground trips</ThemedText>
+            <ThemedText className="text-red-600 font-medium mb-2">{t('dashboard.errors.unable_to_load_ground')}</ThemedText>
             <ThemedText className="text-red-600 mb-3">{groundTripError.message}</ThemedText>
             <TouchableOpacity
               onPress={() => retryFetchTrips('Ground')}
               className="self-start bg-[#E75B3B] px-5 py-2 rounded-lg"
             >
-              <ThemedText className="text-white font-medium">Try again</ThemedText>
+              <ThemedText className="text-white font-medium">{t('dashboard.errors.try_again')}</ThemedText>
             </TouchableOpacity>
           </ThemedView>
         );
@@ -562,7 +651,7 @@ export default function DashboardScreen() {
         return (
           <ThemedView className="bg-white border border-dashed border-gray-300 rounded-2xl p-6 items-center">
             <ThemedText className="text-gray-600 text-center">
-              No ground trips near you yet. Check back soon.
+              {t('dashboard.empty_states.no_ground_trips_near_you')}
             </ThemedText>
           </ThemedView>
         );
@@ -581,7 +670,7 @@ export default function DashboardScreen() {
     return (
       <ThemedView className="bg-white border border-dashed border-gray-300 rounded-2xl p-6 items-center">
         <ThemedText className="text-gray-600 text-center">
-          No avaliable posted {selectedTransportType.toLowerCase()} trips yet by you.
+          {t('dashboard.empty_states.no_available_trips', { type: selectedTransportType.toLowerCase() })}
         </ThemedText>
       </ThemedView>
     );
@@ -602,7 +691,7 @@ export default function DashboardScreen() {
 
           <ThemedView className="flex-1 items-center">
             <ThemedView className="flex-row items-center">
-              <ThemedText className="text-lg font-semibold text-gray-900">Hello, {firstName}</ThemedText>
+              <ThemedText className="text-lg font-semibold text-gray-900">{t('dashboard.header.hello', { name: firstName })}</ThemedText>
             </ThemedView>
             <ThemedView className="flex-row items-center">
               <LocationIcon />
@@ -611,7 +700,16 @@ export default function DashboardScreen() {
             </ThemedView>
           </ThemedView>
 
-          <NotificationIconComponent />
+          <ThemedView className="flex-row items-center gap-x-3">
+            {/* Language Switcher Icon */}
+            <TouchableOpacity onPress={() => setShowLanguageMenu(!showLanguageMenu)}>
+              <ThemedView className="w-10 h-10 rounded-full bg-gray-100 items-center justify-center">
+                <Globe color="#E75B3B" size={20} />
+              </ThemedView>
+            </TouchableOpacity>
+            
+            <NotificationIconComponent />
+          </ThemedView>
         </ThemedView>
 
         <ScrollView className="flex-1" showsVerticalScrollIndicator={false}>
@@ -620,7 +718,7 @@ export default function DashboardScreen() {
             <ThemedView className="bg-white rounded-xl border-[#F4B4A5] h-[48px] border border-gray-200 flex-row px-3 items-center shadow-sm">
               <SearchIcon />
               <TextInput
-                placeholder="Search for jobs..."
+                placeholder={t('dashboard.header.search_placeholder')}
                 className="flex-1 ml-3 text-gray-700"
                 placeholderTextColor="#9CA3AF"
               />
@@ -655,7 +753,7 @@ export default function DashboardScreen() {
                       <View className="items-center">
                         <IconComponent isActive={isActive} />
                         <Text className={`mt-2 text-sm capitalize ${isActive ? 'text-white font-medium' : 'text-gray-700'}`}>
-                          {transport.type}
+                          {t(`dashboard.transport.${transport.type.toLowerCase()}`)}
                         </Text>
                       </View>
                     </TouchableOpacity>
@@ -674,7 +772,7 @@ export default function DashboardScreen() {
                   {transport.type === 'Ground' ? (
                     <ThemedView className="mb-2 ">
                       <ThemedText className="text-xl font-bold text-gray-900 mb-4">
-                        Ground Trips Near You
+                        {t('dashboard.sections.ground_trips_near_you')}
                       </ThemedText>
 
                       {renderMyPostedTripContent()}
@@ -687,7 +785,7 @@ export default function DashboardScreen() {
                       >
                         <View className="flex-row items-center">
                           <Plus color="white" className='mr-3' />
-                          <ThemedText className="text-white self-center font-semibold text-lg">Post My Trip</ThemedText>
+                          <ThemedText className="text-white self-center font-semibold text-lg">{t('dashboard.sections.post_my_trip')}</ThemedText>
                         </View>
                       </TouchableOpacity>
                       {renderMyPostedTripContent()}
@@ -716,6 +814,50 @@ export default function DashboardScreen() {
         onClose={() => setShowLogoutModal(false)}
         onConfirm={confirmLogout}
       />
+
+      {/* Language Selection Modal */}
+      {showLanguageMenu && (
+        <ThemedView className="absolute inset-0 z-50" style={{ backgroundColor: 'transparent' }}>
+          <TouchableOpacity 
+            className="absolute inset-0 bg-black/50" 
+            onPress={() => setShowLanguageMenu(false)} 
+            activeOpacity={1} 
+          />
+          <ThemedView className="absolute top-20 right-4 w-64 rounded-2xl shadow-2xl" style={{ backgroundColor: '#ffffff' }}>
+            <ThemedView className="p-4 border-b border-gray-200" style={{ backgroundColor: 'transparent' }}>
+              <ThemedText className="text-lg font-semibold text-gray-900">{t('settings.main.language_title')}</ThemedText>
+            </ThemedView>
+            <ScrollView className="max-h-96">
+              {languages.map((lang) => (
+                <TouchableOpacity
+                  key={lang.code}
+                  className="flex-row items-center justify-between py-3 px-4 border-b border-gray-100"
+                  style={{
+                    backgroundColor: i18n.language === lang.code ? '#FEF2F2' : '#ffffff',
+                  }}
+                  onPress={() => handleLanguageChange(lang.code)}
+                >
+                  <ThemedView className="flex-row items-center" style={{ backgroundColor: 'transparent' }}>
+                    <ThemedText className="text-2xl mr-3">{lang.flag}</ThemedText>
+                    <ThemedText 
+                      className="text-base"
+                      style={{
+                        fontWeight: i18n.language === lang.code ? '600' : '400',
+                        color: i18n.language === lang.code ? '#E75B3B' : '#374151',
+                      }}
+                    >
+                      {lang.name}
+                    </ThemedText>
+                  </ThemedView>
+                  {i18n.language === lang.code && (
+                    <Globe color="#E75B3B" size={18} />
+                  )}
+                </TouchableOpacity>
+              ))}
+            </ScrollView>
+          </ThemedView>
+        </ThemedView>
+      )}
     </SafeAreaView>
   );
 }

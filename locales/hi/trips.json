@@ -1,0 +1,138 @@
+{
+  "header": {
+    "title": "यात्राएँ",
+    "land": "सड़क मार्ग",
+    "air": "हवाई मार्ग",
+    "maritime": "समुद्री मार्ग",
+    "enter_location": "अपना स्थान दर्ज करें",
+    "traveler_details": "यात्री विवरण"
+  },
+  "search": {
+    "placeholder": "उपलब्ध यात्राओं की खोज करें...",
+    "vehicle_placeholder": "खोजें..."
+  },
+  "tabs": {
+    "ground": "सड़क मार्ग",
+    "air": "हवाई मार्ग",
+    "maritime": "समुद्री मार्ग"
+  },
+  "list": {
+    "departure": "प्रस्थान:",
+    "arrival": "आगमन:",
+    "status": "स्थिति:",
+    "bid_button": "स्पेस में बोली लगाएँ",
+    "empty_title": "कोई यात्रा उपलब्ध नहीं",
+    "empty_desc": "इस समय कोई यात्रा उपलब्ध नहीं है। बाद में अपडेट के लिए वापस जांचें।"
+  },
+  "road_delivery": {
+    "pickup_address": "पिकअप पता",
+    "dropoff_location": "ड्रॉप ऑफ स्थान",
+    "weight": "वजन",
+    "weight_placeholder": "अपना वजन दर्ज करें",
+    "vehicle_option": "वाहन विकल्प",
+    "vehicle_placeholder": "वाहन प्रकार चुनें",
+    "total_distance": "कुल दूरी:",
+    "continue_button": "जारी रखें",
+    "validation": {
+      "vehicle_required": "वाहन श्रेणी आवश्यक है",
+      "dropoff_required": "ड्रॉप-ऑफ स्थान आवश्यक है",
+      "pickup_required": "पिकअप पता आवश्यक है",
+      "weight_required": "वजन आवश्यक है",
+      "lat_required": "अक्षांश आवश्यक है",
+      "lng_required": "देशांतर आवश्यक है",
+      "address_required": "पता आवश्यक है"
+    },
+    "toast": {
+      "missing_pickup_title": "पिकअप पता गायब",
+      "missing_pickup_desc": "कृपया पिकअप पता चुनें",
+      "missing_dropoff_title": "ड्रॉप-ऑफ पता गायब",
+      "missing_dropoff_desc": "कृपया ड्रॉप-ऑफ पता चुनें",
+      "success_title": "सफलता",
+      "success_desc": "सड़क डिलीवरी सफलतापूर्वक शुरू हुई!",
+      "failed_title": "डिलीवरी प्रक्रिया विफल",
+      "failed_default": "साइन अप विफल"
+    }
+  },
+  "traveler_details": {
+    "trip_id": "यात्रा आईडी",
+    "airline": "एयरलाइन",
+    "flight_number": "फ्लाइट नंबर",
+    "departure_city": "प्रस्थान शहर",
+    "arrival_city": "आगमन शहर",
+    "departure_date": "प्रस्थान तिथि",
+    "arrival_date": "आगमन तिथि",
+    "status": "स्थिति",
+    "mmsi_number": "MMSI नंबर",
+    "vessel_name": "जहाज का नाम",
+    "vessel_operator": "जहाज ऑपरेटर",
+    "voyage_number": "यात्रा नंबर",
+    "container_number": "कंटेनर नंबर",
+    "departure_port": "प्रस्थान बंदरगाह",
+    "arrival_port": "आगमन बंदरगाह",
+    "trip_title_air": "हवाई यात्रा",
+    "trip_title_maritime": "समुद्री यात्रा",
+    "trip_prefix": "यात्रा",
+    "unavailable_title": "यात्रा विवरण उपलब्ध नहीं",
+    "unavailable_desc": "हम इस यात्रा को लोड नहीं कर सके। कृपया पुनः प्रयास करें।",
+    "retry_button": "पुनः प्रयास करें",
+    "enter_delivery_details": "डिलीवरी विवरण दर्ज करें"
+  },
+  "cancel_modal": {
+    "title": "बुकिंग रद्द करें",
+    "reason_label": "कारण",
+    "reason_placeholder": "कारण दर्ज करें",
+    "reason_required": "कारण आवश्यक है",
+    "confirm_text": "क्या आप वाकई इस बुकिंग को रद्द करना चाहते हैं? यह क्रिया पूर्ववत नहीं की जा सकती।",
+    "policy_text": "पुष्टि करने पर, आप स्वीकार करते हैं कि किसी भी संबंधित शुल्क या दंड लागू हो सकते हैं।",
+    "go_back": "वापस जाएँ",
+    "confirm_button": "पुष्टि करें",
+    "cancel_button": "बुकिंग रद्द करें",
+    "success_title": "सफलता",
+    "success_desc": "बुकिंग सफलतापूर्वक रद्द की गई!",
+    "failed_title": "बुकिंग रद्द करना विफल",
+    "failed_default": "रद्द करना विफल"
+  },
+  "air_sea_delivery": {
+    "title": "अपना स्थान दर्ज करें",
+    "pickup_address_label": "पिकअप पता",
+    "dropoff_address_label": "ड्रॉप-ऑफ स्थान",
+    "weight_label": "वजन",
+    "weight_placeholder": "अपना वजन दर्ज करें",
+    "aircraft_option_label": "हवाई विकल्प",
+    "fleet_option_label": "फ्लीट विकल्प",
+    "trip_option_placeholder": "यात्रा विकल्प चुनें",
+    "total_distance": "कुल दूरी:",
+    "continue_button": "जारी रखें",
+    "missing_pickup_title": "पिकअप पता गायब",
+    "missing_pickup_desc": "कृपया पिकअप पता चुनें",
+    "missing_dropoff_title": "ड्रॉप-ऑफ पता गायब",
+    "missing_dropoff_desc": "कृपया ड्रॉप-ऑफ पता चुनें",
+    "success_title": "सफलता",
+    "air_success_desc": "हवाई डिलीवरी सफलतापूर्वक शुरू हुई!",
+    "maritime_success_desc": "समुद्री डिलीवरी सफलतापूर्वक शुरू हुई!",
+    "failed_title": "डिलीवरी प्रक्रिया विफल",
+    "validation": {
+      "lat_required": "अक्षांश आवश्यक है",
+      "lng_required": "देशांतर आवश्यक है",
+      "address_required": "पता आवश्यक है",
+      "dropoff_required": "ड्रॉप-ऑफ स्थान आवश्यक है",
+      "pickup_required": "पिकअप पता आवश्यक है",
+      "weight_required": "वजन आवश्यक है",
+      "air_trip_required": "हवाई यात्रा आवश्यक है",
+      "maritime_trip_required": "समुद्री यात्रा आवश्यक है"
+    },
+    "transport_types": {
+      "container_ships": "कंटेनर जहाज",
+      "bulk_carriers": "बल्क कैरियर",
+      "oil_tankers": "तेल टैंकर",
+      "fishing_vessels": "मछली पकड़ने के जहाज",
+      "ferries": "फ़ेरी",
+      "speedboats": "स्पीडबोट",
+      "cargo_planes": "कार्गो विमान",
+      "small_freight_aircraft": "छोटा मालवाहक विमान",
+      "passenger_aircraft": "यात्री विमान",
+      "helicopters": "हेलीकॉप्टर",
+      "drones": "ड्रोन"
+    }
+  }
+}

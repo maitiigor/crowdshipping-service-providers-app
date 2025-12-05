@@ -1,0 +1,12 @@
+{
+  "header": { "title": "プロフィール編集" },
+  "steps": { "step1": "個人情報", "step2": "書類", "step3": "支払い情報" },
+  "identificationType": { "label": "身分証明書の種類", "placeholder": "身分証明書の種類を選択", "error": "身分証明書の種類は必須です" },
+  "idNumber": { "label": "ID番号", "placeholder": "ID番号", "error": "ID番号は必須です" },
+  "idFrontImage": { "label": "ID表面画像", "helper": "身分証明書の写真", "error": "ID表面画像は必須です" },
+  "proofOfAddress": { "label": "住所証明", "helper": "住所証明書の写真", "error": "住所証明は必須です" },
+  "insuranceResidenceProof": { "label": "保険住所証明", "helper": "保険証明書の写真", "error": "保険住所証明は必須です" },
+  "driverPassport": { "label": "運転者パスポート", "helper": "運転者パスポートの写真", "error": "運転者パスポートは必須です" },
+  "buttons": { "next": "次へ" },
+  "actionSheet": { "selectIdentificationType": "身分証明書の種類を選択" }
+}

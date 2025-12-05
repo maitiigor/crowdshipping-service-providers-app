@@ -3,7 +3,8 @@ import { Icon } from '@/components/ui/icon';
 import { router, useNavigation } from 'expo-router';
 import { Box, ChevronLeft, ChevronRight, SearchIcon } from 'lucide-react-native';
 import React, { useEffect, useState } from 'react';
-import { ActivityIndicator, Text, TextInput, TouchableOpacity } from 'react-native';
+import { useTranslation } from 'react-i18next';
+import { ActivityIndicator, TextInput, TouchableOpacity } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import GroundTripCard from '../../../components/Custom/GroundTripCard';
 import NotificationIconComponent from '../../../components/NotificationIconComponent';
@@ -55,6 +56,7 @@ const formatDate = (dateString: string) => {
 };
 
 export default function BookingHistoryScreen() {
+    const { t } = useTranslation();
     const dispatch = useAppDispatch();
     const { groundTrips, loading: groundTripLoading } = useAppSelector((state) => state.groundTrip);
     const { marineBookings, loadingBookings: marineLoadingBookings } = useAppSelector(
@@ -235,7 +237,7 @@ export default function BookingHistoryScreen() {
             headerTitle: () => {
                 return (
                     <ThemedText type="s1_subtitle" className="text-center">
-                        Notifications
+                        {t('booking-history.header.title')}
                     </ThemedText>
                 );
             },
@@ -307,7 +309,7 @@ export default function BookingHistoryScreen() {
                                         className={`mt-2 text-sm capitalize ${isActive ? 'text-white font-medium' : 'text-gray-700'
                                             }`}
                                     >
-                                        {transport.type}
+                                        {t(`dashboard.transport.${transport.type.toLowerCase()}`)}
                                     </ThemedText>
                                 </ThemedView>
                             </TouchableOpacity>
@@ -339,7 +341,7 @@ export default function BookingHistoryScreen() {
                     <SearchIcon size={18} color="#888" />
                     <TextInput
                         className="ml-2 flex-1 text-base"
-                        placeholder="Search bookings..."
+                        placeholder={t('trips.search.placeholder')}
                         value={searchQuery}
                         onChangeText={setSearchQuery}
                     />
@@ -355,7 +357,7 @@ export default function BookingHistoryScreen() {
                             filteredAirBookings.map((booking) => renderBookingHistoryItem(booking, 'Air'))
                         ) : (
                             <ThemedView className="bg-white rounded-xl p-6 mb-4 shadow-sm border border-gray-100">
-                                <ThemedText className="text-gray-500 text-center">No Air bookings found</ThemedText>
+                                <ThemedText className="text-gray-500 text-center">{t('booking-history.empty_state.description')}</ThemedText>
                             </ThemedView>
                         )
                     ) : selectedTransportType === 'Maritime' ? (
@@ -367,7 +369,7 @@ export default function BookingHistoryScreen() {
                             )
                         ) : (
                             <ThemedView className="bg-white rounded-xl p-6 mb-4 shadow-sm border border-gray-100">
-                                <ThemedText className="text-gray-500 text-center">No Maritime bookings found</ThemedText>
+                                <ThemedText className="text-gray-500 text-center">{t('booking-history.empty_state.description')}</ThemedText>
                             </ThemedView>
                         )
                     ) : groundTripLoading ? (
@@ -378,7 +380,7 @@ export default function BookingHistoryScreen() {
                         )
                     ) : (
                         <ThemedView className="bg-white rounded-xl p-6 mb-4 shadow-sm border border-gray-100">
-                            <ThemedText className="text-gray-500 text-center">No Ground bookings found</ThemedText>
+                            <ThemedText className="text-gray-500 text-center">{t('booking-history.empty_state.description')}</ThemedText>
                         </ThemedView>
                     )}
                 </ThemedView>

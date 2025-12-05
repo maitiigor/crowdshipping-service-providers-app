@@ -1,0 +1,67 @@
+{
+  "header": {
+    "hello": "Hallo, {{name}}",
+    "search_placeholder": "Nach Jobs suchen..."
+  },
+  "sidebar": {
+    "welcome_back": "Willkommen zurück,",
+    "view_profile": "Profil anzeigen",
+    "availability": "Verfügbarkeit",
+    "online": "Online",
+    "offline": "Offline",
+    "logout": "Abmelden",
+    "menu": {
+      "home": "Startseite",
+      "my_vehicles": "Meine Fahrzeuge",
+      "booking_history": "Buchungsverlauf",
+      "trips_jobs": "Fahrten/Jobs",
+      "inbox": "Posteingang",
+      "payment_logs": "Zahlungsprotokolle",
+      "complaints": "Beschwerden",
+      "support": "Support",
+      "notifications": "Benachrichtigungen",
+      "terms_conditions": "Allgemeine Geschäftsbedingungen",
+      "privacy_policy": "Datenschutzrichtlinie",
+      "app_settings": "App-Einstellungen"
+    }
+  },
+  "transport": {
+    "ground": "Land",
+    "maritime": "See",
+    "air": "Luft"
+  },
+  "sections": {
+    "ground_trips_near_you": "Landfahrten in Ihrer Nähe",
+    "post_my_trip": "Meine Fahrt posten"
+  },
+  "loading": {
+    "maritime_trips": "Lade Seefahrten in Ihrer Nähe...",
+    "air_trips": "Lade Ihre Luftfahrten...",
+    "ground_trips": "Lade Ihre Landfahrten..."
+  },
+  "errors": {
+    "unable_to_load_maritime": "Seefahrten können nicht geladen werden",
+    "unable_to_load_air": "Luftfahrten können nicht geladen werden",
+    "unable_to_load_ground": "Landfahrten können nicht geladen werden",
+    "try_again": "Erneut versuchen"
+  },
+  "empty_states": {
+    "no_maritime_trip": "Noch keine Seefahrt",
+    "no_maritime_trip_description": "Posten Sie eine Seefahrt, um sie hier zu sehen und Angebote zu erhalten.",
+    "no_maritime_trips_near_you": "Noch keine Seefahrten in Ihrer Nähe. Schau bald wieder vorbei.",
+    "no_ground_trips_near_you": "Noch keine Landfahrten in Ihrer Nähe. Schau bald wieder vorbei.",
+    "no_available_trips": "Keine verfügbaren {{type}}-Fahrten von Ihnen veröffentlicht.",
+    "date_not_available": "Datum nicht verfügbar"
+  },
+  "trip_card": {
+    "date": "Datum:",
+    "bids_received": "Gebote erhalten:"
+  },
+  "date_relative": {
+    "in_days": "in {{count}} Tagen",
+    "tomorrow": "morgen",
+    "today": "heute",
+    "yesterday": "gestern",
+    "days_ago": "vor {{count}} Tagen"
+  }
+}

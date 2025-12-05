@@ -1,0 +1,67 @@
+{
+  "header": {
+    "hello": "こんにちは、{{name}}",
+    "search_placeholder": "仕事を検索..."
+  },
+  "sidebar": {
+    "welcome_back": "おかえりなさい、",
+    "view_profile": "プロフィールを見る",
+    "availability": "利用状況",
+    "online": "オンライン",
+    "offline": "オフライン",
+    "logout": "ログアウト",
+    "menu": {
+      "home": "ホーム",
+      "my_vehicles": "マイビークル",
+      "booking_history": "予約履歴",
+      "trips_jobs": "旅行/仕事",
+      "inbox": "受信箱",
+      "payment_logs": "支払い履歴",
+      "complaints": "苦情",
+      "support": "サポート",
+      "notifications": "通知",
+      "terms_conditions": "利用規約",
+      "privacy_policy": "プライバシーポリシー",
+      "app_settings": "アプリ設定"
+    }
+  },
+  "transport": {
+    "ground": "陸上",
+    "maritime": "海上",
+    "air": "航空"
+  },
+  "sections": {
+    "ground_trips_near_you": "あなたの近くの陸上旅",
+    "post_my_trip": "旅を投稿する"
+  },
+  "loading": {
+    "maritime_trips": "近くの海上旅を読み込み中...",
+    "air_trips": "航空旅を読み込み中...",
+    "ground_trips": "陸上旅を読み込み中..."
+  },
+  "errors": {
+    "unable_to_load_maritime": "海上旅を読み込めません",
+    "unable_to_load_air": "航空旅を読み込めません",
+    "unable_to_load_ground": "陸上旅を読み込めません",
+    "try_again": "再試行"
+  },
+  "empty_states": {
+    "no_maritime_trip": "まだ海上旅はありません",
+    "no_maritime_trip_description": "海上旅を投稿すると、ここで確認し入札を受けられます。",
+    "no_maritime_trips_near_you": "近くに海上旅はありません。後でもう一度ご確認ください。",
+    "no_ground_trips_near_you": "近くに陸上旅はありません。後でもう一度ご確認ください。",
+    "no_available_trips": "あなたが投稿した利用可能な {{type}} 旅はありません。",
+    "date_not_available": "利用できない日付です"
+  },
+  "trip_card": {
+    "date": "日付：",
+    "bids_received": "受け取った入札："
+  },
+  "date_relative": {
+    "in_days": "{{count}}日後",
+    "tomorrow": "明日",
+    "today": "今日",
+    "yesterday": "昨日",
+    "days_ago": "{{count}}日前"
+  }
+}

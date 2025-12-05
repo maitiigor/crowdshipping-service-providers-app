@@ -5,6 +5,7 @@ import { router } from "expo-router";
 import { Formik } from "formik";
 import { HelpCircleIcon, LucideIcon } from 'lucide-react-native';
 import React from "react";
+import { useTranslation } from 'react-i18next';
 import {
     ScrollView,
     TextInput,
@@ -14,6 +15,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { useDispatch } from "react-redux";
 import * as Yup from "yup";
 import CustomToast from '../../../components/Custom/CustomToast';
+import { ThemedText } from '../../../components/ThemedText';
 import { ThemedView } from '../../../components/ThemedView';
 import { Button, ButtonText } from "../../../components/ui/button";
 import { Toast, ToastDescription, ToastTitle, useToast } from "../../../components/ui/toast";
@@ -21,28 +23,27 @@ import { useEditProfileForm } from "../../../hooks/useRedux";
 import { ApiError } from "../../../models";
 import { AppDispatch, useAppSelector } from "../../../store";
 import { register } from "../../../store/slices/authSlice";
-import { ThemedText } from '../../../components/ThemedText';
 
 
 export default function Registration() {
-
+    const { t } = useTranslation();
     const { dropdownOptions, editProfile, nextStep } = useEditProfileForm();
 
     const toast = useToast();
     const validationSchema = Yup.object().shape({
-        fullName: Yup.string().required("Full name is required"),
-        email: Yup.string().email("Invalid email").required("Email is required"),
-        phoneNumber: Yup.string().matches(/^\d{10,12}$/, "Invalid phone number").required("Phone number is required"),
+        fullName: Yup.string().required(t('signup.full_name_required')),
+        email: Yup.string().email(t('signup.validation.invalid_email')).required(t('signup.validation.email_required')),
+        phoneNumber: Yup.string().matches(/^\d{10,12}$/, t('signup.invalid_phone')).required(t('signup.phone_required')),
         password: Yup.string()
-            .required("Password is required")
+            .required(t('signup.validation.password_required'))
             .matches(
                 /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*]).{8,}$/,
-                "Password must be at least 8 characters and include upper case, lower case, a number and a special character (!@#$%^&*)"
+                t('signup.password_complex')
             ),
 
         confirmPassword: Yup.string()
-            .oneOf([Yup.ref("password")], "Passwords must match")
-            .required("Confirm password is required"),
+            .oneOf([Yup.ref("password")], t('signup.validation.confirm_password_match'))
+            .required(t('signup.validation.confirm_password_required')),
     });
 
 
@@ -108,8 +109,8 @@ export default function Registration() {
                     render: ({ id }) => {
                         return (
                             <Toast nativeID={id} action="success">
-                                <ToastTitle>Registration Successful 🎉</ToastTitle>
-                                <ToastDescription>Welcome onboard!</ToastDescription>
+                                <ToastTitle>{t('signup.toast.success_title')}</ToastTitle>
+                                <ToastDescription>{t('signup.toast.success_description')}</ToastDescription>
                             </Toast>
                         );
                     },
@@ -130,7 +131,7 @@ export default function Registration() {
                     (resultAction.payload as ApiError) || { code: 0, message: "Something went wrong" } as ApiError;
 
                 showNewToast({
-                    title: "Registration Failed",
+                    title: t('signup.toast.failed_title'),
                     description: errorMessage.message,
                     icon: HelpCircleIcon,
                     action: "success",
@@ -141,8 +142,8 @@ export default function Registration() {
         } catch (error) {
             console.error("🚨 Error dispatching register:", error);
             showNewToast({
-                title: "Unexpected Error 🚨",
-                description: "Please try again later",
+                title: t('signup.toast.unexpected_error_title'),
+                description: t('signup.toast.unexpected_error_description'),
                 icon: HelpCircleIcon,
                 action: "error",
                 variant: "solid",
@@ -187,7 +188,7 @@ export default function Registration() {
                         </TouchableOpacity>
 
                         <ThemedText className="text-lg font-semibold text-black">
-                            SignUp
+                            {t('signup.header_title')}
                         </ThemedText>
 
                         <TouchableOpacity className="p-2">
@@ -204,14 +205,14 @@ export default function Registration() {
                         showsVerticalScrollIndicator={false}
                     >
                         <ThemedText className="text-xl font-semibold text-black mb-6">
-                            Driver Registration
+                            {t('signup.driver_registration')}
                         </ThemedText>
 
                         {/* Full Name */}
                         <ThemedView className="mb-4">
-                            <ThemedText className="text-sm text-gray-700 mb-2">Your Full Name</ThemedText>
+                            <ThemedText className="text-sm text-gray-700 mb-2">{t('signup.full_name_label')}</ThemedText>
                             <TextInput
-                                placeholder="Full Name"
+                                placeholder={t('signup.full_name_placeholder')}
                                 value={values.fullName}
                                 onChangeText={handleChange("fullName")}
                                 className="bg-[#FDF2F0] rounded-lg px-4 py-4 text-base"
@@ -223,9 +224,9 @@ export default function Registration() {
 
                         {/* Email */}
                         <ThemedView className="mb-4">
-                            <ThemedText className="text-sm text-gray-700 mb-2">Email Address</ThemedText>
+                            <ThemedText className="text-sm text-gray-700 mb-2">{t('signup.email_label')}</ThemedText>
                             <TextInput
-                                placeholder="Email"
+                                placeholder={t('signup.email_placeholder')}
                                 value={values.email}
                                 onChangeText={handleChange("email")}
                                 className="bg-[#FDF2F0] rounded-lg px-4 py-4 text-base"
@@ -238,7 +239,7 @@ export default function Registration() {
 
                         {/* Phone Number */}
                         <ThemedView className="mb-4">
-                            <ThemedText className="text-sm text-gray-700 mb-2">Phone Number</ThemedText>
+                            <ThemedText className="text-sm text-gray-700 mb-2">{t('signup.phone_label')}</ThemedText>
                             <ThemedView className="flex-row gap-3  items-center">
                                 <ThemedView className="w-1/4 bg-[#FDF2F0] px-1 rounded-lg">
                                     <Picker
@@ -269,7 +270,7 @@ export default function Registration() {
                         </ThemedView>
 
                         <ThemedView className="mb-4">
-                            <ThemedText className="text-sm text-gray-700 mb-2">Password</ThemedText>
+                            <ThemedText className="text-sm text-gray-700 mb-2">{t('signup.password_label')}</ThemedText>
                             <TextInput
                                 placeholder="********"
                                 value={values.password}
@@ -283,9 +284,9 @@ export default function Registration() {
                         </ThemedView>
 
                         <ThemedView className="mb-4">
-                            <ThemedText className="text-sm text-gray-700 mb-2">Confirm password</ThemedText>
+                            <ThemedText className="text-sm text-gray-700 mb-2">{t('signup.confirm_password_label')}</ThemedText>
                             <TextInput
-                                placeholder="********"
+                                placeholder={t('signup.confirm_password_placeholder')}
                                 value={values.confirmPassword}
                                 onChangeText={handleChange("confirmPassword")}
                                 className="bg-[#FDF2F0] rounded-lg px-4 py-4 text-base"
@@ -302,14 +303,14 @@ export default function Registration() {
                                 className="bg-[#E75B3B] rounded-xl"
                                 onPress={() => loading == false ? handleSubmit() : null}
                             >
-                                <ButtonText className="text-white font-semibold">{loading ? 'Submitting...' : 'Register'}</ButtonText>
+                                <ButtonText className="text-white font-semibold">{loading ? t('signup.submitting') : t('signup.register_button')}</ButtonText>
                             </Button>
                         </ThemedView>
 
                         {/* Divider */}
                         <ThemedView className="flex-row items-center my-6">
                             <ThemedView className="flex-1 h-px bg-gray-300" />
-                            <ThemedText className="px-4 text-gray-500 text-sm" style={{ fontFamily: 'Inter-Regular' }}>or</ThemedText>
+                            <ThemedText className="px-4 text-gray-500 text-sm" style={{ fontFamily: 'Inter-Regular' }}>{t('signup.or_divider')}</ThemedText>
                             <ThemedView className="flex-1 h-px bg-gray-300" />
                         </ThemedView>
 

@@ -1,0 +1,112 @@
+{
+  "header": {
+    "title": "行程详情"
+  },
+  "loading": {
+    "trip_details": "正在加载行程详情...",
+    "no_data": "无可用行程数据",
+    "go_back": "返回"
+  },
+  "status": {
+    "going_to_pickup": "前往取件",
+    "picked_up": "已取件",
+    "in_progress": "进行中",
+    "in_transit": "运输中",
+    "arrived_destination": "已到达目的地",
+    "delivered": "已送达",
+    "toll_bill_pending": "过路费待处理",
+    "completed": "已完成",
+    "pending": "待处理",
+    "cancelled": "已取消"
+  },
+  "banner": {
+    "in_transit": "您的包裹正在运输中",
+    "completed": "包裹已送达",
+    "delivered": "包裹已送达",
+    "pending_driver": "等待司机",
+    "pending_pathfinder": "等待向导",
+    "cancelled": "订单已取消",
+    "going_to_pickup_driver": "司机正在前往取件",
+    "going_to_pickup_pathfinder": "向导正在前往取件",
+    "picked_up": "包裹已取件",
+    "arrived_destination": "已到达目的地",
+    "in_progress": "包裹处理中",
+    "toll_bill_pending": "过路费待处理"
+  },
+  "driver": {
+    "driver": "司机",
+    "pathfinder": "向导",
+    "loading": "加载中...",
+    "current_location": "{{role}}当前位置",
+    "location": "{{role}}位置"
+  },
+  "info": {
+    "estimated_time": "预计时间",
+    "package_weight": "包裹重量",
+    "track_id": "追踪 ID"
+  },
+  "location": {
+    "no_data": "暂无位置数据",
+    "speed": "速度：{{speed}} 公里/小时"
+  },
+  "button": {
+    "waiting_driver": "等待司机中...",
+    "waiting_pathfinder": "等待向导中...",
+    "tracking_active": "追踪激活"
+  },
+  "modal": {
+    "title": "运输完成",
+    "review_prompt": "请为您的快递员留下星级评价",
+    "thank_you": "谢谢，您给我们的{{role}}评了{{rating}}星",
+    "write_review": "撰写评价",
+    "cancel": "取消"
+  },
+  "rating": {
+    "one": "一",
+    "two": "二",
+    "three": "三",
+    "four": "四",
+    "five": "五"
+  },
+  "toast": {
+    "success": "成功",
+    "review_success": "{{name}}评价成功！",
+    "review_failed": "{{name}}评价失败",
+    "failed_default": "账户更新失败"
+  },
+  "feedback": {
+    "title": "司机反馈",
+    "validation": {
+      "review_min": "评论必须至少 10 个字符",
+      "review_max": "评论不能超过 500 个字符",
+      "review_required": "评论为必填项",
+      "rating_min": "评分必须至少 1 星",
+      "rating_max": "评分不能超过 5 星",
+      "rating_required": "评分为必填项"
+    },
+    "comment_label": "评论",
+    "review_placeholder": "输入评论",
+    "submit_button": "提交评论",
+    "modal": {
+      "title": "已提交",
+      "description": "您的评分和评论已提交",
+      "done": "完成"
+    }
+  },
+  "driver_details": {
+    "title": "司机详情",
+    "driver_info": "司机信息",
+    "vehicle_info": "车辆信息",
+    "tracking_link": "实时追踪链接/地图",
+    "arrival_time": "预计到达时间",
+    "receiver_name": "收件人姓名",
+    "receiver_number": "收件人号码",
+    "vehicle_type": "车辆类型",
+    "vehicle_model": "车辆品牌/型号",
+    "license_plate": "车牌号",
+    "navigate": "导航",
+    "cancel_booking": "取消预订",
+    "report_driver": "举报司机",
+    "call_driver": "呼叫司机"
+  }
+}

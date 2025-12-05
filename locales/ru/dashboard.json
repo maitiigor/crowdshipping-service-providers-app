@@ -1,0 +1,67 @@
+{
+  "header": {
+    "hello": "Здравствуйте, {{name}}",
+    "search_placeholder": "Поиск вакансий..."
+  },
+  "sidebar": {
+    "welcome_back": "С возвращением,",
+    "view_profile": "Просмотр профиля",
+    "availability": "Доступность",
+    "online": "Онлайн",
+    "offline": "Офлайн",
+    "logout": "Выйти",
+    "menu": {
+      "home": "Главная",
+      "my_vehicles": "Мой транспорт",
+      "booking_history": "История бронирований",
+      "trips_jobs": "Поездки/Работы",
+      "inbox": "Входящие",
+      "payment_logs": "Платёжные логи",
+      "complaints": "Жалобы",
+      "support": "Поддержка",
+      "notifications": "Уведомления",
+      "terms_conditions": "Правила и условия",
+      "privacy_policy": "Политика конфиденциальности",
+      "app_settings": "Настройки приложения"
+    }
+  },
+  "transport": {
+    "ground": "Наземный",
+    "maritime": "Морской",
+    "air": "Воздушный"
+  },
+  "sections": {
+    "ground_trips_near_you": "Наземные поездки рядом с вами",
+    "post_my_trip": "Опубликовать мою поездку"
+  },
+  "loading": {
+    "maritime_trips": "Загрузка морских поездок рядом с вами...",
+    "air_trips": "Загрузка ваших воздушных поездок...",
+    "ground_trips": "Загрузка ваших наземных поездок..."
+  },
+  "errors": {
+    "unable_to_load_maritime": "Не удалось загрузить морские поездки",
+    "unable_to_load_air": "Не удалось загрузить воздушные поездки",
+    "unable_to_load_ground": "Не удалось загрузить наземные поездки",
+    "try_again": "Повторить"
+  },
+  "empty_states": {
+    "no_maritime_trip": "Пока нет морских поездок",
+    "no_maritime_trip_description": "Опубликуйте морскую поездку, чтобы увидеть её здесь и получать ставки.",
+    "no_maritime_trips_near_you": "Пока нет морских поездок рядом с вами. Проверьте позже.",
+    "no_ground_trips_near_you": "Пока нет наземных поездок рядом с вами. Проверьте позже.",
+    "no_available_trips": "Вы ещё не опубликовали доступные поездки типа {{type}}.",
+    "date_not_available": "Дата недоступна"
+  },
+  "trip_card": {
+    "date": "Дата:",
+    "bids_received": "Получено ставок:"
+  },
+  "date_relative": {
+    "in_days": "через {{count}} дней",
+    "tomorrow": "завтра",
+    "today": "сегодня",
+    "yesterday": "вчера",
+    "days_ago": "{{count}} дней назад"
+  }
+}

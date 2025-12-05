@@ -5,6 +5,7 @@ import dayjs from 'dayjs';
 import { router, useNavigation } from 'expo-router';
 import { Box, ChevronLeft } from 'lucide-react-native';
 import React, { useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Text, TouchableOpacity, View } from 'react-native';
 import NotificationIcon from '../../../components/Custom/NotificationIcon';
 import ParallaxScrollView from '../../../components/Custom/ParallaxScrollView';
@@ -21,6 +22,7 @@ import { fetchReports } from '../../../store/slices/reportSlice';
 
 
 export default function ReportsScreen() {
+    const { t } = useTranslation();
   //  const [reports, setReports] = useState<Report[]>(mockReports);
     const [activeFilter, setActiveFilter] = useState<'pending' | 'resolved' | string>('pending');
 
@@ -73,7 +75,7 @@ export default function ReportsScreen() {
                 {/* Row 1: Report ID */}
                 <HStack className="justify-between items-center">
                     <ThemedText className="text-gray-500 text-sm font-normal" style={{ fontFamily: 'Poppins-Light' }}>
-                        Report ID
+                        {t('reports.list.report_id')}
                     </ThemedText>
                     <ThemedText className="font-semibold text-base text-gray-900">
                         {report.reportRef || `#REP-${report.id.substring(0, 6)}`}
@@ -83,7 +85,7 @@ export default function ReportsScreen() {
                 {/* Row 2: Last Updated Date */}
                 <HStack className="justify-between items-center">
                     <ThemedText className="text-gray-500 w-1/3 text-xs font-normal" style={{ fontFamily: 'Poppins-Light' }}>
-                        Last Updated Date
+                        {t('reports.list.last_updated')}
                     </ThemedText>
                     <ThemedText className="font-semibold text-xs text-gray-900">
                         {dayjs(report.updatedAt).format('MMMM DD, YYYY | hh:mmA')}
@@ -93,13 +95,13 @@ export default function ReportsScreen() {
                 {/* Row 3: Current Status */}
                 <HStack className="justify-between items-center">
                     <ThemedText className="text-gray-500 text-xs font-normal" style={{ fontFamily: 'Poppins-Light' }}>
-                        Current Status
+                        {t('reports.list.current_status')}
                     </ThemedText>
                     <ThemedView className={`px-3 py-1.5 rounded-full`}>
                         <View className={`w-40 rounded-full ${report.status === 'resolved' ? 'bg-[#CDF5E0]' : 'bg-[#FDEFEB]'} items-center`}>
 
                             <Text className={` p-2 ${report.status === 'resolved' ? 'text-[#009A49]' : 'text-[#FF5107]'}`} style={{ fontFamily: 'Inter-Regular' }}>
-                                {report.status === 'resolved' ? 'Resolved' : 'Under Review'}
+                                {report.status === 'resolved' ? t('reports.list.status_resolved') : t('reports.list.status_under_review')}
                             </Text>
                         </View>
                     </ThemedView>
@@ -114,7 +116,7 @@ export default function ReportsScreen() {
                 headerTitle: () => {
                     return (
                         <ThemedText type="s1_subtitle" className="text-center font-bold text-xl">
-                            Report
+                            {t('reports.header.title')}
                         </ThemedText>
                     );
                 },
@@ -185,7 +187,7 @@ export default function ReportsScreen() {
                     className="bg-[#E75B3B] mb-6 rounded-xl h-12"
                     onPress={() => router.push('/screens/reports/new')}
                 >
-                    <ButtonText className="text-white font-semibold text-base">Add New</ButtonText>
+                    <ButtonText className="text-white font-semibold text-base">{t('reports.list.add_new')}</ButtonText>
                 </Button>
 
                 {/* Filter Buttons */}
@@ -200,7 +202,7 @@ export default function ReportsScreen() {
                     >
                         <Text className={`text-center font-medium ${activeFilter === 'pending' ? 'text-[#E75B3B]' : 'text-[#E75B3B]'
                             }`}>
-                            Pending
+                            {t('reports.list.filter_pending')}
                         </Text>
                     </TouchableOpacity>
 
@@ -213,7 +215,7 @@ export default function ReportsScreen() {
                     >
                         <Text className={`text-center font-medium ${activeFilter === 'resolved' ? 'text-[#E75B3B]' : 'text-[#E75B3B]'
                             }`}>
-                            Resolved
+                            {t('reports.list.filter_resolved')}
                         </Text>
                     </TouchableOpacity>
 
@@ -244,7 +246,7 @@ export default function ReportsScreen() {
                 ) : (
                     <ThemedView className="flex-1 items-center justify-center mt-10">
                         <ThemedText className="text-gray-400 text-center text-lg font-medium">
-                            No reports Available
+                            {activeFilter === 'pending' ? t('reports.list.empty_pending_desc') : t('reports.list.empty_resolved_desc')}
                         </ThemedText>
                     </ThemedView>
                 )}

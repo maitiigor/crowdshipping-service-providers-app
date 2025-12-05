@@ -1,0 +1,22 @@
+{
+  "welcome_back": "مرحباً بعودتك،",
+  "view_profile": "عرض الملف الشخصي",
+  "availability": "التوفر",
+  "online": "متصل",
+  "offline": "غير متصل",
+  "logout": "تسجيل الخروج",
+  "menu": {
+    "home": "الرئيسية",
+    "my_vehicles": "مركباتي",
+    "booking_history": "سجل الحجوزات",
+    "trips_jobs": "الرحلات/الوظائف",
+    "inbox": "الوارد",
+    "payment_logs": "سجلات الدفع",
+    "complaints": "الشكاوى",
+    "support": "الدعم",
+    "notifications": "الإشعارات",
+    "terms_conditions": "الشروط والأحكام",
+    "privacy_policy": "سياسة الخصوصية",
+    "app_settings": "إعدادات التطبيق"
+  }
+}

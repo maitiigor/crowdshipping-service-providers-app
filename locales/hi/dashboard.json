@@ -1,0 +1,67 @@
+{
+  "header": {
+    "hello": "नमस्ते, {{name}}",
+    "search_placeholder": "नौकरियों की खोज करें..."
+  },
+  "sidebar": {
+    "welcome_back": "वापसी पर स्वागत है,",
+    "view_profile": "प्रोफ़ाइल देखें",
+    "availability": "उपलब्धता",
+    "online": "ऑनलाइन",
+    "offline": "ऑफ़लाइन",
+    "logout": "लॉग आउट",
+    "menu": {
+      "home": "होम",
+      "my_vehicles": "मेरे वाहन",
+      "booking_history": "बुकिंग इतिहास",
+      "trips_jobs": "यात्राएँ/कार्य",
+      "inbox": "इनबॉक्स",
+      "payment_logs": "भुगतान लॉग",
+      "complaints": "शिकायतें",
+      "support": "सहायता",
+      "notifications": "सूचनाएँ",
+      "terms_conditions": "नियम और शर्तें",
+      "privacy_policy": "गोपनीयता नीति",
+      "app_settings": "ऐप सेटिंग्स"
+    }
+  },
+  "transport": {
+    "ground": "स्थल मार्ग",
+    "maritime": "समुद्री",
+    "air": "वायु"
+  },
+  "sections": {
+    "ground_trips_near_you": "आपके पास की स्थल यात्राएँ",
+    "post_my_trip": "मेरी यात्रा पोस्ट करें"
+  },
+  "loading": {
+    "maritime_trips": "आपके पास की समुद्री यात्राएँ लोड हो रही हैं...",
+    "air_trips": "आपकी वायु यात्राएँ लोड हो रही हैं...",
+    "ground_trips": "आपकी स्थल यात्राएँ लोड हो रही हैं..."
+  },
+  "errors": {
+    "unable_to_load_maritime": "समुद्री यात्राएँ लोड करने में असमर्थ",
+    "unable_to_load_air": "वायु यात्राएँ लोड करने में असमर्थ",
+    "unable_to_load_ground": "स्थल यात्राएँ लोड करने में असमर्थ",
+    "try_again": "फिर से कोशिश करें"
+  },
+  "empty_states": {
+    "no_maritime_trip": "अभी तक कोई समुद्री यात्रा नहीं",
+    "no_maritime_trip_description": "एक समुद्री यात्रा पोस्ट करें ताकि यहाँ दिखाई दे और बोलियाँ प्राप्त हों।",
+    "no_maritime_trips_near_you": "आपके पास कोई समुद्री यात्रा नहीं। जल्द वापस देखें।",
+    "no_ground_trips_near_you": "आपके पास कोई स्थल यात्रा नहीं। जल्द वापस देखें।",
+    "no_available_trips": "अभी तक आपके द्वारा कोई {{type}} यात्रा पोस्ट नहीं की गई है।",
+    "date_not_available": "तारीख उपलब्ध नहीं है"
+  },
+  "trip_card": {
+    "date": "तारीख:",
+    "bids_received": "प्राप्त बोलियाँ:"
+  },
+  "date_relative": {
+    "in_days": "{{count}} दिनों में",
+    "tomorrow": "कल",
+    "today": "आज",
+    "yesterday": "कल",
+    "days_ago": "{{count}} दिन पहले"
+  }
+}

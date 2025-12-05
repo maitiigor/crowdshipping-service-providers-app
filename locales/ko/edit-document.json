@@ -1,0 +1,12 @@
+{
+  "header": { "title": "프로필 수정" },
+  "steps": { "step1": "개인 정보", "step2": "문서", "step3": "결제 정보" },
+  "identificationType": { "label": "신분증 종류", "placeholder": "신분증 종류 선택", "error": "신분증 종류는 필수입니다" },
+  "idNumber": { "label": "ID 번호", "placeholder": "ID 번호", "error": "ID 번호는 필수입니다" },
+  "idFrontImage": { "label": "신분증 앞면 사진", "helper": "신분증 사진", "error": "신분증 앞면 사진은 필수입니다" },
+  "proofOfAddress": { "label": "주소 증명서", "helper": "주소 증명 사진", "error": "주소 증명서가 필요합니다" },
+  "insuranceResidenceProof": { "label": "보험 거주 증명", "helper": "보험 증명 사진", "error": "보험 거주 증명은 필수입니다" },
+  "driverPassport": { "label": "운전자 여권", "helper": "운전자 여권 사진", "error": "운전자 여권은 필수입니다" },
+  "buttons": { "next": "다음" },
+  "actionSheet": { "selectIdentificationType": "신분증 종류 선택" }
+}

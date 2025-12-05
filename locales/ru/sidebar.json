@@ -1,0 +1,22 @@
+{
+  "welcome_back": "С возвращением,",
+  "view_profile": "Просмотреть профиль",
+  "availability": "Доступность",
+  "online": "В сети",
+  "offline": "Не в сети",
+  "logout": "Выйти",
+  "menu": {
+    "home": "Главная",
+    "my_vehicles": "Мои транспортные средства",
+    "booking_history": "История бронирований",
+    "trips_jobs": "Поездки/Работы",
+    "inbox": "Входящие",
+    "payment_logs": "Платежные записи",
+    "complaints": "Жалобы",
+    "support": "Поддержка",
+    "notifications": "Уведомления",
+    "terms_conditions": "Условия и положения",
+    "privacy_policy": "Политика конфиденциальности",
+    "app_settings": "Настройки приложения"
+  }
+}

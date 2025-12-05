@@ -2,6 +2,7 @@ import { MaterialIcons } from "@expo/vector-icons";
 import { router, useNavigation } from "expo-router";
 import { ChevronLeft, CircleCheckIcon, Edit, HelpCircleIcon, Plus, Trash2 } from "lucide-react-native";
 import React, { useEffect } from "react";
+import { useTranslation } from "react-i18next";
 import {
     Alert,
     Image,
@@ -19,10 +20,10 @@ import { HStack } from "../../../components/ui/hstack";
 import { Icon } from "../../../components/ui/icon";
 import { Skeleton, SkeletonText } from "../../../components/ui/skeleton";
 import { useShowToast } from '../../../hooks/useShowToast';
+import { useThemeColor } from "../../../hooks/useThemeColor";
 import { Vehicle } from "../../../models";
 import { AppDispatch, useAppSelector } from "../../../store";
 import { deleteVehicle, fetchVehicles, setVehicle } from "../../../store/slices/vechileSlice";
-import { useThemeColor } from "../../../hooks/useThemeColor";
 
 interface VehicleCardProps {
     vehicle: Vehicle;
@@ -31,6 +32,7 @@ interface VehicleCardProps {
 }
 
 const VehicleCard: React.FC<VehicleCardProps> = ({ vehicle, onEdit, onDelete }) => {
+    const { t } = useTranslation();
     const getStatusColor = (status: string) => {
         switch (status.toLowerCase()) {
             case 'approved':
@@ -173,6 +175,7 @@ const VehicleCard: React.FC<VehicleCardProps> = ({ vehicle, onEdit, onDelete }) 
 };
 
 export default function MyVehiclesScreen() {
+    const { t } = useTranslation();
     const dispatch = useDispatch<AppDispatch>();
     const { vehicles, loading } = useAppSelector((state) => state.vechile);
     const showToast: any = useShowToast();
@@ -231,7 +234,7 @@ export default function MyVehiclesScreen() {
             headerTitle: () => {
                 return (
                     <ThemedText type="s1_subtitle" className="text-center">
-                        Notifications
+                        {t('sidebar.menu.my_vehicles')}
                     </ThemedText>
                 );
             },

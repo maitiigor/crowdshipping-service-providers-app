@@ -1,19 +1,16 @@
+import apiClient from '@/lib/api/client';
 import { getFCMToken, removeFCMToken } from '@/utils/fcmService';
-import axios from 'axios';
-
-// TODO: Replace with your actual API base URL
-const API_BASE_URL = process.env.EXPO_PUBLIC_API_URL || 'https://your-api.com';
 
 /**
  * Send FCM token to backend
  * Call this after user logs in
  */
-export async function registerFCMToken(token: string, userId: string): Promise<boolean> {
+export async function registerFCMToken(token: string): Promise<boolean> {
   try {
-    const response = await axios.post(`${API_BASE_URL}/api/fcm/register`, {
+    const response = await apiClient.patch('/user/save-device-token', {
       token,
-      userId,
-      platform: 'android', // or detect platform
+    //  userId,
+     // platform: 'android', // or detect platform
     });
 
     console.log('FCM token registered:', response.data);
@@ -33,9 +30,9 @@ export async function unregisterFCMToken(userId: string): Promise<boolean> {
     const token = await getFCMToken();
     if (!token) return true;
 
-    await axios.delete(`${API_BASE_URL}/api/fcm/unregister`, {
-      data: { token, userId },
-    });
+    // await apiClient.delete('/api/fcm/unregister', {
+    //   data: { token, userId },
+    // });
 
     // Remove from local storage
     await removeFCMToken();
@@ -54,7 +51,7 @@ export async function unregisterFCMToken(userId: string): Promise<boolean> {
  */
 export async function updateFCMToken(newToken: string, userId: string): Promise<boolean> {
   try {
-    const response = await axios.put(`${API_BASE_URL}/api/fcm/refresh`, {
+    const response = await apiClient.put('/api/fcm/refresh', {
       token: newToken,
       userId,
     });
@@ -66,3 +63,4 @@ export async function updateFCMToken(newToken: string, userId: string): Promise<
     return false;
   }
 }
+

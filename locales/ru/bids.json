@@ -1,0 +1,50 @@
+{
+  "header": {
+    "title": "Ставки",
+    "air": "Авиа",
+    "maritime": "Морские"
+  },
+  "search_placeholder": "Поиск доступных поездок...",
+  "empty_state": {
+    "title": "Нет доступных ставок",
+    "description": "В данный момент ставок нет. Пожалуйста, проверьте позже."
+  },
+  "buttons": {
+    "view_bid": "Просмотр ставки",
+    "cancel_bid": "Отменить ставку",
+    "pay": "Оплатить",
+    "renegotiate": "Пересмотреть",
+    "retry": "Повторить"
+  },
+  "labels": {
+    "from": "От:",
+    "to": "До:",
+    "bid_amount": "Сумма ставки",
+    "parcel_tracking_id": "ID отслеживания посылки",
+    "total_weight": "Общий вес",
+    "parcel_group": "Группа посылок",
+    "trip_mode": "Тип поездки",
+    "air_freight": "Авиа груз",
+    "maritime_freight": "Морской груз",
+    "bidder": "Участник торгов",
+    "user_id": "ID пользователя",
+    "city": "Город",
+    "parcel_journey": "Маршрут посылки",
+    "pick_up": "Забрать",
+    "distance": "Расстояние",
+    "drop_off": "Доставить",
+    "trip_timeline": "Хронология поездки",
+    "departure": "Отправление",
+    "arrival": "Прибытие",
+    "trip_status": "Статус поездки",
+    "trip_created_by": "Поездка создана",
+    "bid_details": "Детали ставки",
+    "bid_details_unavailable": "Детали ставки недоступны",
+    "bid_details_error": "Не удалось загрузить детали ставки. Попробуйте снова."
+  },
+  "status": {
+    "accepted": "Принято",
+    "pending": "В ожидании",
+    "cancelled": "Отменено"
+  }
+}

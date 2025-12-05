@@ -1,0 +1,31 @@
+{
+  "header": {
+    "title": "ऑर्डर ट्रैक करें"
+  },
+  "form": {
+    "tracking_reference": "ट्रैकिंग संदर्भ",
+    "placeholder": "जैसे PKG-123456789",
+    "validation_required": "ट्रैकिंग संदर्भ आवश्यक है",
+    "track_button": "ऑर्डर ट्रैक करें"
+  },
+  "status": {
+    "package_status": "पैकेज की स्थिति",
+    "tracking_id": "ट्रैकिंग आईडी"
+  },
+  "location": {
+    "title": "स्थान विवरण",
+    "pickup": "पिक-अप स्थान",
+    "dropoff": "ड्रॉप-ऑफ स्थान"
+  },
+  "timeline": {
+    "title": "समयरेखा",
+    "created": "सृजित",
+    "last_updated": "अंतिम अपडेट"
+  },
+  "toast": {
+    "success": "सफलता",
+    "success_desc": "ऑर्डर सफलतापूर्वक ट्रैक किया गया!",
+    "failed_title": "ऑर्डर ट्रैकिंग विफल",
+    "failed_default": "ऑर्डर ट्रैकिंग असफल"
+  }
+}

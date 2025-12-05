@@ -3,6 +3,7 @@ import { Icon } from '@/components/ui/icon';
 import { Href, router, useNavigation } from 'expo-router';
 import { ChevronLeft, SearchIcon } from 'lucide-react-native';
 import React, { useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { ActivityIndicator, TextInput, TouchableOpacity } from 'react-native';
 import GroundTripCard from '../../../components/Custom/GroundTripCard';
 import NotificationIconComponent from '../../../components/NotificationIconComponent';
@@ -36,6 +37,7 @@ interface Booking {
 
 
 export default function TripHistoryScreen() {
+    const { t } = useTranslation();
     const [activeTab, setActiveTab] = useState<TripStatus>('All');
 
 
@@ -167,7 +169,7 @@ export default function TripHistoryScreen() {
                 return (
                     <ThemedView className="items-center py-6">
                         <ActivityIndicator size="small" color="#E75B3B" />
-                        <ThemedText className="text-gray-500 mt-2">Loading maritime trips...</ThemedText>
+                        <ThemedText className="text-gray-500 mt-2">{t('dashboard.loading.maritime_trips')}</ThemedText>
                     </ThemedView>
                 );
             }
@@ -175,13 +177,13 @@ export default function TripHistoryScreen() {
             if (marineTripsError) {
                 return (
                     <ThemedView className="bg-red-50 border border-red-100 rounded-2xl p-5">
-                        <ThemedText className="text-red-600 font-medium mb-2">Unable to load maritime trips</ThemedText>
+                        <ThemedText className="text-red-600 font-medium mb-2">{t('dashboard.errors.unable_to_load_maritime')}</ThemedText>
                         <ThemedText className="text-red-600 mb-3">{marineTripsError.message}</ThemedText>
                         <TouchableOpacity
                             onPress={() => retryFetchTrips('Maritime')}
                             className="self-start bg-[#E75B3B] px-5 py-2 rounded-lg"
                         >
-                            <ThemedText className="text-white font-medium">Try again</ThemedText>
+                            <ThemedText className="text-white font-medium">{t('dashboard.errors.try_again')}</ThemedText>
                         </TouchableOpacity>
                     </ThemedView>
                 );
@@ -193,7 +195,7 @@ export default function TripHistoryScreen() {
                 return (
                     <ThemedView className="bg-white border border-dashed border-gray-300 rounded-2xl p-6 items-center">
                         <ThemedText className="text-gray-600 text-center">
-                            No {activeTab.toLowerCase()} maritime trips found.
+                            {t('trips.list.empty_desc')}
                         </ThemedText>
                     </ThemedView>
                 );
@@ -209,7 +211,7 @@ export default function TripHistoryScreen() {
                 return (
                     <ThemedView className="items-center py-6">
                         <ActivityIndicator size="small" color="#E75B3B" />
-                        <ThemedText className="text-gray-500 mt-2">Loading air trips...</ThemedText>
+                        <ThemedText className="text-gray-500 mt-2">{t('dashboard.loading.air_trips')}</ThemedText>
                     </ThemedView>
                 );
             }
@@ -217,13 +219,13 @@ export default function TripHistoryScreen() {
             if (airTripsError) {
                 return (
                     <ThemedView className="bg-red-50 border border-red-100 rounded-2xl p-5">
-                        <ThemedText className="text-red-600 font-medium mb-2">Unable to load air trips</ThemedText>
+                        <ThemedText className="text-red-600 font-medium mb-2">{t('dashboard.errors.unable_to_load_air')}</ThemedText>
                         <ThemedText className="text-red-600 mb-3">{airTripsError.message}</ThemedText>
                         <TouchableOpacity
                             onPress={() => retryFetchTrips('Air')}
                             className="self-start bg-[#E75B3B] px-5 py-2 rounded-lg"
                         >
-                            <ThemedText className="text-white font-medium">Try again</ThemedText>
+                            <ThemedText className="text-white font-medium">{t('dashboard.errors.try_again')}</ThemedText>
                         </TouchableOpacity>
                     </ThemedView>
                 );
@@ -235,7 +237,7 @@ export default function TripHistoryScreen() {
                 return (
                     <ThemedView className="bg-white border border-dashed border-gray-300 rounded-2xl p-6 items-center">
                         <ThemedText className="text-gray-600 text-center">
-                            No {activeTab.toLowerCase()} air trips found.
+                            {t('trips.list.empty_desc')}
                         </ThemedText>
                     </ThemedView>
                 );
@@ -251,7 +253,7 @@ export default function TripHistoryScreen() {
                 return (
                     <ThemedView className="items-center py-6">
                         <ActivityIndicator size="small" color="#E75B3B" />
-                        <ThemedText className="text-gray-500 mt-2">Loading ground trips...</ThemedText>
+                        <ThemedText className="text-gray-500 mt-2">{t('dashboard.loading.ground_trips')}</ThemedText>
                     </ThemedView>
                 );
             }
@@ -259,13 +261,13 @@ export default function TripHistoryScreen() {
             if (groundTripError) {
                 return (
                     <ThemedView className="bg-red-50 border border-red-100 rounded-2xl p-5">
-                        <ThemedText className="text-red-600 font-medium mb-2">Unable to load ground trips</ThemedText>
+                        <ThemedText className="text-red-600 font-medium mb-2">{t('dashboard.errors.unable_to_load_ground')}</ThemedText>
                         <ThemedText className="text-red-600 mb-3">{groundTripError.message}</ThemedText>
                         <TouchableOpacity
                             onPress={() => retryFetchTrips('Ground')}
                             className="self-start bg-[#E75B3B] px-5 py-2 rounded-lg"
                         >
-                            <ThemedText className="text-white font-medium">Try again</ThemedText>
+                            <ThemedText className="text-white font-medium">{t('dashboard.errors.try_again')}</ThemedText>
                         </TouchableOpacity>
                     </ThemedView>
                 );
@@ -277,7 +279,7 @@ export default function TripHistoryScreen() {
                 return (
                     <ThemedView className="bg-white border border-dashed border-gray-300 rounded-2xl p-6 items-center">
                         <ThemedText className="text-gray-600 text-center">
-                            No {activeTab.toLowerCase()} ground trips found.
+                            {t('trips.list.empty_desc')}
                         </ThemedText>
                     </ThemedView>
                 );
@@ -322,7 +324,7 @@ export default function TripHistoryScreen() {
             headerTitle: () => {
                 return (
                     <ThemedText type="s1_subtitle" className="text-center">
-                        Trips
+                        {t('trips.header.title')}
                     </ThemedText>
                 );
             },
@@ -402,7 +404,7 @@ export default function TripHistoryScreen() {
                                     <ThemedView className="items-center">
                                         <IconComponent isActive={isActive} />
                                         <ThemedText className={`mt-2 text-sm capitalize ${isActive ? 'text-white font-medium' : 'text-gray-700'}`}>
-                                            {transport.type}
+                                            {t(`dashboard.transport.${transport.type.toLowerCase()}`)}
                                         </ThemedText>
                                     </ThemedView>
                                 </TouchableOpacity>
@@ -439,7 +441,7 @@ export default function TripHistoryScreen() {
                                     <ThemedView className="bg-white mt-2 mb-3 rounded-xl border-[#F4B4A5] h-[48px] border border-gray-200 flex-row px-3 items-center shadow-sm">
                                         <SearchIcon />
                                         <TextInput
-                                            placeholder="Search by tracking ID, pickup, or dropoff..."
+                                            placeholder={t('trips.search.placeholder')}
                                             className="flex-1 ml-3 text-gray-700"
                                             placeholderTextColor="#9CA3AF"
                                             value={searchQuery}
@@ -473,7 +475,7 @@ export default function TripHistoryScreen() {
                                     <ThemedView className="bg-white rounded-xl border-[#F4B4A5] h-[48px] border border-gray-200 flex-row px-3 items-center shadow-sm">
                                         <SearchIcon />
                                         <TextInput
-                                            placeholder="Search by tracking ID, pickup, or dropoff..."
+                                            placeholder={t('trips.search.placeholder')}
                                             className="flex-1 text-gray-700"
                                             placeholderTextColor="#9CA3AF"
                                             value={searchQuery}

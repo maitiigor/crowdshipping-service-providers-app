@@ -1,0 +1,58 @@
+{
+  "header_title": "प्रोफ़ाइल संपादित करें",
+  "first_name_label": "प्रथम नाम",
+  "first_name_placeholder": "प्रथम नाम",
+  "last_name_label": "अंतिम नाम",
+  "last_name_placeholder": "अंतिम नाम",
+  "pickup_address_label": "पिकअप पता",
+  "phone_number_label": "फ़ोन नंबर",
+  "state_label": "राज्य",
+  "state_placeholder": "राज्य दर्ज करें",
+  "city_label": "शहर",
+  "city_placeholder": "शहर दर्ज करें",
+  "gender_label": "लिंग",
+  "gender_placeholder": "लिंग चुनें",
+  "gender_options": {
+    "male": "पुरुष",
+    "female": "महिला",
+    "other": "अन्य"
+  },
+  "dob_label": "जन्म तिथि",
+  "upload_helper_text": "प्रोफ़ाइल फोटो अपलोड करें",
+  "update_button": "अपडेट करें",
+  "validation": {
+    "first_name_min": "प्रथम नाम कम से कम 2 अक्षरों का होना चाहिए",
+    "first_name_max": "प्रथम नाम 50 अक्षरों से अधिक नहीं हो सकता",
+    "first_name_required": "प्रथम नाम आवश्यक है",
+    "last_name_min": "अंतिम नाम कम से कम 2 अक्षरों का होना चाहिए",
+    "last_name_max": "अंतिम नाम 50 अक्षरों से अधिक नहीं हो सकता",
+    "last_name_required": "अंतिम नाम आवश्यक है",
+    "phone_required": "फ़ोन नंबर आवश्यक है",
+    "country_required": "देश आवश्यक है",
+    "state_required": "राज्य आवश्यक है",
+    "city_required": "शहर आवश्यक है",
+    "location_required": "स्थान आवश्यक है",
+    "lat_required": "अक्षांश आवश्यक है",
+    "lng_required": "देशांतर आवश्यक है",
+    "address_required": "पता आवश्यक है",
+    "gender_required": "लिंग आवश्यक है",
+    "dob_future": "तिथि भविष्य में नहीं हो सकती"
+  },
+  "toast": {
+    "missing_location_title": "स्थान गायब",
+    "missing_location_description": "कृपया पिकअप पता चुनें",
+    "invalid_phone_title": "अमान्य फ़ोन",
+    "invalid_phone_description": "कृपया मान्य फ़ोन नंबर दर्ज करें",
+    "update_failed_title": "प्रोफ़ाइल अपडेट विफल",
+    "image_uploaded_title": "छवि अपलोड हो गई",
+    "image_uploaded_description": "आपकी प्रोफ़ाइल फोटो अपडेट की गई है।",
+    "upload_failed_title": "अपलोड विफल",
+    "upload_failed_default": "छवि अपलोड नहीं हो सकी",
+    "default_error": "साइन अप विफल"
+  },
+  "modal": {
+    "title": "प्रोफ़ाइल अपडेट की गई",
+    "description": "आपकी जानकारी सफलतापूर्वक सहेजी गई है।",
+    "button": "होम पर लौटें"
+  }
+}

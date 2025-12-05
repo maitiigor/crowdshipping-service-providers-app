@@ -2,6 +2,8 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import apiClient, { setAuthToken } from "../../lib/api/client";
 import { ApiError, ApiResponse, AuthState, ForgotPasswordRequest, LoginFormValues, OTPVerificationRequest, RegistrationPayload, ResendOTPRequest, ResetPasswordRequest, User, UserProfile } from "../../models";
+import { registerFCMToken } from "../../utils/fcmApi";
+import { getFCMToken } from "../../utils/fcmService";
 import { getUserProfile } from "./profileSlice";
 
 
@@ -150,6 +152,14 @@ const authSlice = createSlice({
         logout(state) {
             AsyncStorage.multiRemove(["user", "token", "userProfile"]);
             setAuthToken(null);
+            
+            // Remove FCM token from device when logging out
+            import('../../utils/fcmService').then(({ removeFCMToken }) => {
+                removeFCMToken().catch(err => 
+                    console.error('Failed to remove FCM token on logout:', err)
+                );
+            });
+            
             state.isAuthenticated = false;
             state.email = "";
             state.pin = "";
@@ -217,6 +227,15 @@ const authSlice = createSlice({
                 AsyncStorage.setItem("token", action.payload.data.token);
                 AsyncStorage.setItem("userProfile", JSON.stringify(state.userProfile));
 
+                // Register FCM token after successful login
+                getFCMToken().then(fcmToken => {
+                    if (fcmToken) {
+                        registerFCMToken(fcmToken).catch(err => 
+                            console.error('Failed to register FCM token:', err)
+                        );
+                    }
+                });
+
             })
             .addCase(login.rejected, (state, action) => {
                 state.loading = false;
@@ -246,6 +265,15 @@ const authSlice = createSlice({
                     AsyncStorage.setItem("token", action.payload.data.token);
                     AsyncStorage.setItem("userProfile", JSON.stringify(state.userProfile));
                     AsyncStorage.setItem("isVerified", "true");
+
+                    // Register FCM token after successful signup verification
+                    getFCMToken().then(fcmToken => {
+                        if (fcmToken) {
+                            registerFCMToken(fcmToken).catch(err => 
+                                console.error('Failed to register FCM token:', err)
+                            );
+                        }
+                    });
                 } else {
                     state.resetToken = action.payload.data.token;
                 }
@@ -353,6 +381,15 @@ export const restoreSession = createAsyncThunk(
                 if (storedUserProfile) {
                     dispatch(setUserProfile(JSON.parse(storedUserProfile)));
                 }
+
+                // Register FCM token when session is restored
+                getFCMToken().then(fcmToken => {
+                    if (fcmToken) {
+                        registerFCMToken(fcmToken).catch(err => 
+                            console.error('Failed to register FCM token on session restore:', err)
+                        );
+                    }
+                });
             } else {
                 setAuthToken(null);
                 dispatch(setAuthenticated(false));

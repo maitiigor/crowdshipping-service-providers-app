@@ -1,0 +1,67 @@
+{
+  "header": {
+    "hello": "你好，{{name}}",
+    "search_placeholder": "搜索工作..."
+  },
+  "sidebar": {
+    "welcome_back": "欢迎回来，",
+    "view_profile": "查看资料",
+    "availability": "可用状态",
+    "online": "在线",
+    "offline": "离线",
+    "logout": "退出登录",
+    "menu": {
+      "home": "首页",
+      "my_vehicles": "我的车辆",
+      "booking_history": "预订记录",
+      "trips_jobs": "行程/工作",
+      "inbox": "收件箱",
+      "payment_logs": "支付记录",
+      "complaints": "投诉",
+      "support": "支持",
+      "notifications": "通知",
+      "terms_conditions": "条款和条件",
+      "privacy_policy": "隐私政策",
+      "app_settings": "应用设置"
+    }
+  },
+  "transport": {
+    "ground": "陆运",
+    "maritime": "海运",
+    "air": "空运"
+  },
+  "sections": {
+    "ground_trips_near_you": "附近的陆运行程",
+    "post_my_trip": "发布我的行程"
+  },
+  "loading": {
+    "maritime_trips": "正在加载附近的海运行程...",
+    "air_trips": "正在加载您的空运行程...",
+    "ground_trips": "正在加载您的陆运行程..."
+  },
+  "errors": {
+    "unable_to_load_maritime": "无法加载海运行程",
+    "unable_to_load_air": "无法加载空运行程",
+    "unable_to_load_ground": "无法加载陆运行程",
+    "try_again": "重试"
+  },
+  "empty_states": {
+    "no_maritime_trip": "暂无海运行程",
+    "no_maritime_trip_description": "发布海运行程以接收报价。",
+    "no_maritime_trips_near_you": "您附近暂无海运行程，请稍后再来。",
+    "no_ground_trips_near_you": "您附近暂无陆运行程，请稍后再来。",
+    "no_available_trips": "您还未发布可用的 {{type}} 行程。",
+    "date_not_available": "日期不可用"
+  },
+  "trip_card": {
+    "date": "日期：",
+    "bids_received": "收到的报价："
+  },
+  "date_relative": {
+    "in_days": "{{count}}天后",
+    "tomorrow": "明天",
+    "today": "今天",
+    "yesterday": "昨天",
+    "days_ago": "{{count}}天前"
+  }
+}

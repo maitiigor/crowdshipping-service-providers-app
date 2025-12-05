@@ -1,0 +1,22 @@
+{
+  "welcome_back": "वापसी पर स्वागत है,",
+  "view_profile": "प्रोफ़ाइल देखें",
+  "availability": "उपलब्धता",
+  "online": "ऑनलाइन",
+  "offline": "ऑफ़लाइन",
+  "logout": "लॉग आउट",
+  "menu": {
+    "home": "होम",
+    "my_vehicles": "मेरी वाहनें",
+    "booking_history": "बुकिंग इतिहास",
+    "trips_jobs": "यात्राएँ/नौकरियां",
+    "inbox": "इनबॉक्स",
+    "payment_logs": "भुगतान लॉग",
+    "complaints": "शिकायतें",
+    "support": "सहायता",
+    "notifications": "सूचनाएँ",
+    "terms_conditions": "नियम एवं शर्तें",
+    "privacy_policy": "गोपनीयता नीति",
+    "app_settings": "एप्लिकेशन सेटिंग्स"
+  }
+}

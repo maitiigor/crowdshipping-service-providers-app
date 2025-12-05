@@ -1,0 +1,12 @@
+{
+  "header": { "title": "Edit Profile" },
+  "steps": { "step1": "Personal Information", "step2": "Documents", "step3": "Payment Information" },
+  "identificationType": { "label": "Identification Type", "placeholder": "Select Identification Type", "error": "Identification type is required" },
+  "idNumber": { "label": "ID Number", "placeholder": "ID Number", "error": "ID Number is required" },
+  "idFrontImage": { "label": "ID Front Image", "helper": "A picture of identification Document", "error": "ID Front Image is required" },
+  "proofOfAddress": { "label": "Proof of Address", "helper": "A picture of proof of address", "error": "ID Proof of Address is required" },
+  "insuranceResidenceProof": { "label": "Insurance Residence Proof", "helper": "A picture of your Insurance Proof", "error": "ID proof of Insurance Residence is required" },
+  "driverPassport": { "label": "Driver Passport", "helper": "A picture of your Driver Passport", "error": "Driver Passport is required" },
+  "buttons": { "next": "Next" },
+  "actionSheet": { "selectIdentificationType": "Select Identification Type" }
+}

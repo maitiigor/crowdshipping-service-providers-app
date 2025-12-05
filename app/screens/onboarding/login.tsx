@@ -1,6 +1,7 @@
 import { router } from 'expo-router';
 import { Formik } from 'formik';
 import React, { useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import {
     ActivityIndicator,
     KeyboardAvoidingView,
@@ -17,9 +18,9 @@ import { Apple, ArrowLeftIcon, EyeIcon, EyeOffIcon, Facebook, Google, Icon } fro
 import { Input, InputField, InputSlot } from '@/components/ui/input';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { CircleCheckIcon, HelpCircleIcon, LucideIcon } from 'lucide-react-native';
+import { ScrollView } from 'react-native-gesture-handler';
 import { useDispatch } from 'react-redux';
 import CustomToast from '../../../components/Custom/CustomToast';
-import ParallaxScrollView from '../../../components/ParallaxScrollView';
 import { ThemedText } from '../../../components/ThemedText';
 import { ThemedView } from '../../../components/ThemedView';
 import { useToast } from '../../../components/ui/toast';
@@ -27,7 +28,6 @@ import { ApiError, LoginFormValues } from '../../../models';
 import { AppDispatch, useAppSelector } from '../../../store';
 import { login, setHasLaunched, setRestoring } from '../../../store/slices/authSlice';
 import { getUserProfile } from '../../../store/slices/profileSlice';
-import { ScrollView } from 'react-native-gesture-handler';
 
 
 // Validation Schema
@@ -40,6 +40,7 @@ const loginSchema = Yup.object().shape({
 });
 
 export default function LoginScreen() {
+    const { t } = useTranslation();
     const [showPassword, setShowPassword] = useState(false);
     const loading = useAppSelector((state) => state.auth.loading);
     const toast = useToast();
@@ -184,7 +185,7 @@ export default function LoginScreen() {
                         </TouchableOpacity>
 
                         <ThemedText className="text-lg font-semibold text-gray-900" style={{ fontFamily: 'Poppins-SemiBold' }}>
-                            Login
+                            {t('login.header_title')}
                         </ThemedText>
 
                         <ThemedView className="w-8" />
@@ -195,10 +196,10 @@ export default function LoginScreen() {
                         {/* Welcome Text */}
                         <ThemedView className="mb-8">
                             <ThemedText className="text-2xl font-bold text-gray-900 mb-2" style={{ fontFamily: 'Poppins-Bold' }}>
-                                Welcome Back
+                                {t('login.welcome_back')}
                             </ThemedText>
                             <ThemedText className="text-base text-gray-600 leading-6" style={{ fontFamily: 'Inter-Regular' }}>
-                                Sign in to your account to accept and track deliveries
+                                {t('login.subtitle')}
                             </ThemedText>
                         </ThemedView>
 
@@ -213,7 +214,7 @@ export default function LoginScreen() {
                                     {/* Email Input */}
                                     <ThemedView>
                                         <ThemedText className="text-sm font-medium text-gray-700 mb-3" style={{ fontFamily: 'Inter-Regular' }}>
-                                            Email address
+                                            {t('login.email_label')}
                                         </ThemedText>
                                         <Input
                                             variant="outline"
@@ -224,7 +225,7 @@ export default function LoginScreen() {
                                                 } bg-rose-50 border-0 rounded-lg px-4 py mb-3 min-h-[54px]`}
                                         >
                                             <InputField
-                                                placeholder="user@gmail.com"
+                                                placeholder={t('login.email_placeholder')}
                                                 value={values.email}
                                                 onChangeText={handleChange('email')}
                                                 onBlur={handleBlur('email')}
@@ -244,7 +245,7 @@ export default function LoginScreen() {
                                     {/* Password Input */}
                                     <ThemedView>
                                         <ThemedText className="text-sm font-medium text-gray-700  mt-8 mb-3" style={{ fontFamily: 'Inter-Regular' }}>
-                                            Password
+                                            {t('login.password_label')}
                                         </ThemedText>
                                         <Input
                                             variant="outline"
@@ -287,7 +288,7 @@ export default function LoginScreen() {
                                         disabled={loading}
                                     >
                                         <ButtonText className="text-white font-semibold text-base" style={{ fontFamily: 'Poppins-SemiBold' }}>
-                                            {loading ? <ActivityIndicator color="white" /> : 'Login'}
+                                            {loading ? <ActivityIndicator color="white" /> : t('login.login_button')}
                                         </ButtonText>
                                     </Button>
 
@@ -297,14 +298,14 @@ export default function LoginScreen() {
                                         className="items-center py-2"
                                     >
                                         <ThemedText className="text-[#E75B3B] mt-3 font-medium" style={{ fontFamily: 'Inter-Regular' }}>
-                                            Forgot Password?
+                                            {t('login.forgot_password')}
                                         </ThemedText>
                                     </TouchableOpacity>
 
                                     {/* Divider */}
                                     <ThemedView className="flex-row items-center my-6">
                                         <ThemedView className="flex-1 h-px bg-gray-300" />
-                                        <ThemedText className="px-4 text-gray-500 text-sm" style={{ fontFamily: 'Inter-Regular' }}>or</ThemedText>
+                                        <ThemedText className="px-4 text-gray-500 text-sm" style={{ fontFamily: 'Inter-Regular' }}>{t('login.or_divider')}</ThemedText>
                                         <ThemedView className="flex-1 h-px bg-gray-300" />
                                     </ThemedView>
 
@@ -343,11 +344,11 @@ export default function LoginScreen() {
                 {/* Bottom Sign Up Link */}
                 <ThemedView className="px-6 py-6 border-t border-gray-200">
                     <ThemedView className="flex-row justify-center items-center">
-                        <ThemedText className="text-gray-600" style={{ fontFamily: 'Inter-Regular' }}>You don't have an account? </ThemedText>
+                        <ThemedText className="text-gray-600" style={{ fontFamily: 'Inter-Regular' }}>{t('login.no_account')} </ThemedText>
                         <TouchableOpacity
                             onPress={() => router.push('/screens/onboarding/welcome')}
                         >
-                            <ThemedText className="text-[#E75B3B] font-semibold" style={{ fontFamily: 'Inter-Regular' }}>Sign up</ThemedText>
+                            <ThemedText className="text-[#E75B3B] font-semibold" style={{ fontFamily: 'Inter-Regular' }}>{t('login.sign_up_link')}</ThemedText>
                         </TouchableOpacity>
                     </ThemedView>
                 </ThemedView>

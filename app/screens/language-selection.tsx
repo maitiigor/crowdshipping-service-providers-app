@@ -8,12 +8,11 @@ import {
     TextInput,
     TouchableOpacity
 } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
-import { Icon, SearchIcon } from '../../components/ui/icon';
-import { changeAppLanguage, LANGUAGE_STORAGE_KEY } from '../../lib/i18n';
-import { ThemedView } from '../../components/ThemedView';
-import { ThemedText } from '../../components/ThemedText';
 import ParallaxScrollView from '../../components/Custom/ParallaxScrollView';
+import { ThemedText } from '../../components/ThemedText';
+import { ThemedView } from '../../components/ThemedView';
+import { Icon, SearchIcon } from '../../components/ui/icon';
+import { LANGUAGE_STORAGE_KEY, changeAppLanguage } from '../../lib/i18n';
 
 interface Language {
     code: string;
@@ -94,20 +93,20 @@ export default function LanguageSelectionScreen() {
             <ThemedView className="px-4 py-4 pt-8">
                 {/* Title */}
                 <ThemedText className="text-3xl font-bold text-gray-900 mb-4">
-                    Choose the language
+                    {t('onboarding.choose_language')}
                 </ThemedText>
 
                 {/* Subtitle */}
                 <ThemedText className="text-gray-600 text-lg mb-2">
-                    Select your preferred language below
+                    {t('onboarding.choose_language_hint')}
                 </ThemedText>
                 <ThemedText className="text-gray-600 text-lg mb-8">
-                    This helps us serve you better.
+                    {/* This helps us serve you better. */}
                 </ThemedText>
 
                 {/* You Selected Section */}
                 <ThemedText className="text-xl font-semibold text-gray-900 mb-4">
-                    You Selected
+                    {t('onboarding.you_selected')}
                 </ThemedText>
 
                 {/* Selected Language Display */}
@@ -119,7 +118,7 @@ export default function LanguageSelectionScreen() {
 
                 {/* All Languages Section */}
                 <ThemedText className="text-xl font-semibold text-gray-900 mb-4">
-                    All Languages
+                    {t('onboarding.all_languages')}
                 </ThemedText>
 
                 {/* Search Bar */}
@@ -130,7 +129,7 @@ export default function LanguageSelectionScreen() {
                     <TextInput
                         value={searchQuery}
                         onChangeText={setSearchQuery}
-                        placeholder="English"
+                        placeholder={t('common.search')}
                         placeholderTextColor="#9CA3AF"
                         className="bg-gray-50 rounded-lg pl-12 pr-4 py-4 text-gray-900 text-lg"
                     />
@@ -184,7 +183,7 @@ export default function LanguageSelectionScreen() {
                         onPress={handleContinue}
                     >
                         <ThemedText className="text-white text-center font-semibold text-base">
-                            Continue
+                            {t('onboarding.continue')}
                         </ThemedText>
                     </TouchableOpacity>
                 </ThemedView>

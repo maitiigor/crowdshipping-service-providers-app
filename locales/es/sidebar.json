@@ -1,0 +1,22 @@
+{
+  "welcome_back": "Bienvenido de nuevo,",
+  "view_profile": "Ver perfil",
+  "availability": "Disponibilidad",
+  "online": "En línea",
+  "offline": "Desconectado",
+  "logout": "Cerrar sesión",
+  "menu": {
+    "home": "Inicio",
+    "my_vehicles": "Mis vehículos",
+    "booking_history": "Historial de reservas",
+    "trips_jobs": "Viajes/Trabajos",
+    "inbox": "Bandeja de entrada",
+    "payment_logs": "Registros de pago",
+    "complaints": "Quejas",
+    "support": "Soporte",
+    "notifications": "Notificaciones",
+    "terms_conditions": "Términos y Condiciones",
+    "privacy_policy": "Política de privacidad",
+    "app_settings": "Configuración de la aplicación"
+  }
+}

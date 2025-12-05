@@ -1,0 +1,67 @@
+{
+  "header": {
+    "hello": "Hola, {{name}}",
+    "search_placeholder": "Buscar trabajos..."
+  },
+  "sidebar": {
+    "welcome_back": "Bienvenido de nuevo,",
+    "view_profile": "Ver perfil",
+    "availability": "Disponibilidad",
+    "online": "En línea",
+    "offline": "Desconectado",
+    "logout": "Cerrar sesión",
+    "menu": {
+      "home": "Inicio",
+      "my_vehicles": "Mis vehículos",
+      "booking_history": "Historial de reservas",
+      "trips_jobs": "Viajes/Trabajos",
+      "inbox": "Bandeja de entrada",
+      "payment_logs": "Registros de pago",
+      "complaints": "Quejas",
+      "support": "Soporte",
+      "notifications": "Notificaciones",
+      "terms_conditions": "Términos y condiciones",
+      "privacy_policy": "Política de privacidad",
+      "app_settings": "Configuración de la aplicación"
+    }
+  },
+  "transport": {
+    "ground": "Terrestre",
+    "maritime": "Marítimo",
+    "air": "Aéreo"
+  },
+  "sections": {
+    "ground_trips_near_you": "Viajes terrestres cerca de ti",
+    "post_my_trip": "Publicar mi viaje"
+  },
+  "loading": {
+    "maritime_trips": "Cargando viajes marítimos cerca de ti...",
+    "air_trips": "Cargando tus viajes aéreos...",
+    "ground_trips": "Cargando tus viajes terrestres..."
+  },
+  "errors": {
+    "unable_to_load_maritime": "No se pueden cargar los viajes marítimos",
+    "unable_to_load_air": "No se pueden cargar los viajes aéreos",
+    "unable_to_load_ground": "No se pueden cargar los viajes terrestres",
+    "try_again": "Intentar de nuevo"
+  },
+  "empty_states": {
+    "no_maritime_trip": "Aún no hay viaje marítimo",
+    "no_maritime_trip_description": "Publica un viaje marítimo para verlo aquí y recibir ofertas.",
+    "no_maritime_trips_near_you": "Aún no hay viajes marítimos cerca de ti. Vuelve pronto.",
+    "no_ground_trips_near_you": "Aún no hay viajes terrestres cerca de ti. Vuelve pronto.",
+    "no_available_trips": "Aún no tienes viajes {{type}} disponibles publicados.",
+    "date_not_available": "Fecha no disponible"
+  },
+  "trip_card": {
+    "date": "Fecha:",
+    "bids_received": "Ofertas recibidas:"
+  },
+  "date_relative": {
+    "in_days": "en {{count}} días",
+    "tomorrow": "mañana",
+    "today": "hoy",
+    "yesterday": "ayer",
+    "days_ago": "hace {{count}} días"
+  }
+}

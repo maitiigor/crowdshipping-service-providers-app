@@ -1,0 +1,42 @@
+{
+  "header": {
+    "editProfile": "编辑资料",
+    "notifications": "通知"
+  },
+  "progress": {
+    "step1": "步骤 1",
+    "step2": "步骤 2",
+    "step3": "步骤 3"
+  },
+  "titles": {
+    "personalInformation": "个人信息"
+  },
+  "fields": {
+    "fullName": "全名",
+    "emailAddress": "电子邮件地址",
+    "phoneNumber": "电话号码",
+    "country": "国家",
+    "gender": "性别",
+    "state": "州",
+    "city": "城市",
+    "pickupAddress": "取货地址"
+  },
+  "placeholders": {
+    "fullName": "全名",
+    "email": "电子邮件"
+  },
+  "buttons": {
+    "next": "下一步"
+  },
+  "errors": {
+    "fullNameRequired": "全名是必填项",
+    "emailRequired": "电子邮件是必填项",
+    "invalidEmail": "无效的电子邮件",
+    "phoneRequired": "电话号码是必填项",
+    "countryRequired": "国家是必填项",
+    "genderRequired": "性别是必填项",
+    "stateRequired": "州是必填项",
+    "cityRequired": "城市是必填项",
+    "locationRequired": "位置是必填项"
+  }
+}

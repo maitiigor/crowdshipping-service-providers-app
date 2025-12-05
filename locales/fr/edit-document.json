@@ -1,0 +1,12 @@
+{
+  "header": { "title": "Modifier le Profil" },
+  "steps": { "step1": "Informations Personnelles", "step2": "Documents", "step3": "Informations de Paiement" },
+  "identificationType": { "label": "Type d'Identification", "placeholder": "Sélectionner le Type d'Identification", "error": "Le type d'identification est requis" },
+  "idNumber": { "label": "Numéro d'ID", "placeholder": "Numéro d'ID", "error": "Le numéro d'ID est requis" },
+  "idFrontImage": { "label": "Image Avant de l'ID", "helper": "Une photo du document d'identification", "error": "L'image avant de l'ID est requise" },
+  "proofOfAddress": { "label": "Justificatif de Domicile", "helper": "Une photo du justificatif de domicile", "error": "Le justificatif de domicile est requis" },
+  "insuranceResidenceProof": { "label": "Preuve de Résidence d'Assurance", "helper": "Une photo de votre preuve d'assurance", "error": "La preuve de résidence d'assurance est requise" },
+  "driverPassport": { "label": "Passeport du Conducteur", "helper": "Une photo de votre passeport de conducteur", "error": "Le passeport du conducteur est requis" },
+  "buttons": { "next": "Suivant" },
+  "actionSheet": { "selectIdentificationType": "Sélectionner le Type d'Identification" }
+}

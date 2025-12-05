@@ -1,0 +1,12 @@
+{
+  "header": { "title": "تعديل الملف الشخصي" },
+  "steps": { "step1": "المعلومات الشخصية", "step2": "الوثائق", "step3": "معلومات الدفع" },
+  "identificationType": { "label": "نوع الهوية", "placeholder": "اختر نوع الهوية", "error": "نوع الهوية مطلوب" },
+  "idNumber": { "label": "رقم الهوية", "placeholder": "رقم الهوية", "error": "رقم الهوية مطلوب" },
+  "idFrontImage": { "label": "صورة الهوية الأمامية", "helper": "صورة لوثيقة الهوية", "error": "صورة الهوية الأمامية مطلوبة" },
+  "proofOfAddress": { "label": "إثبات العنوان", "helper": "صورة لإثبات العنوان", "error": "إثبات العنوان مطلوب" },
+  "insuranceResidenceProof": { "label": "إثبات الإقامة التأمينية", "helper": "صورة لإثبات التأمين", "error": "إثبات الإقامة التأمينية مطلوب" },
+  "driverPassport": { "label": "جواز سفر السائق", "helper": "صورة لجواز سفر السائق", "error": "جواز سفر السائق مطلوب" },
+  "buttons": { "next": "التالي" },
+  "actionSheet": { "selectIdentificationType": "اختر نوع الهوية" }
+}

@@ -1,5 +1,6 @@
 import { useNavigation, useRouter } from "expo-router";
 import React, { useEffect } from "react";
+import { useTranslation } from "react-i18next";
 import { FlatList, TouchableOpacity, View } from "react-native";
 
 import { EmptyState } from "@/components/Custom/EmptyState";
@@ -22,6 +23,7 @@ import { fetchNotifications } from "../../../store/slices/notificationSlice";
 dayjs.extend(relativeTime);
 
 export default function NotificationScreen() {
+    const { t } = useTranslation();
     const navigation = useNavigation();
     const router = useRouter();
     const dispatch = useAppDispatch();
@@ -48,7 +50,7 @@ export default function NotificationScreen() {
             headerTitle: () => {
                 return (
                     <ThemedText type="s1_subtitle" className="text-center">
-                        Notifications
+                        {t('notifications.header.title')}
                     </ThemedText>
                 );
             },
@@ -139,8 +141,8 @@ export default function NotificationScreen() {
                             }}
                             ListEmptyComponent={
                                 <EmptyState
-                                    title="No unread notifications"
-                                    description="You have no unread notifications at the moment. Check back later for updates."
+                                    title={t('notifications.empty_state.title')}
+                                    description={t('notifications.empty_state.description')}
                                     icon={BellIcon}
                                     className="mt-10"
                                 />

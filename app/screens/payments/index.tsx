@@ -4,6 +4,7 @@ import dayjs from 'dayjs';
 import { router } from 'expo-router';
 import { CircleCheckBig } from 'lucide-react-native';
 import React, { useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { ImageBackground, ScrollView, TouchableOpacity, View } from 'react-native';
 import { FlatList } from 'react-native-gesture-handler';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -20,6 +21,7 @@ import { formatCurrency } from '../../../utils/helper';
 
 
 export default function PaymentLogsScreen() {
+    const { t } = useTranslation();
     const [showBalance, setShowBalance] = useState(false);
     const [activeTab, setActiveTab] = useState<'payout' | 'withdrawal'>('payout');
     const dispatch = useAppDispatch();
@@ -87,7 +89,7 @@ export default function PaymentLogsScreen() {
                     <Icon as={ArrowLeftIcon} size="md" className="text-gray-700" />
                 </TouchableOpacity>
 
-                <ThemedText className="text-xl font-semibold text-gray-900">Payment logs</ThemedText>
+                <ThemedText className="text-xl font-semibold text-gray-900">{t('payment-logs.header.wallet')}</ThemedText>
 
                 <TouchableOpacity>
                     <Icon as={BellIcon} size="md" className="text-gray-700" />
@@ -128,7 +130,7 @@ export default function PaymentLogsScreen() {
                         >
                             <ThemedView className="flex h-full w-full justify-center items-center">
                                 <ThemedText type="h5_header" className="text-white">
-                                    Total Balance
+                                    {t('payment-logs.wallet.total_balance')}
                                 </ThemedText>
                                 <ThemedText type="h3_header" className="text-white mt-4">
                                     {formatCurrency(
@@ -152,7 +154,7 @@ export default function PaymentLogsScreen() {
                                 }}
                             >
                                 <ThemedText className={`text-center font-medium ${activeTab === 'payout' ? 'text-white' : 'text-primary-500'}`}>
-                                    Payout Account
+                                    {t('payment-logs.wallet.withdrawal')}
                                 </ThemedText>
                             </TouchableOpacity>
 
@@ -164,7 +166,7 @@ export default function PaymentLogsScreen() {
                                 }}
                             >
                                 <ThemedText className={`text-center font-medium ${activeTab === 'withdrawal' ? 'text-white' : 'text-primary-500'}`}>
-                                    Withdrawal
+                                    {t('payment-logs.wallet.withdrawal')}
                                 </ThemedText>
                             </TouchableOpacity>
                         </ThemedView>
@@ -172,9 +174,9 @@ export default function PaymentLogsScreen() {
                         {/* Transaction History */}
                         <ThemedView className="mx-4 mb-6">
                             <ThemedView className="flex-row items-center justify-between mb-4">
-                                <ThemedText className="text-lg font-semibold text-gray-900">Transaction History</ThemedText>
+                                <ThemedText className="text-lg font-semibold text-gray-900">{t('payment-logs.wallet.transaction_history')}</ThemedText>
                                 <TouchableOpacity onPress={() => router.push('/screens/payments/history')}>
-                                    <ThemedText className="text-primary-500 font-medium">See all</ThemedText>
+                                    <ThemedText className="text-primary-500 font-medium">{t('payment-logs.wallet.see_all')}</ThemedText>
                                 </TouchableOpacity>
                             </ThemedView>
 
@@ -185,7 +187,7 @@ export default function PaymentLogsScreen() {
                                         data={transactions.slice(0, 5)}
                                         ListEmptyComponent={
                                             <ThemedText type="b2_body" className="text-center mt-10">
-                                                No transactions found.
+                                                {t('payment-logs.wallet.no_transactions')}
                                             </ThemedText>
                                         }
                                         contentContainerClassName="pb-20"
@@ -220,7 +222,7 @@ export default function PaymentLogsScreen() {
                                                             numberOfLines={2}
                                                             ellipsizeMode="tail"
                                                         >
-                                                            {item?.title ?? `Wallet has been ${item.type}ed`}
+                                                            {item?.title ?? t(`payment-logs.wallet.wallet_${item.type}ed`)}
                                                         </ThemedText>
                                                         <ThemedView className="flex-row items-center">
                                                             <ThemedText

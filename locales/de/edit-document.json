@@ -1,0 +1,12 @@
+{
+  "header": { "title": "Profil Bearbeiten" },
+  "steps": { "step1": "Persönliche Informationen", "step2": "Dokumente", "step3": "Zahlungsinformationen" },
+  "identificationType": { "label": "Identifikationstyp", "placeholder": "Identifikationstyp auswählen", "error": "Der Identifikationstyp ist erforderlich" },
+  "idNumber": { "label": "ID-Nummer", "placeholder": "ID-Nummer", "error": "Die ID-Nummer ist erforderlich" },
+  "idFrontImage": { "label": "ID-Vorderbild", "helper": "Ein Bild des Identifikationsdokuments", "error": "Das ID-Vorderbild ist erforderlich" },
+  "proofOfAddress": { "label": "Adressnachweis", "helper": "Ein Bild des Adressnachweises", "error": "Der Adressnachweis ist erforderlich" },
+  "insuranceResidenceProof": { "label": "Versicherungswohnsitznachweis", "helper": "Ein Bild Ihres Versicherungsnachweises", "error": "Der Versicherungswohnsitznachweis ist erforderlich" },
+  "driverPassport": { "label": "Fahrerausweis", "helper": "Ein Bild Ihres Fahrerausweises", "error": "Der Fahrerausweis ist erforderlich" },
+  "buttons": { "next": "Weiter" },
+  "actionSheet": { "selectIdentificationType": "Identifikationstyp auswählen" }
+}

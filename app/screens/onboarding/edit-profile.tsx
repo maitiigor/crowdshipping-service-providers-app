@@ -7,6 +7,7 @@ import { Picker } from "@react-native-picker/picker"; // dropdown select
 import { router } from "expo-router";
 import { Formik } from "formik";
 import React, { useEffect, useRef, useState } from "react";
+import { useTranslation } from 'react-i18next';
 import {
     ActivityIndicator,
     TextInput,
@@ -27,7 +28,7 @@ import { AppDispatch, useAppSelector } from "../../../store";
 import { setDocument } from "../../../store/slices/profileSlice";
 
 export default function EditProfile() {
-
+    const { t } = useTranslation();
     const { dropdownOptions, editProfile, nextStep } = useEditProfileForm();
 
     const { profile } = useAppSelector((state) => state.profile);
@@ -39,15 +40,14 @@ export default function EditProfile() {
     const userProfile = useAppSelector((state) => state.auth.userProfile);
 
     const validationSchema = Yup.object().shape({
-        fullName: Yup.string().required("Full name is required"),
-        email: Yup.string().email("Invalid email").required("Email is required"),
-        phoneNumber: Yup.string().required("Phone number is required"),
-        //   accountType: Yup.string().required("Account type is required"),
-        country: Yup.string().required("Country is required"),
-        gender: Yup.string().required("Gender is required"),
-        state: Yup.string().required("State is required"),
-        city: Yup.string().required("City is required"),
-        location: Yup.object().required("Location is required"),
+        fullName: Yup.string().required(t('edit-profile.errors.fullNameRequired')),
+        email: Yup.string().email(t('edit-profile.errors.invalidEmail')).required(t('edit-profile.errors.emailRequired')),
+        phoneNumber: Yup.string().required(t('edit-profile.errors.phoneRequired')),
+        country: Yup.string().required(t('edit-profile.errors.countryRequired')),
+        gender: Yup.string().required(t('edit-profile.errors.genderRequired')),
+        state: Yup.string().required(t('edit-profile.errors.stateRequired')),
+        city: Yup.string().required(t('edit-profile.errors.cityRequired')),
+        location: Yup.object().required(t('edit-profile.errors.locationRequired')),
     });
 
 
@@ -135,7 +135,7 @@ export default function EditProfile() {
                 </TouchableOpacity>
 
                 <ThemedText className="text-lg font-semibold text-black">
-                    Edit Profile
+                    {t('edit-profile.header.editProfile')}
                 </ThemedText>
 
                 <TouchableOpacity className="p-2">
@@ -167,14 +167,14 @@ export default function EditProfile() {
                         headerBackgroundColor={{ light: "#FFFFFF", dark: "#353636" }}
                     >
                         <ThemedText className="text-xl font-semibold text-black mb-6">
-                            Personal Information
+                            {t('edit-profile.titles.personalInformation')}
                         </ThemedText>
 
                         {/* Full Name */}
                         <ThemedView>
-                            <InputLabelText className="">Full Name</InputLabelText>
+                            <InputLabelText className="">{t('edit-profile.fields.fullName')}</InputLabelText>
                             <TextInput
-                                placeholder="Full Name"
+                                placeholder={t('edit-profile.placeholders.fullName')}
                                 value={values.fullName}
                                 onChangeText={handleChange("fullName")}
                                 className="bg-[#FDF2F0] rounded-lg px-4 py-4 text-base"
@@ -186,9 +186,9 @@ export default function EditProfile() {
 
                         {/* Email */}
                         <ThemedView>
-                            <InputLabelText className="">Email Address</InputLabelText>
+                            <InputLabelText className="">{t('edit-profile.fields.emailAddress')}</InputLabelText>
                             <TextInput
-                                placeholder="Email"
+                                placeholder={t('edit-profile.placeholders.email')}
                                 value={values.email}
                                 editable={false}
                                 onChangeText={handleChange("email")}
@@ -202,7 +202,7 @@ export default function EditProfile() {
 
                         {/* Phone Number */}
                         <ThemedView>
-                            <InputLabelText className="">Phone Number</InputLabelText>
+                            <InputLabelText className="">{t('edit-profile.fields.phoneNumber')}</InputLabelText>
                             <PhoneNumberInput
                                 ref={phoneInputRef}
                                 value={values.phoneNumber}
@@ -231,7 +231,7 @@ export default function EditProfile() {
 
                         {/* Gender */}
                         <ThemedView>
-                            <InputLabelText className="">Gender</InputLabelText>
+                            <InputLabelText className="">{t('edit-profile.fields.gender')}</InputLabelText>
                             <Picker
                                 selectedValue={values.gender}
                                 onValueChange={handleChange("gender")}
@@ -253,7 +253,7 @@ export default function EditProfile() {
 
                         {/* State */}
                         <ThemedView>
-                            <InputLabelText className="">State</InputLabelText>
+                            <InputLabelText className="">{t('edit-profile.fields.state')}</InputLabelText>
                             <Picker
                                 selectedValue={values.state}
                                 onValueChange={handleChange("state")}
@@ -275,7 +275,7 @@ export default function EditProfile() {
 
                         {/* City */}
                         <ThemedView>
-                            <InputLabelText className="">City</InputLabelText>
+                            <InputLabelText className="">{t('edit-profile.fields.city')}</InputLabelText>
                             <Picker
                                 selectedValue={values.city}
                                 onValueChange={handleChange("city")}
@@ -297,7 +297,7 @@ export default function EditProfile() {
 
                         {/* Location */}
                         <ThemedView>
-                            <InputLabelText className="">Pickup Address</InputLabelText>
+                            <InputLabelText className="">{t('edit-profile.fields.pickupAddress')}</InputLabelText>
                             <AddressPicker
                                 value={values.location}
                                 onSelect={(sel) => {
@@ -325,7 +325,7 @@ export default function EditProfile() {
                             onPress={() => handleSubmit()}
                         >
                             <ThemedText type="s1_subtitle" className="text-white">
-                                {false ? <ActivityIndicator color="white" /> : "Next"}
+                                {false ? <ActivityIndicator color="white" /> : t('edit-profile.buttons.next')}
                             </ThemedText>
                         </Button>
 
