@@ -15,6 +15,7 @@ import tripManagementReducer from "./slices/tripManagementSlice";
 import vechileReducer from "./slices/vechileSlice";
 import walletReducer from "./slices/walletSlice";
 import settingReducer from "./slices/settingSlice";
+import reportReducer from "./slices/reportSlice";
 
 export const store = configureStore({
   reducer: {
@@ -24,6 +25,7 @@ export const store = configureStore({
     airTrip: airTripReducer,
     marineTrip: marineTripReducer,
     payment: paymentReducer,
+    report: reportReducer,
     wallet: walletReducer,
     setting: settingReducer,
     groundTrip: groundTripReducer,

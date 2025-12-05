@@ -436,7 +436,7 @@ export default function TripStatusManagementScreen() {
 
                     <ThemedView className="flex-row justify-between">
                         <ThemedText className="text-gray-500">Pickup Location</ThemedText>
-                        <Text
+                        <ThemedText
                             className="font-semibold text-gray-900 flex-1 text-right"
                             numberOfLines={1}
                         >
@@ -446,7 +446,7 @@ export default function TripStatusManagementScreen() {
 
                     <ThemedView className="flex-row justify-between">
                         <ThemedText className="text-gray-500">Drop-off Location</ThemedText>
-                        <Text
+                        <ThemedText
                             className="font-semibold text-gray-900 flex-1 text-right"
                             numberOfLines={1}
                         >
@@ -537,8 +537,8 @@ export default function TripStatusManagementScreen() {
                             const StatusIcon = status.icon;
 
                             return (
-                                <View key={status.key} className="flex-row items-center">
-                                    <View
+                                <ThemedView key={status.key} className="flex-row items-center">
+                                    <ThemedView
                                         className={`w-8 h-8 rounded-full items-center justify-center mr-3 ${isCompleted ? 'bg-[#E75B3B]' : 'bg-gray-200'
                                             }`}
                                     >
@@ -548,7 +548,7 @@ export default function TripStatusManagementScreen() {
                                         />
                                     </ThemedView>
                                     <ThemedView className="flex-1">
-                                        <Text
+                                        <ThemedText
                                             className={`font-medium ${isCurrent ? 'text-[#E75B3B]' : 'text-gray-900'
                                                 }`}
                                         >
@@ -562,7 +562,7 @@ export default function TripStatusManagementScreen() {
                             );
                         })}
                     </ThemedView>
-                </View >
+                </ThemedView >
             </>
         );
     };

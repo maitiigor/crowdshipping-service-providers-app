@@ -8,6 +8,8 @@ import {
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Button, ButtonText } from '../../../components/ui/button';
 import { ArrowLeftIcon, BellIcon, Icon } from '../../../components/ui/icon';
+import { ThemedView } from '../../../components/ThemedView';
+import { ThemedText } from '../../../components/ThemedText';
 
 export default function DriverFeedbackScreen() {
     const [rating, setRating] = useState(0);

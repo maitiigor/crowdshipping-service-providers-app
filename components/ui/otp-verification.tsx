@@ -8,6 +8,7 @@ import {
 } from "react-native";
 import { ThemedView } from "../ThemedView";
 import { Button, ButtonText } from "./button";
+import { ThemedText } from "../ThemedText";
 
 interface OTPVerificationProps {
     title: string;
@@ -83,7 +84,7 @@ export default function OTPVerification({
         return (
             <ThemedView className="flex-row justify-center items-center mb-8 gap-4">
                 {Array.from({ length: pinLength }, (_, index) => (
-                    <View
+                    <ThemedView
                         key={index}
                         className={`${pinLength === 4
                             ? 'w-16 h-16 rounded-2xl border-2'

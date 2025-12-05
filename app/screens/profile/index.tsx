@@ -1,9 +1,16 @@
 'use client';
 import { ArrowLeftIcon, BellIcon, EditIcon, Icon, StarIcon } from '@/components/ui/icon';
-import { router } from 'expo-router';
-import React, { useState } from 'react';
+import { Image } from 'expo-image';
+import { router, useNavigation } from 'expo-router';
+import React, { useEffect, useState } from 'react';
 import { Alert, ScrollView, TouchableOpacity } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { ThemedText } from '../../../components/ThemedText';
+import { ThemedView } from '../../../components/ThemedView';
+import { useAppSelector } from '../../../store';
+import { useThemeColor } from '../../../hooks/useThemeColor';
+import { ChevronLeft } from 'lucide-react-native';
+import NotificationIcon from '../../../components/Custom/NotificationIcon';
 
 interface ProfileData {
     name: string;
@@ -17,6 +24,9 @@ interface ProfileData {
 }
 
 export default function ProfileScreen() {
+
+
+    const { userProfile } = useAppSelector((state) => state.auth);
     const [profileData] = useState<ProfileData>({
         name: 'Gbemisola',
         email: 'gbemisola@example.com',
@@ -28,52 +38,117 @@ export default function ProfileScreen() {
         status: 'online'
     });
 
+    const navigation = useNavigation();
+
+    const background = useThemeColor({}, "background");
+    const color = useThemeColor({}, "text");
+
     const handleViewVehicle = () => {
         Alert.alert('Vehicle Info', 'Toyota Camry 2020\nPlate: ABC-123-XY\nColor: Silver');
     };
+
+
+        useEffect(() => {
+            navigation.setOptions({
+                headerShown: true,
+                headerTitle: () => {
+                    return (
+                        <ThemedText type="s1_subtitle" className="text-center">
+                            Profile
+                        </ThemedText>
+                    );
+                },
+                headerTitleAlign: "center",
+                headerTitleStyle: { fontSize: 20 }, // Increased font size
+                headerShadowVisible: false,
+                headerStyle: {
+                    backgroundColor: background,
+                    elevation: 0, // Android
+                    shadowOpacity: 0, // iOS
+                    shadowColor: "transparent", // iOS
+                    borderBottomWidth: 0,
+                    color: color
+                },
+                headerLeft: () => (
+                    <ThemedView
+                        style={{
+                            shadowColor: "#FDEFEB1A",
+                            shadowOffset: { width: 0, height: 1 },
+                            shadowOpacity: 0.102,
+                            shadowRadius: 3,
+                            elevation: 4,
+                        }}
+                    >
+                        <ThemedView
+                            style={{
+                                shadowColor: "#0000001A",
+                                shadowOffset: { width: 0, height: 1 },
+                                shadowOpacity: 0.102,
+                                shadowRadius: 2,
+                                elevation: 2,
+                            }}
+                        >
+                            <TouchableOpacity
+                                onPress={() => navigation.goBack()}
+                                className="p-2 rounded flex justify-center items-center"
+                            >
+                                <Icon
+                                    as={ChevronLeft}
+                                    size="3xl"
+                                    color={color}
+                                    className="text-typography-900"
+                                />
+                            </TouchableOpacity>
+                        </ThemedView>
+                    </ThemedView>
+                ),
+                headerRight: () => <NotificationIcon />,
+            });
+        }, [navigation, router]);
 
     const handleReviewsAndRatings = () => {
         router.push('/screens/dashboard/reviews');
     };
 
     return (
-        <SafeAreaView className="flex-1 bg-gray-50">
-            {/* Header */}
-            <ThemedView className="flex-row items-center justify-between px-4 py-3 bg-white border-b border-gray-100">
-                <TouchableOpacity onPress={() => router.back()}>
-                    <Icon as={ArrowLeftIcon} size="md" className="text-gray-700" />
-                </TouchableOpacity>
-
-                <ThemedText className="text-xl font-semibold text-gray-900">Profile</ThemedText>
-
-                <TouchableOpacity onPress={() => router.push('/screens/notifications')}>
-                    <Icon as={BellIcon} size="md" className="text-gray-700" />
-                </TouchableOpacity>
-            </ThemedView>
+        <SafeAreaView className="flex-1">
 
             <ScrollView className="flex-1">
                 {/* Profile Header */}
-                <ThemedView className="bg-white mx-4 mt-4 rounded-2xl p-6">
+                <ThemedView className="mx-4 mt-4 rounded-2xl p-6">
                     <ThemedView className="items-center mb-6">
                         {/* Profile Avatar */}
                         <ThemedView className="relative mb-4">
-                            <ThemedView className="w-24 h-24 bg-[#E75B3B] rounded-full items-center justify-center">
-                                <ThemedText className="text-white text-3xl font-bold">G</ThemedText>
-                            </ThemedView>
+                            {
+                                true === true ? (
+                                    <ThemedView style={{ width: 96, height: 96 }} className="rounded-full">
+                                        <Image
+                                            source={{ uri: userProfile.profile?.profilePicUrl || "https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=687&q=80" }}
+                                            className="w-full h-full"
+                                            onError={(err) => console.log(err)}
+                                        />
+                                    </ThemedView>
+                                ) : <ThemedView className="w-24 h-24 bg-[#E75B3B] rounded-full items-center justify-center">
+                                    <ThemedText className="text-3xl font-bold">{userProfile.fullName.charAt(0)}</ThemedText>
+                                </ThemedView>
+                            }
+
                             {/* Online Status Indicator */}
                             <ThemedView className={`absolute bottom-2 right-2 w-6 h-6 rounded-full border-2 border-white ${profileData.status === 'online' ? 'bg-green-500' : 'bg-gray-400'
                                 }`} />
                         </ThemedView>
 
                         {/* Name and Basic Info */}
-                        <ThemedText className="text-gray-900 font-bold text-2xl mb-2">{profileData.name}</ThemedText>
-                        <ThemedText className="text-gray-500 text-base mb-4">{profileData.email}</ThemedText>
+                        <ThemedText className="font-bold text-2xl mb-2">{userProfile.fullName}</ThemedText>
+                        <ThemedText className="text-base mb-4">{userProfile.email}</ThemedText>
+                        {/* <ThemedText className="text-base mb-4">{userProfile.phoneNumber}</ThemedText> */}
+
 
                         {/* Rating */}
                         <ThemedView className="flex-row items-center mb-4">
                             <Icon as={StarIcon} size="sm" className="text-yellow-500 mr-1" />
-                            <ThemedText className="text-gray-900 font-semibold text-lg mr-2">{profileData.rating}</ThemedText>
-                            <ThemedText className="text-gray-500">({profileData.totalTrips} trips)</ThemedText>
+                            <ThemedText className="text-gray-900 font-semibold text-lg mr-2">{userProfile.profile?.rating?.avg ?? 0}</ThemedText>
+                            <ThemedText className="text-gray-500">({userProfile.profile.rating?.count ?? 0} trips)</ThemedText>
                         </ThemedView>
 
                         {/* Edit Profile Button */}
@@ -87,7 +162,7 @@ export default function ProfileScreen() {
                     </ThemedView>
 
                     {/* Quick Stats */}
-                    <ThemedView className="flex-row justify-around pt-6 border-t border-gray-100">
+                    {/* <ThemedView className="flex-row justify-around pt-6 border-t border-gray-100">
                         <ThemedView className="items-center">
                             <Icon as={StarIcon} size='lg' className='text-[#E75B3B]' ></Icon>
                             <ThemedText className="text-gray-900 font-bold text-xl">{profileData.totalTrips}</ThemedText>
@@ -101,33 +176,87 @@ export default function ProfileScreen() {
                             <ThemedText className="text-gray-900 font-bold text-xl">2+</ThemedText>
                             <ThemedText className="text-gray-500 text-sm">Years</ThemedText>
                         </ThemedView>
-                    </ThemedView>
+                    </ThemedView> */}
                 </ThemedView>
 
 
 
                 {/* Account Info */}
-                <ThemedView className="bg-white mx-4 mt-4 mb-6 rounded-2xl p-6">
+                <ThemedView className="mx-4 mt-4 mb-6 rounded-2xl p-6">
                     <ThemedText className="text-gray-900 font-semibold text-lg mb-4">Account Information</ThemedText>
 
                     <ThemedView className="space-y-3">
                         <ThemedView className="flex-row justify-between">
                             <ThemedText className="text-gray-500">Phone Number</ThemedText>
-                            <ThemedText className="text-gray-900 font-medium">{profileData.phone}</ThemedText>
+                            <ThemedText className="text-gray-900 font-medium">{userProfile.phoneNumber}</ThemedText>
                         </ThemedView>
-                        <ThemedView className="flex-row justify-between">
+                        {/* <ThemedView className="flex-row justify-between">
                             <ThemedText className="text-gray-500">Member Since</ThemedText>
                             <ThemedText className="text-gray-900 font-medium">{profileData.joinDate}</ThemedText>
+                        </ThemedView> */}
+                        <ThemedView className="flex-row justify-between">
+                            <ThemedText className="text-gray-500">KYC Status</ThemedText>
+                            <ThemedView className="flex-row items-center">
+                                <ThemedView className={`w-2 h-2 rounded-full mr-2 ${userProfile.kycStatus === 'pending' ? 'bg-orange-500' : userProfile.kycStatus === 'completed' ? 'bg-green-500' : 'bg-gray-400'
+                                    }`} />
+                                <ThemedText className={`font-medium capitalize ${userProfile.kycStatus === 'completed' ? 'text-green-600' : 'text-gray-600'
+                                    }`}>
+                                    {userProfile.kycStatus}
+                                </ThemedText>
+                            </ThemedView>
+                        </ThemedView>
+
+                          <ThemedView className="flex-row justify-between">
+                            <ThemedText className="text-gray-500">Verification Status</ThemedText>
+                            <ThemedView className="flex-row items-center">
+                                <ThemedView className={`w-2 h-2 rounded-full mr-2 ${userProfile.isVerfied ? 'bg-green-500' : 'bg-gray-400'
+                                    }`} />
+                                <ThemedText className={`font-medium capitalize ${userProfile.isVerfied ? 'text-green-600' : 'text-gray-600'
+                                    }`}>
+                                    {userProfile.isVerfied ? 'Verified' : 'Verified'}
+                                </ThemedText>
+                            </ThemedView>
+                        </ThemedView>
+
+                        <ThemedView className="flex-row justify-between">
+                            <ThemedText className="text-gray-500">Country</ThemedText>
+                            <ThemedView className="flex-row items-center">
+                                <ThemedText className="text-gray-900 font-medium">{userProfile.profile?.country}</ThemedText>
+                            </ThemedView>
                         </ThemedView>
                         <ThemedView className="flex-row justify-between">
-                            <ThemedText className="text-gray-500">Status</ThemedText>
+                            <ThemedText className="text-gray-500">State</ThemedText>
                             <ThemedView className="flex-row items-center">
-                                <ThemedView className={`w-2 h-2 rounded-full mr-2 ${profileData.status === 'online' ? 'bg-green-500' : 'bg-gray-400'
-                                    }`} />
-                                <ThemedText className={`font-medium capitalize ${profileData.status === 'online' ? 'text-green-600' : 'text-gray-600'
-                                    }`}>
-                                    {profileData.status}
+                                <ThemedText className="text-gray-900 font-medium">{userProfile.profile?.state}</ThemedText>
+                            </ThemedView>
+                        </ThemedView>
+
+                        <ThemedView className="flex-row justify-between">
+                            <ThemedText className="text-gray-500">City</ThemedText>
+                            <ThemedView className="flex-row items-center">
+                                <ThemedText className="text-gray-900 font-medium">{userProfile.profile?.city}</ThemedText>
+                            </ThemedView>
+                        </ThemedView>
+
+                        <ThemedView className="flex-row justify-between">
+                            <ThemedText className="text-gray-500">Gender</ThemedText>
+                            <ThemedView className="flex-row items-center">
+                                <ThemedText className="text-gray-900 font-medium">{userProfile.profile?.gender}</ThemedText>
+                            </ThemedView>
+                        </ThemedView>
+                        <ThemedView className="flex-row justify-between">
+                            <ThemedText className="text-gray-500 w-1/3">Address</ThemedText>
+
+                            <ThemedView className="flex-row justify-end w-2/3">
+                                <ThemedText className="text-gray-900 font-medium text-right">
+                                    {userProfile.profile.address}
                                 </ThemedText>
+                            </ThemedView>
+                        </ThemedView>
+                        <ThemedView className="flex-row justify-between">
+                            <ThemedText className="text-gray-500">Available Balance</ThemedText>
+                            <ThemedView className="flex-row items-center">
+                                <ThemedText className="text-gray-900 font-medium">{userProfile.wallet?.availableBalance}</ThemedText>
                             </ThemedView>
                         </ThemedView>
                     </ThemedView>

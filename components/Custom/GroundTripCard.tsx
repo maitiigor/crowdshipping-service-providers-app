@@ -6,6 +6,8 @@ import { useDispatch } from 'react-redux';
 import { useShowToast } from '../../hooks/useShowToast';
 import { GroundTrip } from '../../models';
 import { setGroundTrip } from '../../store/slices/groundTripSlice';
+import { ThemedView } from '../ThemedView';
+import { ThemedText } from '../ThemedText';
 
 interface GroundTripCardProps {
   trip: GroundTrip;

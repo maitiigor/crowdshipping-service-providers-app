@@ -13,6 +13,7 @@ import { Skeleton, SkeletonText } from "@/components/ui/skeleton";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
 import { BellIcon, ChevronLeft } from "lucide-react-native";
+import { useThemeColor } from "../../../hooks/useThemeColor";
 import { useAppDispatch, useAppSelector } from "../../../store";
 import { fetchNotifications } from "../../../store/slices/notificationSlice";
 
@@ -28,6 +29,8 @@ export default function NotificationScreen() {
 
     const notifList = Array.isArray(notifications) ? notifications : [];
     const unreadNotifications = notifList.filter((notif) => !notif.isRead);
+    const color = useThemeColor({}, 'text');
+    const background = useThemeColor({}, 'background')
 
     // Function to fetch notifications
     const refetchNotifications = () => {
@@ -53,11 +56,12 @@ export default function NotificationScreen() {
             headerTitleStyle: { fontSize: 20 }, // Increased font size
             headerShadowVisible: false,
             headerStyle: {
-                backgroundColor: "#FFFFFF",
+                backgroundColor: background,
                 elevation: 0, // Android
                 shadowOpacity: 0, // iOS
                 shadowColor: "transparent", // iOS
                 borderBottomWidth: 0,
+                color: color
             },
             headerLeft: () => (
                 <ThemedView
@@ -85,6 +89,7 @@ export default function NotificationScreen() {
                             <Icon
                                 as={ChevronLeft}
                                 size="3xl"
+                                color={color}
                                 className="text-typography-900"
                             />
                         </TouchableOpacity>
@@ -106,6 +111,7 @@ export default function NotificationScreen() {
         return unsubscribe;
     }, [navigation]);
     return (
+
         <ThemedView className="flex-1 bg-white pt-3">
             <ThemedView className="flex-1 pb-20 px-[18px] overflow-hidden">
                 <ThemedView className="mt-5">
@@ -144,7 +150,7 @@ export default function NotificationScreen() {
                             renderItem={({ item }) => (
                                 <TouchableOpacity
                                     onPress={() => {
-                                        
+
                                         router.push({
                                             pathname: "/screens/notifications/details",
                                             params: {
@@ -195,5 +201,6 @@ export default function NotificationScreen() {
                 </ThemedView>
             </ThemedView>
         </ThemedView>
+
     );
 }

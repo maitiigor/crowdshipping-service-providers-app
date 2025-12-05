@@ -12,6 +12,8 @@ import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Button, ButtonText } from '../../../components/ui/button';
 import { ArrowLeftIcon, Icon, MessageCircleIcon, PhoneIcon, StarIcon, WarningCircle } from '../../../components/ui/icon';
+import { ThemedView } from '../../../components/ThemedView';
+import { ThemedText } from '../../../components/ThemedText';
 
 const { width, height } = Dimensions.get('window');
 
@@ -172,7 +174,7 @@ export default function ArivedLocationScreen() {
                         {/* Location Timeline */}
                         <ThemedView className="px-4 mb-6">
                             {locations.map((location, index) => (
-                                <View key={location.id} className="flex-row mb-4">
+                                <ThemedView key={location.id} className="flex-row mb-4">
                                     {/* Timeline Indicator */}
                                     <ThemedView className="items-center mr-4">
                                         <View

@@ -2,6 +2,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import apiClient, { setAuthToken } from "../../lib/api/client";
 import { ApiError, ApiResponse, AuthState, ForgotPasswordRequest, LoginFormValues, OTPVerificationRequest, RegistrationPayload, ResendOTPRequest, ResetPasswordRequest, User, UserProfile } from "../../models";
+import { getUserProfile } from "./profileSlice";
 
 
 
@@ -35,6 +36,7 @@ const initialState: AuthState = {
     userProfile: {
         _id: "",
         deviceTokens: [],
+        kycStatus: "",
         email: "",
         fullName: "",
         isVerfied: false,
@@ -108,9 +110,10 @@ const authSlice = createSlice({
         },
         setUserProfile(state, action: PayloadAction<UserProfile>) {
             state.userProfile = action.payload;
-
+            console.log("user profile set:", state.userProfile);
             AsyncStorage.setItem("userProfile", JSON.stringify(state.userProfile));
         },
+
         clearPin(state) {
             state.pin = "";
         },
@@ -188,6 +191,10 @@ const authSlice = createSlice({
                     role: "",
                     status: "",
                 };
+            }).addCase(getUserProfile.fulfilled, (state, action) => {
+                if (action.payload?.data) {
+                    state.userProfile = action.payload.data;
+                }
             })
             .addCase(login.fulfilled, (state, action) => {
                 state.loading = false;
@@ -200,6 +207,7 @@ const authSlice = createSlice({
                 state.userProfile.role = state.user.role;
                 state.userProfile.status = state.user.status;
                 state.userProfile.phoneNumber = state.user.phoneNumber;
+                state.userProfile.kycStatus = state.user.kycStatus;
                 state.token = action.payload.data.token;
                 setAuthToken(action.payload.data.token);
 

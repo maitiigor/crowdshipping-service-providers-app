@@ -22,8 +22,7 @@ import {
   Sun,
 } from "lucide-react-native";
 import React, { useEffect, useState } from "react";
-import { ActivityIndicator, Switch, TouchableOpacity } from "react-native";
-import { ScrollView } from "react-native-gesture-handler";
+import { ActivityIndicator, SafeAreaView, Switch, TouchableOpacity } from "react-native";
 import { useAppDispatch, useAppSelector } from "../../../store";
 import { fetchUserPreference, updateUserPreference } from "../../../store/slices/settingSlice";
 
@@ -50,15 +49,15 @@ export default function UserPreference() {
 
 
   // Local state for immediate UI updates
-  const  [enableEmail, setEnableEmail] = useState(false);
-  const    [selectedTheme, setSelectedTheme] = useState<string>("system");
-  const  [enableSms, setEnableSms] = useState(false);
+  const [enableEmail, setEnableEmail] = useState(false);
+  const [selectedTheme, setSelectedTheme] = useState<string>("system");
+  const [enableSms, setEnableSms] = useState(false);
 
   const backgroundColor = useThemeColor({}, "background");
 
   const {
     isLoading,
-  } =  useAppSelector((state) => state.setting);
+  } = useAppSelector((state) => state.setting);
 
 
 
@@ -68,7 +67,7 @@ export default function UserPreference() {
   const handleToggleEmail = async (value: boolean) => {
     setEnableEmail(value);
     try {
-      await dispatch( updateUserPreference({ enableEmail: value })).unwrap();
+      await dispatch(updateUserPreference({ enableEmail: value })).unwrap();
       showNewToast({
         title: "Success",
         description: `Email notifications ${value ? "enabled" : "disabled"}`,
@@ -76,7 +75,7 @@ export default function UserPreference() {
         action: "success",
         variant: "solid",
       });
-      dispatch( fetchUserPreference()).unwrap();
+      dispatch(fetchUserPreference()).unwrap();
     } catch {
       setEnableEmail(!value); // Revert on error
       showNewToast({
@@ -93,13 +92,13 @@ export default function UserPreference() {
 
   // Update local state when data loads
   useEffect(() => {
-   
-    dispatch( fetchUserPreference()).unwrap().then((data: IUserPreferenceResponse) => {
-      
-        saveThemePreference(data.data.theme);
+
+    dispatch(fetchUserPreference()).unwrap().then((data: IUserPreferenceResponse) => {
+
+      saveThemePreference(data.data.theme);
     });
-      // Also save to AsyncStorage to sync with local storage
-    
+    // Also save to AsyncStorage to sync with local storage
+
   }, [dispatch]);
 
   useEffect(() => {
@@ -193,11 +192,11 @@ export default function UserPreference() {
     });
   };
 
-  
+
 
   const handleToggleSms = async (value: boolean) => {
     try {
-        dispatch( updateUserPreference({ enableSms: value })).unwrap();
+      dispatch(updateUserPreference({ enableSms: value })).unwrap();
     } catch {
       showNewToast({
         title: "Error",
@@ -216,7 +215,7 @@ export default function UserPreference() {
       await saveThemePreference(theme);
 
       // Then save to backend
-      await dispatch( updateUserPreference({ theme })).unwrap();
+      await dispatch(updateUserPreference({ theme })).unwrap();
 
       showNewToast({
         title: "Success",
@@ -225,7 +224,7 @@ export default function UserPreference() {
         action: "success",
         variant: "solid",
       });
-      dispatch( fetchUserPreference()).unwrap();
+      dispatch(fetchUserPreference()).unwrap();
     } catch {
       showNewToast({
         title: "Error",
@@ -248,286 +247,282 @@ export default function UserPreference() {
   return (
     <>
       <ParallaxScrollView headerBackgroundColor={{ light: "#FFFFFF", dark: "#1D3D47" }}>
-        <ThemedView className="flex-1 pb-20">
-          {/* Header Section */}
-          <ThemedView className="mt-6 mb-8">
-            <ThemedText type="h3_header" className="text-typography-900 mb-2">
-              Customize Your Experience
-            </ThemedText>
-            <ThemedText type="default" className="text-typography-500">
-              Manage notifications and appearance settings
-            </ThemedText>
-          </ThemedView>
-
-          {/* Notifications Section */}
-          <ThemedView className="mb-8">
-            <ThemedView className="flex-row items-center mb-4">
-              <ThemedView className="w-10 h-10 rounded-full bg-primary-100 items-center justify-center mr-3">
-                <Icon
-                  as={MessageSquare}
-                  size="xl"
-                  className="text-primary-600"
-                />
-              </ThemedView>
-              <ThemedText type="s1_subtitle" className="text-typography-900">
-                Notifications
+        <SafeAreaView className="flex-1">
+          <ThemedView className="flex-1 pb-20">
+            {/* Header Section */}
+            <ThemedView className="mt-6 mb-8">
+              <ThemedText type="h3_header" className="text-typography-900 mb-2">
+                Customize Your Experience
+              </ThemedText>
+              <ThemedText type="default" className="text-typography-500">
+                Manage notifications and appearance settings
               </ThemedText>
             </ThemedView>
 
-            {/* Email Toggle */}
-            <ThemedView className="bg-white rounded-2xl p-4 mb-3 shadow-sm">
-              <ThemedView className="flex-row justify-between items-center">
-                <ThemedView className="flex-row items-center flex-1">
-                  <ThemedView className="w-12 h-12 rounded-xl bg-blue-50 items-center justify-center mr-4">
-                    <Icon as={Mail} size="xl" className="text-blue-600" />
-                  </ThemedView>
-                  <ThemedView className="flex-1">
-                    <ThemedText
-                      type="s1_subtitle"
-                      className="text-typography-900 mb-1"
-                    >
-                      Email Notifications
-                    </ThemedText>
-                    <ThemedText
-                      type="default"
-                      className="text-typography-500 text-sm"
-                    >
-                      Receive updates via email
-                    </ThemedText>
-                  </ThemedView>
+            {/* Notifications Section */}
+            <ThemedView className="mb-8">
+              <ThemedView className="flex-row items-center mb-4">
+                <ThemedView className="w-10 h-10 rounded-full bg-primary-100 items-center justify-center mr-3">
+                  <Icon
+                    as={MessageSquare}
+                    size="xl"
+                    className="text-primary-600"
+                  />
                 </ThemedView>
-                <Switch
-                  value={enableEmail}
-                  onValueChange={handleToggleEmail}
-                  trackColor={{ false: "#E5E7EB", true: "#93C5FD" }}
-                  thumbColor={enableEmail ? "#3B82F6" : "#F3F4F6"}
-                  ios_backgroundColor="#E5E7EB"
-                  disabled={isLoading}
-                />
+                <ThemedText type="s1_subtitle" className="text-typography-900">
+                  Notifications
+                </ThemedText>
               </ThemedView>
-            </ThemedView>
 
-            {/* SMS Toggle */}
-            <ThemedView className="bg-white rounded-2xl p-4 shadow-sm">
-              <ThemedView className="flex-row justify-between items-center">
-                <ThemedView className="flex-row items-center flex-1">
-                  <ThemedView className="w-12 h-12 rounded-xl bg-green-50 items-center justify-center mr-4">
-                    <Icon
-                      as={Smartphone}
-                      size="xl"
-                      className="text-green-600"
-                    />
-                  </ThemedView>
-                  <ThemedView className="flex-1">
-                    <ThemedText
-                      type="s1_subtitle"
-                      className="text-typography-900 mb-1"
-                    >
-                      SMS Notifications
-                    </ThemedText>
-                    <ThemedText
-                      type="default"
-                      className="text-typography-500 text-sm"
-                    >
-                      Receive updates via SMS
-                    </ThemedText>
-                  </ThemedView>
-                </ThemedView>
-                <Switch
-                  value={enableSms}
-                  onValueChange={handleToggleSms}
-                  trackColor={{ false: "#E5E7EB", true: "#86EFAC" }}
-                  thumbColor={enableSms ? "#10B981" : "#F3F4F6"}
-                  ios_backgroundColor="#E5E7EB"
-                  disabled={isLoading}
-                />
-              </ThemedView>
-            </ThemedView>
-          </ThemedView>
-
-          {/* Theme Section */}
-          <ThemedView className="mb-8">
-            <ThemedView className="flex-row items-center mb-4">
-              <ThemedView className="w-10 h-10 rounded-full bg-purple-100 items-center justify-center mr-3">
-                <Icon as={Sun} size="xl" className="text-purple-600" />
-              </ThemedView>
-              <ThemedText type="s1_subtitle" className="text-typography-900">
-                Appearance
-              </ThemedText>
-            </ThemedView>
-
-            {/* Theme Options */}
-            <ThemedView className="bg-white rounded-2xl p-4 shadow-sm">
-              {/* Light Theme */}
-              <TouchableOpacity
-                onPress={() => handleThemeChange("light")}
-                disabled={isLoading}
-                className="mb-3"
-              >
-                <ThemedView
-                  className={`flex-row justify-between items-center p-4 rounded-xl ${
-                    selectedTheme === "light"
-                      ? "bg-yellow-50 border-2 border-yellow-400"
-                      : "bg-gray-50"
-                  }`}
-                >
+              {/* Email Toggle */}
+              <ThemedView className="bg-white rounded-2xl p-4 mb-3 shadow-sm">
+                <ThemedView className="flex-row justify-between items-center">
                   <ThemedView className="flex-row items-center flex-1">
-                    <ThemedView
-                      className={`w-10 h-10 rounded-full items-center justify-center mr-4 ${
-                        selectedTheme === "light" ? "bg-yellow-100" : "bg-white"
-                      }`}
-                    >
-                      <Icon
-                        as={Sun}
-                        size="lg"
-                        className={
-                          selectedTheme === "light"
-                            ? "text-yellow-600"
-                            : "text-gray-500"
-                        }
-                      />
+                    <ThemedView className="w-12 h-12 rounded-xl bg-blue-50 items-center justify-center mr-4">
+                      <Icon as={Mail} size="xl" className="text-blue-600" />
                     </ThemedView>
-                    <ThemedView>
+                    <ThemedView className="flex-1">
                       <ThemedText
                         type="s1_subtitle"
-                        className={
-                          selectedTheme === "light"
-                            ? "text-yellow-900"
-                            : "text-typography-700"
-                        }
+                        className="text-typography-900 mb-1"
                       >
-                        Light Mode
+                        Email Notifications
                       </ThemedText>
                       <ThemedText
                         type="default"
-                        className="text-typography-500 text-xs mt-1"
+                        className="text-typography-500 text-sm"
                       >
-                        Bright and clear
+                        Receive updates via email
                       </ThemedText>
                     </ThemedView>
                   </ThemedView>
-                  {selectedTheme === "light" && (
-                    <Icon as={Check} size="xl" className="text-yellow-600" />
-                  )}
+                  <Switch
+                    value={enableEmail}
+                    onValueChange={handleToggleEmail}
+                    trackColor={{ false: "#E5E7EB", true: "#93C5FD" }}
+                    thumbColor={enableEmail ? "#3B82F6" : "#F3F4F6"}
+                    ios_backgroundColor="#E5E7EB"
+                    disabled={isLoading}
+                  />
                 </ThemedView>
-              </TouchableOpacity>
+              </ThemedView>
 
-              {/* Dark Theme */}
-              <TouchableOpacity
-                onPress={() => handleThemeChange("dark")}
-                disabled={isLoading}
-                className="mb-3"
-              >
-                <ThemedView
-                  className={`flex-row justify-between items-center p-4 rounded-xl ${
-                    selectedTheme === "dark"
-                      ? "bg-indigo-50 border-2 border-indigo-400"
-                      : "bg-gray-50"
-                  }`}
-                >
+              {/* SMS Toggle */}
+              <ThemedView className="bg-white rounded-2xl p-4 shadow-sm">
+                <ThemedView className="flex-row justify-between items-center">
                   <ThemedView className="flex-row items-center flex-1">
-                    <ThemedView
-                      className={`w-10 h-10 rounded-full items-center justify-center mr-4 ${
-                        selectedTheme === "dark" ? "bg-indigo-100" : "bg-white"
-                      }`}
-                    >
-                      <Icon
-                        as={Moon}
-                        size="lg"
-                        className={
-                          selectedTheme === "dark"
-                            ? "text-indigo-600"
-                            : "text-gray-500"
-                        }
-                      />
-                    </ThemedView>
-                    <ThemedView>
-                      <ThemedText
-                        type="s1_subtitle"
-                        className={
-                          selectedTheme === "dark"
-                            ? "text-indigo-900"
-                            : "text-typography-700"
-                        }
-                      >
-                        Dark Mode
-                      </ThemedText>
-                      <ThemedText
-                        type="default"
-                        className="text-typography-500 text-xs mt-1"
-                      >
-                        Easy on the eyes
-                      </ThemedText>
-                    </ThemedView>
-                  </ThemedView>
-                  {selectedTheme === "dark" && (
-                    <Icon as={Check} size="xl" className="text-indigo-600" />
-                  )}
-                </ThemedView>
-              </TouchableOpacity>
-
-              {/* System Theme */}
-              <TouchableOpacity
-                onPress={() => handleThemeChange("system")}
-                disabled={isLoading}
-              >
-                <ThemedView
-                  className={`flex-row justify-between items-center p-4 rounded-xl ${
-                    selectedTheme === "system"
-                      ? "bg-blue-50 border-2 border-blue-400"
-                      : "bg-gray-50"
-                  }`}
-                >
-                  <ThemedView className="flex-row items-center flex-1">
-                    <ThemedView
-                      className={`w-10 h-10 rounded-full items-center justify-center mr-4 ${
-                        selectedTheme === "system" ? "bg-blue-100" : "bg-white"
-                      }`}
-                    >
+                    <ThemedView className="w-12 h-12 rounded-xl bg-green-50 items-center justify-center mr-4">
                       <Icon
                         as={Smartphone}
-                        size="lg"
-                        className={
-                          selectedTheme === "system"
-                            ? "text-blue-600"
-                            : "text-gray-500"
-                        }
+                        size="xl"
+                        className="text-green-600"
                       />
                     </ThemedView>
-                    <ThemedView>
+                    <ThemedView className="flex-1">
                       <ThemedText
                         type="s1_subtitle"
-                        className={
-                          selectedTheme === "system"
-                            ? "text-blue-900"
-                            : "text-typography-700"
-                        }
+                        className="text-typography-900 mb-1"
                       >
-                        System Default
+                        SMS Notifications
                       </ThemedText>
                       <ThemedText
                         type="default"
-                        className="text-typography-500 text-xs mt-1"
+                        className="text-typography-500 text-sm"
                       >
-                        Follow device settings
+                        Receive updates via SMS
                       </ThemedText>
                     </ThemedView>
                   </ThemedView>
-                  {selectedTheme === "system" && (
-                    <Icon as={Check} size="xl" className="text-blue-600" />
-                  )}
+                  <Switch
+                    value={enableSms}
+                    onValueChange={handleToggleSms}
+                    trackColor={{ false: "#E5E7EB", true: "#86EFAC" }}
+                    thumbColor={enableSms ? "#10B981" : "#F3F4F6"}
+                    ios_backgroundColor="#E5E7EB"
+                    disabled={isLoading}
+                  />
                 </ThemedView>
-              </TouchableOpacity>
+              </ThemedView>
+            </ThemedView>
+
+            {/* Theme Section */}
+            <ThemedView className="mb-8">
+              <ThemedView className="flex-row items-center mb-4">
+                <ThemedView className="w-10 h-10 rounded-full bg-purple-100 items-center justify-center mr-3">
+                  <Icon as={Sun} size="xl" className="text-purple-600" />
+                </ThemedView>
+                <ThemedText type="s1_subtitle" className="text-typography-900">
+                  Appearance
+                </ThemedText>
+              </ThemedView>
+
+              {/* Theme Options */}
+              <ThemedView className="bg-white rounded-2xl p-4 shadow-sm">
+                {/* Light Theme */}
+                <TouchableOpacity
+                  onPress={() => handleThemeChange("light")}
+                  disabled={isLoading}
+                  className="mb-3"
+                >
+                  <ThemedView
+                    className={`flex-row justify-between items-center p-4 rounded-xl ${selectedTheme === "light"
+                      ? "bg-yellow-50 border-2 border-yellow-400"
+                      : "bg-gray-50"
+                      }`}
+                  >
+                    <ThemedView className="flex-row items-center flex-1">
+                      <ThemedView
+                        className={`w-10 h-10 rounded-full items-center justify-center mr-4 ${selectedTheme === "light" ? "bg-yellow-100" : "bg-white"
+                          }`}
+                      >
+                        <Icon
+                          as={Sun}
+                          size="lg"
+                          className={
+                            selectedTheme === "light"
+                              ? "text-yellow-600"
+                              : "text-gray-500"
+                          }
+                        />
+                      </ThemedView>
+                      <ThemedView>
+                        <ThemedText
+                          type="s1_subtitle"
+                          className={
+                            selectedTheme === "light"
+                              ? "text-yellow-900"
+                              : "text-typography-700"
+                          }
+                        >
+                          Light Mode
+                        </ThemedText>
+                        <ThemedText
+                          type="default"
+                          className="text-typography-500 text-xs mt-1"
+                        >
+                          Bright and clear
+                        </ThemedText>
+                      </ThemedView>
+                    </ThemedView>
+                    {selectedTheme === "light" && (
+                      <Icon as={Check} size="xl" className="text-yellow-600" />
+                    )}
+                  </ThemedView>
+                </TouchableOpacity>
+
+                {/* Dark Theme */}
+                <TouchableOpacity
+                  onPress={() => handleThemeChange("dark")}
+                  disabled={isLoading}
+                  className="mb-3"
+                >
+                  <ThemedView
+                    className={`flex-row justify-between items-center p-4 rounded-xl ${selectedTheme === "dark"
+                      ? "bg-indigo-50 border-2 border-indigo-400"
+                      : "bg-gray-50"
+                      }`}
+                  >
+                    <ThemedView className="flex-row items-center flex-1">
+                      <ThemedView
+                        className={`w-10 h-10 rounded-full items-center justify-center mr-4 ${selectedTheme === "dark" ? "bg-indigo-100" : "bg-white"
+                          }`}
+                      >
+                        <Icon
+                          as={Moon}
+                          size="lg"
+                          className={
+                            selectedTheme === "dark"
+                              ? "text-indigo-600"
+                              : "text-gray-500"
+                          }
+                        />
+                      </ThemedView>
+                      <ThemedView>
+                        <ThemedText
+                          type="s1_subtitle"
+                          className={
+                            selectedTheme === "dark"
+                              ? "text-indigo-900"
+                              : "text-typography-700"
+                          }
+                        >
+                          Dark Mode
+                        </ThemedText>
+                        <ThemedText
+                          type="default"
+                          className="text-typography-500 text-xs mt-1"
+                        >
+                          Easy on the eyes
+                        </ThemedText>
+                      </ThemedView>
+                    </ThemedView>
+                    {selectedTheme === "dark" && (
+                      <Icon as={Check} size="xl" className="text-indigo-600" />
+                    )}
+                  </ThemedView>
+                </TouchableOpacity>
+
+                {/* System Theme */}
+                <TouchableOpacity
+                  onPress={() => handleThemeChange("system")}
+                  disabled={isLoading}
+                >
+                  <ThemedView
+                    className={`flex-row justify-between items-center p-4 rounded-xl ${selectedTheme === "system"
+                      ? "bg-blue-50 border-2 border-blue-400"
+                      : "bg-gray-50"
+                      }`}
+                  >
+                    <ThemedView className="flex-row items-center flex-1">
+                      <ThemedView
+                        className={`w-10 h-10 rounded-full items-center justify-center mr-4 ${selectedTheme === "system" ? "bg-blue-100" : "bg-white"
+                          }`}
+                      >
+                        <Icon
+                          as={Smartphone}
+                          size="lg"
+                          className={
+                            selectedTheme === "system"
+                              ? "text-blue-600"
+                              : "text-gray-500"
+                          }
+                        />
+                      </ThemedView>
+                      <ThemedView>
+                        <ThemedText
+                          type="s1_subtitle"
+                          className={
+                            selectedTheme === "system"
+                              ? "text-blue-900"
+                              : "text-typography-700"
+                          }
+                        >
+                          System Default
+                        </ThemedText>
+                        <ThemedText
+                          type="default"
+                          className="text-typography-500 text-xs mt-1"
+                        >
+                          Follow device settings
+                        </ThemedText>
+                      </ThemedView>
+                    </ThemedView>
+                    {selectedTheme === "system" && (
+                      <Icon as={Check} size="xl" className="text-blue-600" />
+                    )}
+                  </ThemedView>
+                </TouchableOpacity>
+              </ThemedView>
+            </ThemedView>
+
+            {/* Info Section */}
+            <ThemedView className="bg-blue-50 rounded-2xl p-4 mb-6">
+              <ThemedText type="default" className="text-blue-900 text-center">
+                💡 Changes are saved automatically
+              </ThemedText>
             </ThemedView>
           </ThemedView>
-
-          {/* Info Section */}
-          <ThemedView className="bg-blue-50 rounded-2xl p-4 mb-6">
-            <ThemedText type="default" className="text-blue-900 text-center">
-              💡 Changes are saved automatically
-            </ThemedText>
-          </ThemedView>
-        </ThemedView>
+        </SafeAreaView>
       </ParallaxScrollView>
     </>
   );

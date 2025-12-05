@@ -110,7 +110,7 @@ const SkeletonText = forwardRef<
               {...props}
             />
           ))}
-        </ThemedView>
+        </View>
       );
     } else {
       return (

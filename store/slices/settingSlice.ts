@@ -39,8 +39,7 @@ const settingSlice = createSlice({
             state.enableEmail = action.payload.enableEmail;
             state.enableSms = action.payload.enableSms;
             state.theme = action.payload.theme;
-        });
-        builder.addCase(fetchUserPreference.fulfilled, (state, action) => {
+        }).addCase(fetchUserPreference.fulfilled, (state, action) => {
             state.enableEmail = action.payload.enableEmail;
             state.enableSms = action.payload.enableSms;
             state.theme = action.payload.theme;
@@ -50,10 +49,11 @@ const settingSlice = createSlice({
 
 
 export const updateUserPreference = createAsyncThunk(
-  "setting/fetchUserPreference",
+  "setting/updateUserPreference"
+,
   async (preference: any, { rejectWithValue }) => {
     try {
-          const response =  await apiClient.patch("/user/preferences", preference);
+          const response =  await apiClient.patch("/user/preference", preference);
 
             // dispatch(setEnableEmail(preference.enableEmail));
             // dispatch(setEnableSms(preference.enableSms));
@@ -72,7 +72,7 @@ export const fetchUserPreference = createAsyncThunk(
   "setting/fetchUserPreference",
   async (_, { rejectWithValue }) => {
     try {
-          const response =  await apiClient.get("/user/preferences");
+          const response =  await apiClient.get("/user/preference");
             console.log("fetch user preference response:", response.data);
             return response.data;
 

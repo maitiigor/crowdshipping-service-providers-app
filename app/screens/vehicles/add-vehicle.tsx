@@ -30,6 +30,7 @@ import {
 } from "../../../components/ui/select/select-actionsheet";
 import { useEditProfileForm } from "../../../hooks/useRedux";
 import { useShowToast } from '../../../hooks/useShowToast';
+import { useThemeColor } from "../../../hooks/useThemeColor";
 import { AppDispatch, useAppSelector } from "../../../store";
 import { uploadDocument } from "../../../store/slices/profileSlice";
 import { addVehicle, fetchVehicleCategories } from "../../../store/slices/vechileSlice";
@@ -133,6 +134,8 @@ export default function AddvehicleScreen() {
     };
 
     const navigation = useNavigation();
+    const background = useThemeColor({}, 'background');
+    const color = useThemeColor({}, 'text');
 
     useEffect(() => {
         navigation.setOptions({
@@ -140,7 +143,7 @@ export default function AddvehicleScreen() {
             headerTitle: () => {
                 return (
                     <ThemedText type="s1_subtitle" className="text-center">
-                        Notifications
+                        Add Vechicle
                     </ThemedText>
                 );
             },
@@ -148,11 +151,12 @@ export default function AddvehicleScreen() {
             headerTitleStyle: { fontSize: 20 }, // Increased font size
             headerShadowVisible: false,
             headerStyle: {
-                backgroundColor: "#FFFFFF",
+                backgroundColor: background,
                 elevation: 0, // Android
                 shadowOpacity: 0, // iOS
                 shadowColor: "transparent", // iOS
                 borderBottomWidth: 0,
+                color: color
             },
             headerLeft: () => (
                 <ThemedView
@@ -171,6 +175,7 @@ export default function AddvehicleScreen() {
                             shadowOpacity: 0.102,
                             shadowRadius: 2,
                             elevation: 2,
+
                         }}
                     >
                         <TouchableOpacity
@@ -180,6 +185,7 @@ export default function AddvehicleScreen() {
                             <Icon
                                 as={ChevronLeft}
                                 size="3xl"
+                                color={color}
                                 className="text-typography-900"
                             />
                         </TouchableOpacity>

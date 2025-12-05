@@ -1,7 +1,7 @@
-import { router } from 'expo-router';
+import { router, useNavigation } from 'expo-router';
 import { Formik } from 'formik';
-import { CircleCheckIcon, HelpCircleIcon, Plus } from 'lucide-react-native';
-import React, { useState } from 'react';
+import { ChevronLeft, CircleCheckIcon, HelpCircleIcon, Plus } from 'lucide-react-native';
+import React, { useEffect, useState } from 'react';
 import {
     ActivityIndicator,
     ScrollView,
@@ -21,6 +21,9 @@ import { ArrowLeftIcon, BellIcon, Icon } from '../../../components/ui/icon';
 import { Airport, ApiError } from '../../../models';
 import { useAppDispatch, useAppSelector } from '../../../store';
 import { saveAirTrip } from '../../../store/slices/airTripSlice';
+import { useShowToast } from '../../../hooks/useShowToast';
+import { useThemeColor } from '../../../hooks/useThemeColor';
+import NotificationIcon from '../../../components/Custom/NotificationIcon';
 
 interface FormData {
     departureCity: string;
@@ -45,7 +48,7 @@ export default function GroundTripScreen() {
         availableCapacityDimensions: '',
     });
     const dispatch = useAppDispatch();
-    const { airTrip, trips, loading, error } = useAppSelector((state) => state.airTrip);
+    const { airTrip, loading, error } = useAppSelector((state) => state.airTrip);
 
     const validationSchema = Yup.object().shape({
         departureCity: Yup.string().required("Departure city is required"),
@@ -165,27 +168,75 @@ export default function GroundTripScreen() {
         // router.navigate('/screens/dashboard/review-bids')
     };
 
+    const navigation = useNavigation();
+      const color = useThemeColor({}, 'text');
+      const background = useThemeColor({},'background');
+
+
+      useEffect(() => {
+            navigation.setOptions({
+                headerShown: true,
+                headerTitle: () => {
+                    return (
+                        <ThemedText type="s1_subtitle" className="text-center">
+                            Post a trip
+                        </ThemedText>
+                    );
+                },
+                headerTitleAlign: "center",
+                headerTitleStyle: { fontSize: 20 }, // Increased font size
+                headerShadowVisible: false,
+                headerStyle: {
+                    backgroundColor: background,
+                    elevation: 0, // Android
+                    shadowOpacity: 0, // iOS
+                    shadowColor: "transparent", // iOS
+                    borderBottomWidth: 0,
+                    color: color
+                },
+                headerLeft: () => (
+                    <ThemedView
+                        style={{
+                            shadowColor: "#FDEFEB1A",
+                            shadowOffset: { width: 0, height: 1 },
+                            shadowOpacity: 0.102,
+                            shadowRadius: 3,
+                            elevation: 4,
+                        }}
+                    >
+                        <ThemedView
+                            style={{
+                                shadowColor: "#0000001A",
+                                shadowOffset: { width: 0, height: 1 },
+                                shadowOpacity: 0.102,
+                                shadowRadius: 2,
+                                elevation: 2,
+                            }}
+                        >
+                            <TouchableOpacity
+                                onPress={() => navigation.goBack()}
+                                className="p-2 rounded   flex justify-center items-center"
+                            >
+                                <Icon
+                                    as={ChevronLeft}
+                                    size="3xl"
+                                    color={color}
+                                    className="text-typography-900"
+                                />
+                            </TouchableOpacity>
+                        </ThemedView>
+                    </ThemedView>
+                ),
+                headerRight: () => <NotificationIcon />,
+            });
+        }, [navigation, router]);
+
 
 
     return (
         <SafeAreaView className="flex-1 bg-gray-50">
             <StatusBar barStyle="dark-content" backgroundColor="white" />
 
-            {/* Header */}
-            <ThemedView className="bg-white h-16 px-4 flex-row items-center justify-between border-b border-gray-200">
-                <TouchableOpacity className="p-2" onPress={() => router.back()}>
-                    <Icon as={ArrowLeftIcon} size="lg" className="text-gray-700" />
-                </TouchableOpacity>
-
-                <ThemedText className="text-lg font-semibold text-gray-900">Post Your Trip</ThemedText>
-
-                <TouchableOpacity className="p-2">
-                    <ThemedView className="relative">
-                        <Icon as={BellIcon} size="lg" className="text-[#E75B3B]" />
-                        <ThemedView className="absolute -top-1 -right-1 w-2 h-2 bg-red-500 rounded-full" />
-                    </ThemedView>
-                </TouchableOpacity>
-            </ThemedView>
             <Formik initialValues={formData} validationSchema={validationSchema} onSubmit={handlePostTrip}>
                 {({ handleChange, handleSubmit, values, errors, touched, setFieldValue }) => (
                     <ScrollView className="flex-1" showsVerticalScrollIndicator={false}>

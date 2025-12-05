@@ -1,6 +1,7 @@
 import React from 'react';
 import { View } from 'react-native';
 import { useEditProfileForm } from '../hooks/useRedux';
+import { ThemedView } from './ThemedView';
 
 interface ProgressIndicatorProps {
   className?: string;

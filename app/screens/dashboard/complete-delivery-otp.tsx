@@ -15,6 +15,8 @@ import { useShowToast } from '../../../hooks/useShowToast';
 import { useAppDispatch, useAppSelector } from '../../../store';
 import { updateTripStatus } from '../../../store/slices/groundTripSlice';
 import { resendDeliveryOtp } from '../../../store/slices/tripManagementSlice';
+import { ThemedView } from '../../../components/ThemedView';
+import { ThemedText } from '../../../components/ThemedText';
 
 const { width, height } = Dimensions.get('window');
 

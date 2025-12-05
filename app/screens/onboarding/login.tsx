@@ -27,6 +27,7 @@ import { ApiError, LoginFormValues } from '../../../models';
 import { AppDispatch, useAppSelector } from '../../../store';
 import { login, setHasLaunched, setRestoring } from '../../../store/slices/authSlice';
 import { getUserProfile } from '../../../store/slices/profileSlice';
+import { ScrollView } from 'react-native-gesture-handler';
 
 
 // Validation Schema
@@ -162,15 +163,16 @@ export default function LoginScreen() {
     };
 
     return (
-        <SafeAreaView className="flex-1 bg-white">
+        
+        <SafeAreaView className="flex-1">
             <StatusBar barStyle="dark-content" backgroundColor="white" />
 
             <KeyboardAvoidingView
                 behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
                 className="flex-1"
             >
-                <ParallaxScrollView
-                    headerBackgroundColor={{ light: "white", dark: "#353636" }}
+                <ScrollView
+                
                 >
                     {/* Header */}
                     <ThemedView className="flex-row items-center justify-between px-6 py-4">
@@ -219,7 +221,7 @@ export default function LoginScreen() {
                                             className={`${errors.email && touched.email
                                                 ? 'border-red-500'
                                                 : 'border-gray-300'
-                                                } bg-rose-50 border-0 rounded-lg px-4 py mb-3-6 min-h-[54px]`}
+                                                } bg-rose-50 border-0 rounded-lg px-4 py mb-3 min-h-[54px]`}
                                         >
                                             <InputField
                                                 placeholder="user@gmail.com"
@@ -336,7 +338,7 @@ export default function LoginScreen() {
                             )}
                         </Formik>
                     </ThemedView>
-                </ParallaxScrollView>
+                </ScrollView>
 
                 {/* Bottom Sign Up Link */}
                 <ThemedView className="px-6 py-6 border-t border-gray-200">

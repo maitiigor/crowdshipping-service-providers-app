@@ -4,6 +4,8 @@ import { TouchableOpacity } from "react-native";
 import { useAppDispatch, useAppSelector } from "../store";
 import { fetchNotifications } from "../store/slices/notificationSlice";
 import { BellNotification, Icon } from "./ui/icon";
+import { ThemedView } from "./ThemedView";
+import { ThemedText } from "./ThemedText";
 
 export default function NotificationIconComponent() {
   const dispatch = useAppDispatch();

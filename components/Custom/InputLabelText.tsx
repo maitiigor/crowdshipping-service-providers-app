@@ -1,5 +1,6 @@
 import React from "react";
 import { ThemedText } from "../ThemedText";
+import { ThemedView } from "../ThemedView";
 
 interface IProps {
   children: React.ReactNode;

@@ -3,13 +3,15 @@
   "compilerOptions": {
     "strict": true,
     "skipLibCheck": true,
+    "module": "commonjs",
     "paths": {
       "@/*": ["./*"],
       "tailwind.config": ["./tailwind.config.js"],
       "tailwind-variants/dist/config": [
         "./node_modules/tailwind-variants/dist/config"
       ]
-    }
+    },
+    "jsx": "react-native"
   },
   "include": [
     "**/*.ts",

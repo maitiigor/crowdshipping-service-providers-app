@@ -265,7 +265,7 @@ export function AddressPicker({
                   console.warn("WebView error: ", nativeEvent);
                 }}
               />
-            </ThemedView>
+            </View>
           </ModalBody>
           <ModalFooter>
             <Button

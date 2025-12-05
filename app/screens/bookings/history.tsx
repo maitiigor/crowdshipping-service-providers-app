@@ -303,7 +303,7 @@ export default function BookingHistoryScreen() {
                             >
                                 <ThemedView className="items-center">
                                     <IconComponent isActive={isActive} />
-                                    <Text
+                                    <ThemedText
                                         className={`mt-2 text-sm capitalize ${isActive ? 'text-white font-medium' : 'text-gray-700'
                                             }`}
                                     >
@@ -325,7 +325,7 @@ export default function BookingHistoryScreen() {
                             )}`}
                             onPress={() => setActiveTabCategory(status as BookingStatus)}
                         >
-                            <Text
+                            <ThemedText
                                 className={`${getActiveTab() === status ? 'text-white' : 'text-gray-600'
                                     } text-sm font-medium`}
                             >

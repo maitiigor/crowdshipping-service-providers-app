@@ -4,6 +4,8 @@ import { router } from 'expo-router';
 import React, { useState } from 'react';
 import { FlatList, KeyboardAvoidingView, Platform, Text, TextInput, TouchableOpacity, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { ThemedView } from '../../../components/ThemedView';
+import { ThemedText } from '../../../components/ThemedText';
 
 interface Message {
     id: string;
@@ -73,7 +75,7 @@ export default function LiveChatScreen() {
 
     const renderMessage = ({ item }: { item: Message }) => (
         <ThemedView className={`mb-4 ${item.isOwn ? 'items-end' : 'items-start'}`}>
-            <View
+            <ThemedView
                 className={`max-w-[80%] px-4 py-3 rounded-2xl ${item.isOwn
                     ? 'bg-[#E75B3B] rounded-br-md'
                     : 'bg-gray-100 rounded-bl-md'

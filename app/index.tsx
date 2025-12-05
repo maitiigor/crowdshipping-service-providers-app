@@ -38,5 +38,5 @@ export default function AppIndex() {
         return <Redirect href="/screens/onboarding/edit-profile" />;
     }
 
-    return <Redirect href="/screens/onboarding/login" />;
+    return <Redirect href="/screens/onboarding/login"/>;
 }

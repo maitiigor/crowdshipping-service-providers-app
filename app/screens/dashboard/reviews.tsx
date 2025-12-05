@@ -4,6 +4,8 @@ import { router } from 'expo-router';
 import React from 'react';
 import { ScrollView, Text, TouchableOpacity, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { ThemedView } from '../../../components/ThemedView';
+import { ThemedText } from '../../../components/ThemedText';
 
 interface Review {
     id: string;
@@ -141,7 +143,7 @@ export default function ReviewsScreen() {
                             const percentage = (count / totalReviews) * 100;
 
                             return (
-                                <View key={stars} className="flex-row items-center mb-2">
+                                <ThemedView key={stars} className="flex-row items-center mb-2">
                                     <ThemedText className="text-gray-600 text-sm w-8">{stars}</ThemedText>
                                     <Icon as={StarIcon} size="sm" className="text-yellow-500 mr-2" />
                                     <ThemedView className="flex-1 bg-gray-200 rounded-full h-2 mr-3">

@@ -20,6 +20,7 @@ import { useShowToast } from '../../../hooks/useShowToast';
 import { ApiError } from '../../../models';
 import { useAppDispatch, useAppSelector } from '../../../store';
 import { negotiateBid } from '../../../store/slices/bidSlice';
+import { ThemedText } from '../../../components/ThemedText';
 
 interface SuccessModalProps {
     visible: boolean;
@@ -97,7 +98,7 @@ export default function NegotiateBidScreen() {
         const bid = bids.find(b => b._id === bidId);
 
         return (<ThemedView className="bg-white my-4 rounded-xl mb-3 shadow-lg px-4">
-            <ThemedText className="text-lg font-semibold text-gray-900 mb-3">Bid Summary</ThemedText>
+            <ThemedText  className="text-lg font-semibold text-gray-900 mb-3">Bid Summary</ThemedText>
 
             <ThemedView className="flex-row space-between items-center mb-3">
                 <ThemedText className="text-gray-600 text-lg flex-1 w-1/3" >Trip ID</ThemedText>

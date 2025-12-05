@@ -11,6 +11,9 @@ import {
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Icon, SearchIcon } from '../../components/ui/icon';
 import { changeAppLanguage, LANGUAGE_STORAGE_KEY } from '../../lib/i18n';
+import { ThemedView } from '../../components/ThemedView';
+import { ThemedText } from '../../components/ThemedText';
+import ParallaxScrollView from '../../components/Custom/ParallaxScrollView';
 
 interface Language {
     code: string;
@@ -83,7 +86,8 @@ export default function LanguageSelectionScreen() {
     const selectedLanguageName = languages.find(lang => lang.code === selectedLanguage)?.name || '';
 
     return (
-        <SafeAreaView className="flex-1 bg-white">
+           <ParallaxScrollView headerBackgroundColor={{ light: "#FFFFFF", dark: "#353636" }}>
+
             <StatusBar barStyle="dark-content" backgroundColor="white" />
 
             {/* Header */}
@@ -185,6 +189,6 @@ export default function LanguageSelectionScreen() {
                     </TouchableOpacity>
                 </ThemedView>
             )}
-        </SafeAreaView>
+        </ParallaxScrollView>
     );
 }

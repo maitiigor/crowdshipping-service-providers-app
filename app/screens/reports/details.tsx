@@ -1,14 +1,21 @@
 'use client';
-import { ArrowLeftIcon, BellIcon, Icon } from '@/components/ui/icon';
-import { router, useLocalSearchParams } from 'expo-router';
-import React from 'react';
+import { Icon } from '@/components/ui/icon';
+import dayjs from 'dayjs';
+import { router, useLocalSearchParams, useNavigation } from 'expo-router';
+import { ChevronLeft, MessageCircleCode, MessageCircleMore } from 'lucide-react-native';
+import React, { useEffect } from 'react';
 import { ScrollView, TouchableOpacity } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import NotificationIcon from '../../../components/Custom/NotificationIcon';
+import { ThemedText } from '../../../components/ThemedText';
+import { ThemedView } from '../../../components/ThemedView';
+import { useThemeColor } from '../../../hooks/useThemeColor';
 
 export default function ReportDetailsScreen() {
     const params = useLocalSearchParams();
 
     const reportData = {
+        id: params.id as string || '1',
         reportId: params.reportId as string || 'ID4927393',
         type: params.type as string || 'Delivery Issue',
         description: params.description as string || 'I got to the client late because my tire damaged on my way to deliver.',
@@ -32,66 +39,119 @@ export default function ReportDetailsScreen() {
         router.push('/screens/support/live-chat');
     };
 
+    const navigation = useNavigation();
+    const color = useThemeColor({},'text');
+    const background = useThemeColor({},'background');
+
+     useEffect(() => {
+                navigation.setOptions({
+                    headerShown: true,
+                    headerTitle: () => {
+                        return (
+                            <ThemedText type="s1_subtitle" className="text-center font-bold text-xl">
+                                Report
+                            </ThemedText>
+                        );
+                    },
+                    headerTitleAlign: "center",
+                    headerTitleStyle: { fontSize: 20 }, // Increased font size
+                    headerShadowVisible: false,
+                    headerStyle: {
+                        backgroundColor: background,
+                        elevation: 0, // Android
+                        shadowOpacity: 0, // iOS
+                        shadowColor: "transparent", // iOS
+                        borderBottomWidth: 0,
+                        color: color
+                    },
+                    headerLeft: () => (
+                        <ThemedView
+                            style={{
+                                shadowColor: "#FDEFEB1A",
+                                shadowOffset: { width: 0, height: 1 },
+                                shadowOpacity: 0.102,
+                                shadowRadius: 3,
+                                elevation: 4,
+                            }}
+                        >
+                            <ThemedView
+                                style={{
+                                    shadowColor: "#0000001A",
+                                    shadowOffset: { width: 0, height: 1 },
+                                    shadowOpacity: 0.102,
+                                    shadowRadius: 2,
+                                    elevation: 2,
+                                }}
+                            >
+                                <TouchableOpacity
+                                    onPress={() => navigation.goBack()}
+                                    className="p-2 rounded   flex justify-center items-center"
+                                >
+                                    <Icon
+                                        as={ChevronLeft}
+                                        size="3xl"
+                                        color={color}
+                                        className="text-typography-900"
+                                    />
+                                </TouchableOpacity>
+                            </ThemedView>
+                        </ThemedView>
+                    ),
+                    headerRight: () => (
+                        
+                        
+                        <NotificationIcon />
+                     
+                    ),
+                });
+            }, [navigation, router]);
+
     return (
         <SafeAreaView className="flex-1 bg-gray-50">
-            {/* Header */}
-            <ThemedView className="flex-row items-center justify-between px-4 py-3 bg-white border-b border-gray-100">
-                <TouchableOpacity onPress={() => router.back()}>
-                    <Icon as={ArrowLeftIcon} size="md" className="text-gray-700" />
-                </TouchableOpacity>
-
-                <ThemedText className="text-xl font-semibold text-gray-900">View Status of Report</ThemedText>
-
-                <TouchableOpacity onPress={() => router.push('/screens/notifications')}>
-                    <Icon as={BellIcon} size="md" className="text-gray-700" />
-                </TouchableOpacity>
-            </ThemedView>
+           
 
             <ScrollView className="flex-1 px-4 py-6">
                 {/* Report Frame */}
                 <ThemedView className="bg-white rounded-2xl p-6 mb-6 shadow-sm">
-                    <ThemedText className="text-right text-gray-400 text-sm mb-4">
-                        Frame 2087327378
-                    </ThemedText>
-
+                 
                     {/* Report ID */}
                     <ThemedView className="flex-row items-center justify-between mb-4">
-                        <ThemedText className="text-base font-medium text-gray-700">
+                        <ThemedText className="label_text">
                             Report ID
                         </ThemedText>
-                        <ThemedText className="text-base font-semibold text-gray-900">
+                        <ThemedText className="b2_body font-semibold">
                             {reportData.reportId}
                         </ThemedText>
                     </ThemedView>
 
                     {/* Date Submitted */}
                     <ThemedView className="flex-row items-center justify-between mb-4">
-                        <ThemedText className="text-base font-medium text-gray-700">
+                        <ThemedText className="label_text">
                             Date Submitted
                         </ThemedText>
-                        <ThemedText className="text-base text-gray-900">
-                            {reportData.dateSubmitted}
+                        <ThemedText className="b2_body font-semibold">
+                            {dayjs(reportData.lastUpdated).format('DD/MM/YYYY')}
                         </ThemedText>
                     </ThemedView>
 
                     {/* Brief Description */}
                     <ThemedView className="mb-4">
-                        <ThemedText className="text-base font-medium text-gray-700 mb-2">
+                        <ThemedText className="label_text mb-2">
                             Brief Description
                         </ThemedText>
-                        <ThemedText className="text-base text-gray-900 leading-6">
+                        <ThemedText className="b2_body font-semibold">
                             {reportData.description}
                         </ThemedText>
                     </ThemedView>
 
                     {/* Current Status */}
                     <ThemedView className="flex-row items-center justify-between mb-4">
-                        <ThemedText className="text-base font-medium text-gray-700">
+                        <ThemedText className="label_text">
                             Current Status
                         </ThemedText>
                         <ThemedView className="flex-row items-center">
                             <ThemedView className={`w-2 h-2 rounded-full mr-2 ${getStatusBadgeColor(reportData.currentStatus)}`} />
-                            <ThemedText className={`text-base font-medium ${getStatusColor(reportData.currentStatus)}`}>
+                            <ThemedText className={`b2_body font-semibold ${getStatusColor(reportData.currentStatus)}`}>
                                 {reportData.currentStatus}
                             </ThemedText>
                         </ThemedView>
@@ -99,31 +159,31 @@ export default function ReportDetailsScreen() {
 
                     {/* Last Updated Date */}
                     <ThemedView className="flex-row items-center justify-between mb-4">
-                        <ThemedText className="text-base font-medium text-gray-700">
+                        <ThemedText className="label_text">
                             Last Updated Date
                         </ThemedText>
-                        <ThemedText className="text-base text-gray-900">
-                            {reportData.lastUpdated}
+                        <ThemedText className="b2_body">
+                            {dayjs(reportData.lastUpdated).format('DD/MM/YYYY')}
                         </ThemedText>
                     </ThemedView>
 
                     {/* Support Team */}
                     <ThemedView className="flex-row items-center justify-between">
-                        <ThemedText className="text-base font-medium text-gray-700">
+                        <ThemedText className="label_text">
                             Support Team
                         </ThemedText>
-                        <ThemedText className="text-base text-gray-900">
+                        <ThemedText className="b2_body font-semibold">
                             {reportData.supportTeam}
                         </ThemedText>
                     </ThemedView>
                 </ThemedView>
 
                 {/* Action Buttons */}
-                <ThemedView className="gap-y-4">
+                <ThemedView className="flex flex-row justify-between">
                     {/* Back Button */}
                     {/* Live Chat Button */}
                     <TouchableOpacity
-                        className="border-[#E75B3B] border py-4 rounded-xl flex-row items-center justify-center"
+                        className="border-[#E75B3B] px-6 w-40 border py-4 rounded-xl flex-row items-center justify-center"
                         onPress={() => { router.back(); }}
                     >
                         <ThemedText className="text-[#E75B3B] font-semibold text-base">
@@ -132,29 +192,25 @@ export default function ReportDetailsScreen() {
                     </TouchableOpacity>
 
                     {/* Live Chat Button */}
+                    {
+                        reportData.currentStatus === "pending" ? (
                     <TouchableOpacity
-                        className="bg-[#E75B3B] py-4 rounded-xl flex-row items-center justify-center"
+                        className="bg-[#E75B3B] py-4 w-16 rounded-full flex-row items-center justify-center"
                         onPress={handleLiveChat}
                     >
-                        <ThemedView className="w-8 h-8 bg-white rounded-xl items-center justify-center mr-3">
-                            <ThemedText className="text-[#E75B3B] text-lg">💬</ThemedText>
-                        </ThemedView>
-                        <ThemedText className="text-white font-semibold text-base">
-                            Live chat
-                        </ThemedText>
+                        {
+                           (
+                                <Icon
+                                    as={MessageCircleMore}
+                                    size="xl"
+                                    color="white"
+                                />                           
+                               
+                            ) 
+                        }
                     </TouchableOpacity>
-                </ThemedView>
-
-                {/* Additional Information */}
-                <ThemedView className="mt-8 p-4 bg-blue-50 rounded-xl border border-blue-100">
-                    <ThemedText className="text-blue-800 font-medium mb-2">
-                        📋 Report Status Information
-                    </ThemedText>
-                    <ThemedText className="text-blue-700 text-sm leading-5">
-                        Your report is currently being reviewed by our support team.
-                        You will receive updates via notifications as the status changes.
-                        For urgent matters, please use the live chat feature.
-                    </ThemedText>
+                        ) : null
+                    }
                 </ThemedView>
             </ScrollView>
         </SafeAreaView>

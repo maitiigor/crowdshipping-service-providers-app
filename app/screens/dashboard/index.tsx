@@ -1,6 +1,6 @@
 import { LogoutModal } from '@/components/ui/logout-modal';
 import { Href, router } from 'expo-router';
-import { Car, Plus, Search, VectorSquare } from 'lucide-react-native';
+import { Bell, Car, Headset, Home, LogOut, MailPlus, Menu, MessageCircleMore, NotepadText, Plus, RotateCw, ScrollText, Search, SettingsIcon, VectorSquare, Wallet } from 'lucide-react-native';
 import React, { useEffect, useState } from 'react';
 import {
   ActivityIndicator,
@@ -9,31 +9,25 @@ import {
   Switch,
   Text,
   TextInput,
-  TouchableOpacity
+  TouchableOpacity,
+  View
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import GroundTripCard from '../../../components/Custom/GroundTripCard';
 import {
   Aeroplane,
-  BellNotification,
-  ChatBubble,
-  HomeAlt,
   Icon,
-  Inbox,
   Location,
-  Logout,
   MenuScale,
-  Notes,
-  PrivacyPolicy,
-  Refresh,
-  Settings,
   Sharpship,
   VechileCar,
-  Wallet
 } from '../../../components/ui/icon';
 
+import ParallaxScrollView from '../../../components/Custom/ParallaxScrollView';
 import NotificationIconComponent from '../../../components/NotificationIconComponent';
+import { ThemedText } from '../../../components/ThemedText';
+import { ThemedView } from '../../../components/ThemedView';
 import { useShowToast } from '../../../hooks/useShowToast';
 import { AirTrip, MarineTrip } from '../../../models';
 import { useAppDispatch, useAppSelector } from '../../../store';
@@ -42,26 +36,15 @@ import { logout } from '../../../store/slices/authSlice';
 import { acceptBooking, fetchDeliveryBookings, rejectBooking } from '../../../store/slices/groundTripSlice';
 import { fetchMarineTrips } from '../../../store/slices/marineTripSlice';
 import { fetchNotifications } from '../../../store/slices/notificationSlice';
+import { useThemeColor } from '../../../hooks/useThemeColor';
+import { getUserProfile } from '../../../store/slices/profileSlice';
 
 
 // UI Components
 
 // Icons (using simple text/emoji for now, can be replaced with proper icons)
-const MenuIcon = () => <Icon as={MenuScale} size="5xl" />;
-const NotificationIcon = () => <Icon as={Location} size="xl" className="#E75B3B" />;
 const SearchIcon = () => <Search className='text-[#9EA2AE]' />;
 const LocationIcon = () => <Icon as={Location} size="xl" className="text-[#E75B3B]" />;
-const HomeIcon = () => <Icon as={HomeAlt} size="xl" />;
-const BookingIcon = () => <Icon as={Refresh} size="xl" />;
-const InboxIcon = () => <Icon as={Inbox} size='xl' className="text-typography-900 text-gray-800" />;
-const PaymentIcon = () => <Icon as={Wallet} size="xl" />;
-const ComplaintsIcon = () => <Icon as={ChatBubble} size="xl" />;
-const SupportIcon = () => <Icon as={ChatBubble} size="xl" />;
-const NotificationsIcon = () => <Icon as={BellNotification} size="xl" />;
-const TermsIcon = () => <Icon as={Notes} size="xl" />;
-const PrivacyIcon = () => <Icon as={PrivacyPolicy} size="xl" />;
-const SettingsIcon = () => <Icon as={Settings} size="xl" />;
-const LogoutIcon = () => <Icon as={Logout} size="xl" className="text-red-500" />;
 
 export const AirIcon = ({ isActive }: { isActive?: boolean }) => (
   <Icon as={Aeroplane} size="5xl" fill="red" className={isActive ? 'text-white' : 'text-black'} />
@@ -107,36 +90,46 @@ const Sidebar: React.FC<SidebarProps> = ({ isVisible, onClose, onEditProfile, on
     setIsOnline(!isOnline);
   };
 
+
+    const backgroundColor = useThemeColor({}, "background");
+  const color = useThemeColor({}, "text");
+
   const menuItems = [
-    { icon: <HomeIcon />, label: 'Home', active: true, onPress: () => { } },
-    { icon: <Car />, label: 'My Vehicles', onPress: () => router.push('/screens/vehicles') },
+    { icon: <Home color={color} />, label: 'Home', active: true, onPress: () => {
+        router.push('/screens/dashboard');
+     } },
+    { icon: <Car color={color} />, label: 'My Vehicles', onPress: () => router.push('/screens/vehicles') },
 
-    { icon: <BookingIcon />, label: 'Booking History', onPress: () => router.push('/screens/bookings') },
+    { icon: <RotateCw color={color} />, label: 'Booking History', onPress: () => router.push('/screens/bookings') },
 
-    { icon: <VectorSquare />, label: 'Trips/Jobs', onPress: () => router.push('/screens/trips') },
+    { icon: <VectorSquare color={color} />, label: 'Trips/Jobs', onPress: () => router.push('/screens/trips') },
 
-    { icon: <InboxIcon />, label: 'Inbox', onPress: () => router.push('/screens/chats') },
-    { icon: <PaymentIcon />, label: 'Payment logs', onPress: () => router.push('/screens/payments') },
-    { icon: <ComplaintsIcon />, label: 'Complaints', onPress: () => { router.push('/screens/reports'); } },
-    { icon: <SupportIcon />, label: 'Support', onPress: () => router.push('/screens/support') },
-    { icon: <NotificationsIcon />, label: 'Notifications', onPress: () => router.push('/screens/notifications') },
+    { icon: <MailPlus color={color} />, label: 'Inbox', onPress: () => router.push('/screens/chats') },
+    { icon: <Wallet color={color} />, label: 'Payment logs', onPress: () => router.push('/screens/payments') },
+    { icon: <MessageCircleMore color={color} />, label: 'Complaints', onPress: () => { router.push('/screens/reports'); } },
+    { icon: <Headset color={color} />, label: 'Support', onPress: () => router.push('/screens/support') },
+    { icon: <Bell color={color} />, label: 'Notifications', onPress: () => router.push('/screens/notifications') },
     {
-      icon: <TermsIcon />, label: 'Terms & Conditions', onPress: () => {
+      icon: <NotepadText color={color} />, label: 'Terms & Conditions', onPress: () => {
         router.push('/screens/onboarding/terms-conditions');
       },
     },
     {
-      icon: <PrivacyIcon />, label: 'Privacy Policy', onPress: () => {
+      icon: <ScrollText color={color} />, label: 'Privacy Policy', onPress: () => {
         router.push('/screens/onboarding/privacy-policy');
       },
     },
     {
-      icon: <SettingsIcon />, label: 'App Settings', onPress: () => { },
+      icon: <SettingsIcon color={color} />, label: 'App Settings', onPress: () => {
+        router.push('/screens/settings');
+      },
     },
   ];
 
   return (
+
     <ThemedView className="absolute inset-0 z-50">
+
       {/* Overlay */}
       <TouchableOpacity className="absolute inset-0 bg-black/50" onPress={onClose} activeOpacity={1} />
 
@@ -175,7 +168,7 @@ const Sidebar: React.FC<SidebarProps> = ({ isVisible, onClose, onEditProfile, on
                 thumbColor="#FFFFFF"
                 style={{ transform: [{ scaleX: 1.5 }, { scaleY: 1.5 }] }}
               />
-              <Text>{isOnline ? 'Online' : 'Offline'}</ThemedText>
+              <ThemedText>{isOnline ? 'Online' : 'Offline'}</ThemedText>
             </ThemedView>
             {menuItems.map((item, index) => (
               <TouchableOpacity
@@ -194,12 +187,13 @@ const Sidebar: React.FC<SidebarProps> = ({ isVisible, onClose, onEditProfile, on
           {/* Logout */}
           <ThemedView className="px-6 py-4 border-t border-gray-200">
             <TouchableOpacity className="flex-row items-center py-3" onPress={onLogout}>
-              <ThemedView className="w-6 mr-4"><LogoutIcon /></ThemedView>
+              <ThemedView className="w-6 mr-4"><LogOut color={color} /></ThemedView>
               <ThemedText className="text-base text-red-500 font-medium">Log out</ThemedText>
             </TouchableOpacity>
           </ThemedView>
         </SafeAreaView>
       </ThemedView >
+
     </ThemedView >
   );
 };
@@ -373,6 +367,8 @@ export default function DashboardScreen() {
     { type: 'Air', IconComponent: AirIcon },
   ];
 
+  const color = useThemeColor({}, 'text');
+
 
   const showToast = useShowToast();
 
@@ -415,6 +411,7 @@ export default function DashboardScreen() {
     dispatch(fetchAirTrips());
     dispatch(fetchDeliveryBookings())
     dispatch(fetchNotifications())
+    dispatch(getUserProfile())
   }, [dispatch]);
 
   const handlePlaceBid = () => {
@@ -592,116 +589,118 @@ export default function DashboardScreen() {
 
   return (
     <SafeAreaView className="flex-1 bg-gray-50">
-      <StatusBar barStyle="dark-content" backgroundColor="white" />
+      <ParallaxScrollView headerBackgroundColor={{ light: "#FFFFFF", dark: "#353636" }}>
+        <StatusBar barStyle="dark-content" backgroundColor="white" />
 
-      {/* Header */}
-      <ThemedView className="bg-white h-24 ps-4 pr-4 flex-row items-center justify-between border-b border-gray-200">
-        <TouchableOpacity onPress={() => setSidebarVisible(true)}>
-          <ThemedView className="flex items-end mb-auto">
-            <MenuIcon />
-          </ThemedView>
-        </TouchableOpacity>
+        {/* Header */}
+        <ThemedView className="bg-white h-24 ps-4 pr-4 flex-row items-center justify-between border-b border-gray-200">
+          <TouchableOpacity onPress={() => setSidebarVisible(true)}>
+            <ThemedView className="flex items-end mb-auto">
+              <Menu color={color} />
+            </ThemedView>
+          </TouchableOpacity>
 
-        <ThemedView className="flex-1 items-center">
-          <ThemedView className="flex-row items-center">
-            <ThemedText className="text-lg font-semibold text-gray-900">Hello, {firstName}</ThemedText>
+          <ThemedView className="flex-1 items-center">
+            <ThemedView className="flex-row items-center">
+              <ThemedText className="text-lg font-semibold text-gray-900">Hello, {firstName}</ThemedText>
+            </ThemedView>
+            <ThemedView className="flex-row items-center">
+              <LocationIcon />
+              <ThemedText className="text-sm text-gray-600 ml-1">{profile.profile?.address.length <= 20 ? profile.profile?.address : `${profile.profile?.address.substring(0, 20)}...`}</ThemedText>
+              <ThemedText className="text-sm text-gray-400 ml-1">▼</ThemedText>
+            </ThemedView>
           </ThemedView>
-          <ThemedView className="flex-row items-center">
-            <LocationIcon />
-            <ThemedText className="text-sm text-gray-600 ml-1">{profile.profile?.address}</ThemedText>
-            <ThemedText className="text-sm text-gray-400 ml-1">▼</ThemedText>
-          </ThemedView>
+
+          <NotificationIconComponent />
         </ThemedView>
 
-        <NotificationIconComponent />
-      </ThemedView>
-
-      <ScrollView className="flex-1" showsVerticalScrollIndicator={false}>
-        {/* Search Bar */}
-        <ThemedView className="px-4 pt-4">
-          <ThemedView className="bg-white rounded-xl border-[#F4B4A5] h-[48px] border border-gray-200 flex-row px-3 items-center shadow-sm">
-            <SearchIcon />
-            <TextInput
-              placeholder="Search for jobs..."
-              className="flex-1 ml-3 text-gray-700"
-              placeholderTextColor="#9CA3AF"
-            />
+        <ScrollView className="flex-1" showsVerticalScrollIndicator={false}>
+          {/* Search Bar */}
+          <ThemedView className="px-4 pt-4">
+            <ThemedView className="bg-white rounded-xl border-[#F4B4A5] h-[48px] border border-gray-200 flex-row px-3 items-center shadow-sm">
+              <SearchIcon />
+              <TextInput
+                placeholder="Search for jobs..."
+                className="flex-1 ml-3 text-gray-700"
+                placeholderTextColor="#9CA3AF"
+              />
+            </ThemedView>
           </ThemedView>
-        </ThemedView>
 
 
 
 
 
-        {/* My Posted Trips */}
-        <ThemedView className="px-4 mb-3">
-          {/* <ThemedText className="text-xl font-bold text-gray-900 mb-4">My Posted Trips</ThemedText> */}
+          {/* My Posted Trips */}
+          <ThemedView className="px-4 mb-3">
+            {/* <ThemedText className="text-xl font-bold text-gray-900 mb-4">My Posted Trips</ThemedText> */}
 
-          {/* <MaritimeSummaryCard trip={marineTrips[0]} /> */}
+            {/* <MaritimeSummaryCard trip={marineTrips[0]} /> */}
 
-          {/* Transport Tabs */}
-          <ThemedView className="flex-row gap-3 mt-4">
+            {/* Transport Tabs */}
+            <ThemedView className="flex-row gap-3 mt-4">
+              {transportTypes.map((transport) => {
+                const isActive = selectedTransportType === transport.type;
+                const IconComponent = transport.IconComponent;
+
+                return (
+                  <>
+
+                    <TouchableOpacity
+                      key={transport.type}
+                      onPress={() => setSelectedTransportType(transport.type)}
+                      className={`flex-1 items-center justify-center py-5 rounded-2xl ${isActive ? 'bg-[#E75B3B]' : 'bg-white'}`}
+                      activeOpacity={isActive ? 0.8 : 1}
+                    >
+                      <View className="items-center">
+                        <IconComponent isActive={isActive} />
+                        <Text className={`mt-2 text-sm capitalize ${isActive ? 'text-white font-medium' : 'text-gray-700'}`}>
+                          {transport.type}
+                        </Text>
+                      </View>
+                    </TouchableOpacity>
+                  </>
+                );
+              })}
+            </ThemedView>
+          </ThemedView>
+
+          {/* Posted Trips Content */}
+          <ThemedView className="">
             {transportTypes.map((transport) => {
-              const isActive = selectedTransportType === transport.type;
-              const IconComponent = transport.IconComponent;
 
               return (
-                <>
-
-                  <TouchableOpacity
-                    key={transport.type}
-                    onPress={() => setSelectedTransportType(transport.type)}
-                    className={`flex-1 items-center justify-center py-5 rounded-2xl ${isActive ? 'bg-[#E75B3B]' : 'bg-white'}`}
-                    activeOpacity={isActive ? 0.8 : 1}
-                  >
-                    <ThemedView className="items-center">
-                      <IconComponent isActive={isActive} />
-                      <ThemedText className={`mt-2 text-sm capitalize ${isActive ? 'text-white font-medium' : 'text-gray-700'}`}>
-                        {transport.type}
+                <ThemedView className={`px-4 mb-6 ${transport.type === selectedTransportType ? '' : 'hidden'}`} key={transport.type}>
+                  {transport.type === 'Ground' ? (
+                    <ThemedView className="mb-2 ">
+                      <ThemedText className="text-xl font-bold text-gray-900 mb-4">
+                        Ground Trips Near You
                       </ThemedText>
+
+                      {renderMyPostedTripContent()}
                     </ThemedView>
-                  </TouchableOpacity>
-                </>
-              );
+                  ) : (
+                    <ThemedView className="mb-6 mt-4">
+                      <TouchableOpacity
+                        className="bg-[#E75B3B] flex items-center justify-center h-[48px] rounded-xl py-4 shadow-sm"
+                        onPress={() => router.push(transportRoutes[transport.type])}
+                      >
+                        <View className="flex-row items-center">
+                          <Plus color="white" className='mr-3' />
+                          <ThemedText className="text-white self-center font-semibold text-lg">Post My Trip</ThemedText>
+                        </View>
+                      </TouchableOpacity>
+                      {renderMyPostedTripContent()}
+                    </ThemedView>
+                  )}
+
+                </ThemedView>
+              )
             })}
           </ThemedView>
-        </ThemedView>
 
-        {/* Posted Trips Content */}
-        <ThemedView className="">
-          {transportTypes.map((transport) => {
-
-            return (
-              <ThemedView className={`px-4 mb-6 ${transport.type === selectedTransportType ? '' : 'hidden'}`} key={transport.type}>
-                {transport.type === 'Ground' ? (
-                  <ThemedView className="mb-2 ">
-                    <ThemedText className="text-xl font-bold text-gray-900 mb-4">
-                      Ground Trips Near You
-                    </ThemedText>
-
-                    {renderMyPostedTripContent()}
-                  </ThemedView>
-                ) : (
-                  <ThemedView className="mb-6 mt-4">
-                    <TouchableOpacity
-                      className="bg-[#E75B3B] flex items-center justify-center h-[48px] rounded-xl py-4 shadow-sm"
-                      onPress={() => router.push(transportRoutes[transport.type])}
-                    >
-                      <ThemedView className="flex-row items-center">
-                        <Plus color="white" className='mr-3' />
-                        <ThemedText className="text-white self-center font-semibold text-lg">Post My Trip</ThemedText>
-                      </ThemedView>
-                    </TouchableOpacity>
-                    {renderMyPostedTripContent()}
-                  </ThemedView>
-                )}
-
-              </ThemedView>
-            )
-          })}
-        </ThemedView>
-
-      </ScrollView>
+        </ScrollView>
+      </ParallaxScrollView>
 
       {/* Sidebar */}
       <Sidebar

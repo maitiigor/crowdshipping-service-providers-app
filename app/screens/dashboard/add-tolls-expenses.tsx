@@ -25,6 +25,7 @@ import { useAppDispatch, useAppSelector } from '../../../store';
 import { updateTripStatus } from '../../../store/slices/groundTripSlice';
 import { uploadDocument } from '../../../store/slices/profileSlice';
 import { resendDeliveryOtp } from '../../../store/slices/tripManagementSlice';
+import { ThemedText } from '../../../components/ThemedText';
 
 const { width, height } = Dimensions.get('window');
 
@@ -297,7 +298,7 @@ export default function AddTollsExpensesScreen() {
                                 {({ push }) => (
                                     <>
                                         {values.tolls.map((entry, index) => (
-                                            <View key={entry.id} className="mb-4 bg-white p-4 rounded-xl border border-gray-200 shadow-sm">
+                                            <ThemedView key={entry.id} className="mb-4 bg-white p-4 rounded-xl border border-gray-200 shadow-sm">
                                                 <ThemedText className="text-gray-700 font-medium mb-2">
                                                     Toll Amount
                                                 </ThemedText>
@@ -415,7 +416,7 @@ export default function AddTollsExpensesScreen() {
                                 </ThemedText>
                                 <ThemedView className="space-y-2">
                                     {values.tolls.map((entry, index) => (
-                                        <View key={entry.id} className="flex-row justify-between items-center">
+                                        <ThemedView key={entry.id} className="flex-row justify-between items-center">
                                             <ThemedText className="text-gray-600">Toll {index + 1}</ThemedText>
                                             <ThemedText className="text-gray-900 font-medium">
                                                 ₦{parseFloat(entry.amount || '0').toLocaleString()}

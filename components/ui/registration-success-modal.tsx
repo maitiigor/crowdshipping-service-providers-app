@@ -4,6 +4,8 @@ import {
     Modal
 } from "react-native";
 import { Button, ButtonText } from "./button";
+import { ThemedView } from "../ThemedView";
+import { ThemedText } from "../ThemedText";
 
 interface RegistrationSuccessModalProps {
     isVisible: boolean;

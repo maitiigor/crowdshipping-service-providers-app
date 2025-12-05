@@ -42,6 +42,7 @@ export interface UserProfile {
     userId: string,
     fullName: string,
     email: string,
+    kycStatus: string,
     phoneNumber: string,
     role: string,
     isVerfied: false,
@@ -63,6 +64,10 @@ interface Profile {
     state: string,
     gender: string
     location: Location,
+    rating?: {
+        avg: number,
+        count: number
+    }
 }
 
 
@@ -762,5 +767,23 @@ export interface Transaction {
     referenceId: string;
     previousBalance: number;
     currentBalance: number;
+}
+
+export interface Report{
+    reportRef: string;
+    reportType: string;
+    natureOfReport: string;
+    reportAmount: number;
+    description: string;
+    bookingId: string;  
+    parcelGroupId: string;
+    tripId: string;
+    raisedById: string;
+    evidence: string;
+    amountRefunded: number;
+    status: string;
+    createdAt: string;
+    updatedAt: string;
+    id: string;
 }
 

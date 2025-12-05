@@ -4,6 +4,8 @@ import { router } from 'expo-router';
 import React, { useState } from 'react';
 import { ScrollView, Text, TouchableOpacity, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { ThemedView } from '../../../components/ThemedView';
+import { ThemedText } from '../../../components/ThemedText';
 
 type TimeFrame = 'Day' | 'Week' | 'Month';
 
@@ -77,7 +79,7 @@ export default function EarningsScreen() {
                         const days = ['Mo', 'Tu', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
 
                         return (
-                            <View key={index} className="items-center flex-1">
+                            <ThemedView key={index} className="items-center flex-1">
                                 <View
                                     className="bg-orange-500 rounded-t-md w-8 mb-2"
                                     style={{ height: `${height}%` }}

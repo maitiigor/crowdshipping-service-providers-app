@@ -2,6 +2,8 @@ import { AntDesign } from '@expo/vector-icons';
 import React, { useState } from 'react';
 import { ScrollView, TouchableOpacity } from 'react-native';
 import { useAppSelector } from '../store';
+import { ThemedView } from './ThemedView';
+import { ThemedText } from './ThemedText';
 
 export default function ReduxStateDebugger() {
   const [isVisible, setIsVisible] = useState(false);

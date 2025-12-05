@@ -1,9 +1,31 @@
 'use client';
-import { ArrowLeftIcon, BellIcon, CalendarDaysIcon, ChevronDownIcon, Icon } from '@/components/ui/icon';
+import {
+    ArrowLeftIcon,
+    BellIcon,
+    Icon
+} from '@/components/ui/icon';
+import { Picker } from '@react-native-picker/picker';
 import { router } from 'expo-router';
-import React, { useState } from 'react';
-import { ScrollView, TextInput, TouchableOpacity } from 'react-native';
+import { Formik } from 'formik';
+import { CheckCircleIcon } from 'lucide-react-native';
+import React, { useEffect, useRef, useState } from 'react';
+import { ActivityIndicator, ScrollView, TextInput, TouchableOpacity } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { useDispatch } from 'react-redux';
+import * as Yup from 'yup';
+import AddressPicker, { AddressSelection } from '../../../components/Custom/AddressPicker';
+import CountryDropdown from '../../../components/Custom/CountryDropdown';
+import ImageUploader from '../../../components/Custom/ImageUploader';
+import InputLabelText from '../../../components/Custom/InputLabelText';
+import PhoneNumberInput from '../../../components/Custom/PhoneNumberInput';
+import { ThemedText } from '../../../components/ThemedText';
+import { ThemedView } from '../../../components/ThemedView';
+import { Button } from "../../../components/ui/button";
+import { useEditProfileForm } from '../../../hooks/useRedux';
+import { useShowToast } from '../../../hooks/useShowToast';
+import { ApiError } from '../../../models';
+import { AppDispatch, useAppSelector } from '../../../store';
+import { getUserProfile, updateProfile, uploadDocument } from '../../../store/slices/profileSlice';
 
 interface ProfileData {
     fullName: string;
@@ -13,90 +35,168 @@ interface ProfileData {
     country: string;
     phoneNumber: string;
     gender: string;
+    profilePicUrl: string;
     address: string;
+    city: string;
+    state: string;
+    location: {
+        coordinates: {
+            lat: number;
+            lng: number;
+        },
+        address: string;
+    }
 }
 
+
+
 export default function EditProfileScreen() {
-    const [profileData, setProfileData] = useState<ProfileData>({
-        fullName: 'Gbemisola Doe',
-        firstName: 'Gbemisola',
-        dateOfBirth: '07/12/1990',
-        email: 'gbemisoladoe@gmail.com',
-        country: 'Nigeria',
-        phoneNumber: '+234 813 0193 794',
-        gender: 'Male',
-        address: 'gbemisoladoe@gmail.com',
+
+
+    const { profile, loading } = useAppSelector((state) => state.profile);
+    const phoneInputRef = useRef<any>(null);
+    const [phone, setPhone] = useState("");
+    const userProfile = useAppSelector((state) => state.auth.userProfile);
+    const dispatch = useDispatch<AppDispatch>();
+
+    const match = userProfile.phoneNumber.match(/\(\+?(\d+)\)\s*(\d+)/);;
+    const initialValues = {
+        fullName: userProfile.fullName,
+        email: userProfile.email,
+        phoneNumber: match && match[2] ? match[2] : "",
+        countryCode: match && match[1] ? match[1] : "",
+        country: userProfile.profile?.country,
+        gender: userProfile.profile?.gender,
+        profilePicUrl: userProfile.profile?.profilePicUrl ?? "",
+        dob: '',
+        state: userProfile.profile?.state,
+        location: {
+            coordinates: {
+                lat: userProfile.profile?.location?.lat ?? 0,
+                lng: userProfile.profile?.location?.lng ?? 0,
+            },
+            address: userProfile.profile?.location?.address ?? ''
+        },
+        city: userProfile.profile?.city ?? ''
+    }
+
+
+
+    const { dropdownOptions } = useEditProfileForm();
+    const [selectedPickupAddress, setSelectedPickupAddress] =
+        useState<AddressSelection | null>(null);
+
+
+    // ✅ Correct way
+    useEffect(() => {
+        setSelectedPickupAddress({
+            address: userProfile.profile?.location?.address ?? '',
+            coordinates: {
+                lat: userProfile.profile?.location?.lat ?? 0,
+                lng: userProfile.profile?.location?.lng ?? 0,
+            }
+        });
+    }, [userProfile]);
+
+    const validationSchema = Yup.object().shape({
+        //fullName: Yup.string().required('Required'),
+        //email: Yup.string().email('Invalid Email').required('Required'),
+        // dateOfBirth: Yup.string().required('Required'),
+        //country: Yup.string(),
+        // gender: Yup.string(),
+        //   phoneNumber: Yup.string(),
+        //  address: Yup.string(),
     });
 
-    const [showCountryPicker, setShowCountryPicker] = useState(false);
-    const [showGenderPicker, setShowGenderPicker] = useState(false);
+    const handleDocumentUpload = async (documentType: string, file: string) => {
 
-    const countries = ['Nigeria', 'Ghana', 'Kenya', 'South Africa', 'Egypt'];
-    const genders = ['Male', 'Female', 'Other'];
 
-    const updateProfile = () => {
-        // Handle profile update logic here
-        console.log('Profile updated:', profileData);
-        router.back();
+
+
+        try {
+            const response = await dispatch(uploadDocument({ documentType, file })).unwrap();
+            const uploadedUrl = response.url;
+            return uploadedUrl;
+        } catch (error) {
+            console.log("upload error:", error);
+            return "";
+        }
+
     };
 
-    const renderInputField = (
-        label: string,
-        value: string,
-        onChangeText: (text: string) => void,
-        placeholder?: string,
-        rightIcon?: React.ReactNode,
-        onRightIconPress?: () => void
-    ) => (
-        <ThemedView className="mb-4">
-            <ThemedView className="relative">
-                <TextInput
-                    value={value}
-                    onChangeText={onChangeText}
-                    placeholder={placeholder || label}
-                    className="w-full h-[48px] px-4 py-4 bg-gray-50 rounded-lg text-base text-gray-900 border border-gray-200"
-                    placeholderTextColor="#9CA3AF"
-                />
-                {rightIcon && (
-                    <TouchableOpacity
-                        className="absolute right-4 top-4"
-                        onPress={onRightIconPress}
-                    >
-                        {rightIcon}
-                    </TouchableOpacity>
-                )}
-            </ThemedView>
-        </ThemedView>
-    );
+       const showToast = useShowToast();   
 
-    const renderPickerField = (
-        value: string,
-        onPress: () => void,
-        leftIcon?: React.ReactNode
-    ) => (
-        <ThemedView className="mb-4">
-            <TouchableOpacity
-                className="w-full px-4 py-4 bg-gray-50 rounded-lg border border-gray-200 flex-row items-center justify-between"
-                onPress={onPress}
-            >
-                <ThemedView className="flex-row items-center">
-                    {leftIcon && <ThemedView className="mr-3">{leftIcon}</ThemedView>}
-                    <ThemedText className="text-base text-gray-900">{value}</ThemedText>
-                </ThemedView>
-                <Icon as={ChevronDownIcon} size="sm" className="text-gray-500" />
-            </TouchableOpacity>
-        </ThemedView>
-    );
+      const submitData = async (values: any) => {
+        console.log("form data:", values);
+        const formData = {
+            fullName: values.fullName,
+         //   email: values.email,
+            phoneNumber: formatPhoneNumber(values.phoneNumber),
+            city: values.city,
+            state: values.state,
+            gender: values.gender,
+            country: values.country,
+            profilePicUrl: values.profilePicUrl,
+            location: {
+                lat: values.location.coordinates.lat,
+                lng: values.location.coordinates.lng,
+                address: values.location.address,
+            }
+        }
+
+        dispatch(updateProfile(formData)).unwrap().then(() => {
+            showToast({
+                title: "Profile Updated",
+                description: "Your profile has been updated",
+                icon: CheckCircleIcon,
+                action: "success",
+            });
+
+            router.back();
+
+        }).catch((err: ApiError) => {
+            showToast({
+                title: "Something went wrong",
+                description: err.message,
+                icon: CheckCircleIcon,
+                action: "error",
+            });
+
+        }).finally(() => {
+            dispatch(getUserProfile());
+        });
+
+
+
+
+    }
+
+
+    const formatPhoneNumber = (phone: string): string => {
+        const match = phone.match(/^\+?(\d{1,3})(\d{6,})$/);
+        if (!match) return phone; // if format doesn't match, return original
+        const [, countryCode, number] = match;
+        return `(+${countryCode})${number}`;
+    }
+
+
+
+
+
+
+
 
     return (
-        <SafeAreaView className="flex-1 bg-white">
-            {/* Header */}
+        <SafeAreaView className="flex-1">
+            {/* HEADER */}
             <ThemedView className="flex-row items-center justify-between px-4 py-3 border-b border-gray-100">
                 <TouchableOpacity onPress={() => router.back()}>
                     <Icon as={ArrowLeftIcon} size="md" className="text-gray-700" />
                 </TouchableOpacity>
 
-                <ThemedText className="text-xl font-semibold text-gray-900">Edit Profile</ThemedText>
+                <ThemedText className="text-xl font-semibold text-gray-900">
+                    Edit Profile
+                </ThemedText>
 
                 <TouchableOpacity>
                     <Icon as={BellIcon} size="md" className="text-gray-700" />
@@ -104,115 +204,206 @@ export default function EditProfileScreen() {
             </ThemedView>
 
             <ScrollView className="flex-1 px-4 py-6">
-                {/* Full Name */}
-                {renderInputField(
-                    'Full Name',
-                    profileData.fullName,
-                    (text) => setProfileData({ ...profileData, fullName: text })
-                )}
 
-                {/* First Name */}
-                {renderInputField(
-                    'First Name',
-                    profileData.firstName,
-                    (text) => setProfileData({ ...profileData, firstName: text })
-                )}
-
-                {/* Date of Birth */}
-                {renderInputField(
-                    'Date of Birth',
-                    profileData.dateOfBirth,
-                    (text) => setProfileData({ ...profileData, dateOfBirth: text }),
-                    'DD/MM/YYYY',
-                    <Icon as={CalendarDaysIcon} size="sm" className="text-gray-500" />
-                )}
-
-                {/* Email */}
-                {renderInputField(
-                    'Email',
-                    profileData.email,
-                    (text) => setProfileData({ ...profileData, email: text }),
-                    'Enter your email',
-                    <ThemedView className="w-5 h-5 bg-gray-300 rounded" />
-                )}
-
-                {/* Country */}
-                {renderPickerField(
-                    profileData.country,
-                    () => setShowCountryPicker(!showCountryPicker)
-                )}
-
-                {showCountryPicker && (
-                    <ThemedView className="mb-4 bg-gray-50 rounded-lg border border-gray-200">
-                        {countries.map((country) => (
-                            <TouchableOpacity
-                                key={country}
-                                className="px-4 py-3 border-b border-gray-200 last:border-b-0"
-                                onPress={() => {
-                                    setProfileData({ ...profileData, country });
-                                    setShowCountryPicker(false);
-                                }}
-                            >
-                                <ThemedText className="text-base text-gray-900">{country}</ThemedText>
-                            </TouchableOpacity>
-                        ))}
-                    </ThemedView>
-                )}
-
-                {/* Phone Number */}
-                {renderPickerField(
-                    profileData.phoneNumber,
-                    () => { },
-                    <ThemedView className="flex-row items-center">
-                        <ThemedView className="w-6 h-4 bg-green-500 mr-1" />
-                        <ThemedView className="w-6 h-4 bg-white mr-1" />
-                        <ThemedView className="w-6 h-4 bg-green-500" />
-                    </ThemedView>
-                )}
-
-                {/* Gender */}
-                {renderPickerField(
-                    profileData.gender,
-                    () => setShowGenderPicker(!showGenderPicker)
-                )}
-
-                {showGenderPicker && (
-                    <ThemedView className="mb-4 bg-gray-50 rounded-lg border border-gray-200">
-                        {genders.map((gender) => (
-                            <TouchableOpacity
-                                key={gender}
-                                className="px-4 py-3 border-b border-gray-200 last:border-b-0"
-                                onPress={() => {
-                                    setProfileData({ ...profileData, gender });
-                                    setShowGenderPicker(false);
-                                }}
-                            >
-                                <ThemedText className="text-base text-gray-900">{gender}</ThemedText>
-                            </TouchableOpacity>
-                        ))}
-                    </ThemedView>
-                )}
-
-                {/* Address */}
-                {renderPickerField(
-                    profileData.address,
-                    () => { },
-                    <Icon as={ArrowLeftIcon} size="sm" className="text-gray-500 transform rotate-90" />
-                )}
-            </ScrollView>
-
-            {/* Update Button */}
-            <ThemedView className="px-4 pb-4">
-                <TouchableOpacity
-                    className="bg-orange-500 py-4 rounded-full flex-row items-center justify-center"
-                    onPress={updateProfile}
+                <Formik
+                    initialValues={initialValues}
+                    validationSchema={validationSchema}
+                    onSubmit={submitData}
                 >
-                    <ThemedText className="text-white font-semibold text-base mr-2">Update</ThemedText>
-                    <ThemedView className="w-5 h-5 bg-white rounded-full items-center justify-center">
-                        <ThemedText className="text-orange-500 text-xs">✓</ThemedText>
-                    </ThemedView>
-                </TouchableOpacity>
-            </ThemedView>
-        </SafeAreaView>
+                    {({ handleChange, handleSubmit, values, errors, touched, setFieldValue }) => (
+                        <>
+                            {/* Full Name */}
+                            <ThemedView>
+                                <InputLabelText className="">Full Name</InputLabelText>
+                                <TextInput
+                                    placeholder="Full Name"
+                                    value={values.fullName}
+                                    onChangeText={handleChange("fullName")}
+                                    className="bg-[#FDF2F0] rounded-lg px-4 py-4 text-base"
+                                />
+                                {touched.fullName && errors.fullName && (
+                                    <ThemedText style={{ color: "red", fontSize: 12 }}>{errors.fullName}</ThemedText>
+                                )}
+                            </ThemedView>
+
+                            {/* Email */}
+                            <ThemedView>
+                                <InputLabelText className="">Email Address</InputLabelText>
+                                <TextInput
+                                    placeholder="Email"
+                                    value={values.email}
+                                    editable={false}
+                                    onChangeText={handleChange("email")}
+                                    className="bg-[#FDF2F0] rounded-lg px-4 py-4 text-base"
+                                    keyboardType="email-address"
+                                />
+                                {touched.email && errors.email && (
+                                    <ThemedText style={{ color: "red", fontSize: 12 }}>{errors.email}</ThemedText>
+                                )}
+                            </ThemedView>
+
+                            {/* Phone Number */}
+                            <ThemedView>
+                                <InputLabelText className="">Phone Number</InputLabelText>
+                                <PhoneNumberInput
+                                    ref={phoneInputRef}
+                                    value={values.phoneNumber}
+                                    onChangeFormattedText={(t) => {
+                                        setPhone(t);
+                                        setFieldValue("phoneNumber", t);
+                                    }}
+                                />
+                                {errors.phoneNumber && touched.phoneNumber && (
+                                    <ThemedText type="b4_body" className="text-error-500">
+                                        {errors.phoneNumber}
+                                    </ThemedText>
+                                )}
+                            </ThemedView>
+
+                            {/* Country */}
+                            <ThemedView>
+                                <CountryDropdown
+                                    values={values}
+                                    errors={errors}
+                                    touched={touched}
+                                    handleChange={handleChange("country")}
+                                />
+                            </ThemedView>
+
+
+                            {/* Gender */}
+                            <ThemedView>
+                                <InputLabelText className="">Gender</InputLabelText>
+                                <Picker
+                                    selectedValue={values.gender}
+                                    onValueChange={handleChange("gender")}
+                                    style={{ backgroundColor: "#FDF2F0", borderRadius: 50 }}
+                                    className="rounded-lg"
+                                >
+                                    {dropdownOptions.genders.map((gender) => (
+                                        <Picker.Item
+                                            key={gender.value}
+                                            label={gender.label}
+                                            value={gender.value}
+                                        />
+                                    ))}
+                                </Picker>
+                                {touched.gender && errors.gender && (
+                                    <ThemedText style={{ color: "red", fontSize: 12 }}>{errors.gender}</ThemedText>
+                                )}
+                            </ThemedView>
+
+                            {/* State */}
+                            <ThemedView>
+                                <InputLabelText className="">State</InputLabelText>
+                                <Picker
+                                    selectedValue={values.state}
+                                    onValueChange={handleChange("state")}
+                                    style={{ backgroundColor: "#FDF2F0", borderRadius: 50 }}
+                                    className="rounded-lg"
+                                >
+                                    {dropdownOptions.states.map((state) => (
+                                        <Picker.Item
+                                            key={state.value}
+                                            label={state.label}
+                                            value={state.value}
+                                        />
+                                    ))}
+                                </Picker>
+                                {touched.state && errors.state && (
+                                    <ThemedText style={{ color: "red", fontSize: 12 }}>{errors.state}</ThemedText>
+                                )}
+                            </ThemedView>
+
+                            {/* City */}
+                            <ThemedView>
+                                <InputLabelText className="">City</InputLabelText>
+                                <Picker
+                                    selectedValue={values.city}
+                                    onValueChange={handleChange("city")}
+                                    style={{ backgroundColor: "#FDF2F0", borderRadius: 50 }}
+                                    className="rounded-lg"
+                                >
+                                    {dropdownOptions.cities.map((city) => (
+                                        <Picker.Item
+                                            key={city.value}
+                                            label={city.label}
+                                            value={city.value}
+                                        />
+                                    ))}
+                                </Picker>
+                                {touched.city && errors.city && (
+                                    <ThemedText style={{ color: "red", fontSize: 12 }}>{errors.city}</ThemedText>
+                                )}
+                            </ThemedView>
+
+                            {/* Location */}
+                            <ThemedView>
+                                <InputLabelText className="">Address</InputLabelText>
+                                <AddressPicker
+                                    value={values.location}
+                                    onSelect={(sel) => {
+                                        setSelectedPickupAddress(sel);
+                                        // Reflect selection in Formik values.location
+                                        setFieldValue("location", {
+                                            coordinates: {
+                                                lat: sel.coordinates.lat,
+                                                lng: sel.coordinates.lng,
+                                            },
+                                            address: sel.address,
+                                        });
+                                    }}
+                                />
+                                {touched.location && errors.location && (
+                                    <ThemedText style={{ color: "red", fontSize: 12 }}>{errors.location.address}</ThemedText>
+                                )}
+                            </ThemedView>
+
+                            <ThemedView>
+                                <InputLabelText>Profile Picture</InputLabelText>
+                                {/* ID Back Image */}
+                                <ImageUploader
+                                    uri={userProfile.profile?.profilePicUrl}
+                                    editIconClassName="bottom-0 right-0"
+                                    allowsEditing
+                                    size={80}
+                                    label=""
+                                    aspect={[4, 3]}
+                                    className=" border-2 flex justify-center bg-rose-50 border-typography-300 items-center py-4 rounded border-dotted"
+                                    shape="circle"
+                                    onChange={async (uri) => {
+                                        //setPickedImage(uri);
+                                        if (!uri) return;
+                                        const uploadedUrl = await handleDocumentUpload("profilePicUrl", uri);
+                                        setFieldValue("profilePicUrl", uploadedUrl ?? "");
+                                    }}
+                                    helperText="A picture of proof of address"
+                                />
+                                {touched.profilePicUrl && errors.profilePicUrl && (
+                                    <ThemedText style={{ color: "red", fontSize: 12 }}>{errors.profilePicUrl}
+                                    </ThemedText>
+                                )}
+                            </ThemedView>
+
+                            <Button
+                                variant="solid"
+                                size="2xl"
+                                isDisabled={false}
+                                className="mt-5 rounded-[12px]"
+
+                                onPress={() => handleSubmit()}
+                            >
+                                <ThemedText type="s1_subtitle" className="text-white">
+                                    {loading ? <ActivityIndicator
+                                        color="white" /> : "Update Profile"}
+                                </ThemedText>
+                            </Button>
+                            <ThemedView className="h-10" />
+                        </>
+                    )}
+                </Formik>
+            </ScrollView >
+
+        </SafeAreaView >
     );
 }

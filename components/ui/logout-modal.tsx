@@ -1,5 +1,7 @@
 import React from 'react';
 import { Modal, TouchableOpacity } from 'react-native';
+import { ThemedView } from '../ThemedView';
+import { ThemedText } from '../ThemedText';
 
 interface LogoutModalProps {
     visible: boolean;

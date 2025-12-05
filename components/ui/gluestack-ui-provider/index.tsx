@@ -33,6 +33,6 @@ export function GluestackUIProvider({
       <OverlayProvider>
         <ToastProvider>{props.children}</ToastProvider>
       </OverlayProvider>
-    </ThemedView>
+    </View>
   );
 }

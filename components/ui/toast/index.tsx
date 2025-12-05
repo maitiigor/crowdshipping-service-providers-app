@@ -205,7 +205,7 @@ const ToastTitle = React.forwardRef<
       })}
     >
       {children}
-    </ThemedText>
+    </Text>
   );
 });
 

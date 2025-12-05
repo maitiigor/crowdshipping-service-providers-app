@@ -46,7 +46,7 @@ export default function PostTripScreen() {
         availableCapacityDimensions: '',
     });
     const dispatch = useAppDispatch();
-    const { airTrip, trips, loading, error } = useAppSelector((state) => state.airTrip);
+    const { airTrip, loading, error } = useAppSelector((state) => state.airTrip);
 
     const validationSchema = Yup.object().shape({
         departureCity: Yup.string().required("Departure city is required"),

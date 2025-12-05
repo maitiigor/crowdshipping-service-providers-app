@@ -2,7 +2,6 @@
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import apiClient from "../../lib/api/client";
 import { ApiError, ApiResponse, CompleteProfilePayload } from "../../models";
-import { setUserKycStatus, setUserProfile } from "./authSlice";
 
 
 interface EditProfileForm {
@@ -10,6 +9,23 @@ interface EditProfileForm {
     loading: boolean;
     error: ApiError | null;
     success: boolean;
+}
+
+
+interface ProfileUpdatePayload {
+    fullName?: string;
+    phoneNumber?: string;
+    location?: {
+        lat: number;
+        lng: number;
+        address: string;
+    };
+    state?: string;
+    city?: string;
+    country?: string;
+    gender?: string;
+    dob?: Date;
+    profilePicUrl?: string;
 }
 
 
@@ -108,12 +124,19 @@ const profileSlice = createSlice({
             }).addCase(getUserProfile.fulfilled, (state, action) => {
                 state.loading = false;
                 state.error = null;
-                console.log("get user profile:", action.payload?.data);
-                if (action.payload?.data) {
-                    setUserProfile(action.payload.data);
-                    setUserKycStatus("verified");
-                }
+                // state.profile = action.payload?.data;
             }).addCase(getUserProfile.rejected, (state, action) => {
+                state.loading = false;
+                state.error = action.payload as ApiError;
+            }).addCase(updateProfile.pending, (state, action) => {
+                state.loading = true;
+                state.error = null;
+
+            }).addCase(updateProfile.fulfilled, (state, action) => {
+                state.loading = false;
+                state.error = null;
+                //   state.profile = action.payload.data;
+            }).addCase(updateProfile.rejected, (state, action) => {
                 state.loading = false;
                 state.error = action.payload as ApiError;
             });
@@ -204,7 +227,7 @@ export const completeProfile = createAsyncThunk(
 );
 
 export const getUserProfile = createAsyncThunk(
-    "prodile/get-user-profile",
+    "profile/get-user-profile",
     async () => {
         try {
             const response = await apiClient.get<ApiResponse<any>>(
@@ -217,6 +240,30 @@ export const getUserProfile = createAsyncThunk(
         }
     }
 );
+
+export const updateProfile = createAsyncThunk(
+    "profile/update-profile",
+    async (payload: ProfileUpdatePayload, { rejectWithValue }) => {
+        try {
+            //console.log("updating profile:", payload)
+            setLoading(true);
+            const response = await apiClient.patch<ApiResponse<any>>(
+                "/user/update-profile",
+                payload,
+            );
+            //  console.log("updateing profile:", response.data);
+            return response.data;
+        } catch (error: any) {
+            console.log("update profile error:", error.response.data)
+
+            return rejectWithValue(
+                error.response?.data
+                    ? { code: error.response.code, message: error.response.data.message }
+                    : { code: 0, message: "Network error" } as ApiError
+            );
+        }
+    }
+)
 
 
 

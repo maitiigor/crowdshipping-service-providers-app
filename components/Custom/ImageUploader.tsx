@@ -164,7 +164,7 @@ const ImageUploader: React.FC<ImageUploaderProps> = ({
             <ActivityIndicator color="#fff" />
           </ThemedView>
         )}
-      </ThemedView>
+      </View>
       {!!helperText && (
         <ThemedText className="mt-2 text-typography-600 text-center">
           {helperText}

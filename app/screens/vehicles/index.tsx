@@ -22,6 +22,7 @@ import { useShowToast } from '../../../hooks/useShowToast';
 import { Vehicle } from "../../../models";
 import { AppDispatch, useAppSelector } from "../../../store";
 import { deleteVehicle, fetchVehicles, setVehicle } from "../../../store/slices/vechileSlice";
+import { useThemeColor } from "../../../hooks/useThemeColor";
 
 interface VehicleCardProps {
     vehicle: Vehicle;
@@ -221,6 +222,8 @@ export default function MyVehiclesScreen() {
     };
 
     const navigation = useNavigation();
+    const background = useThemeColor({}, 'background');
+    const color = useThemeColor({}, 'text');
 
     useEffect(() => {
         navigation.setOptions({
@@ -228,7 +231,7 @@ export default function MyVehiclesScreen() {
             headerTitle: () => {
                 return (
                     <ThemedText type="s1_subtitle" className="text-center">
-                        My Vehicles
+                        Notifications
                     </ThemedText>
                 );
             },
@@ -236,11 +239,12 @@ export default function MyVehiclesScreen() {
             headerTitleStyle: { fontSize: 20 }, // Increased font size
             headerShadowVisible: false,
             headerStyle: {
-                backgroundColor: "#FFFFFF",
+                backgroundColor: background,
                 elevation: 0, // Android
                 shadowOpacity: 0, // iOS
                 shadowColor: "transparent", // iOS
                 borderBottomWidth: 0,
+                color: color
             },
             headerLeft: () => (
                 <ThemedView
@@ -259,6 +263,7 @@ export default function MyVehiclesScreen() {
                             shadowOpacity: 0.102,
                             shadowRadius: 2,
                             elevation: 2,
+
                         }}
                     >
                         <TouchableOpacity

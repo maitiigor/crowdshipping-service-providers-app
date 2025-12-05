@@ -1,9 +1,11 @@
 'use client';
-import { ArrowLeftIcon, BellIcon, Icon } from '@/components/ui/icon';
+import { ArrowLeftIcon, BellIcon, Icon, SearchIcon } from '@/components/ui/icon';
 import { router } from 'expo-router';
 import React, { useState } from 'react';
 import { ScrollView, TouchableOpacity } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { ThemedText } from '../../../components/ThemedText';
+import { ThemedView } from '../../../components/ThemedView';
 
 type ReportStatus = 'pending' | 'resolved';
 
@@ -67,17 +69,17 @@ export default function ReportStatusScreen() {
     const filteredReports = reports.filter(report => report.status === activeFilter);
 
     const getStatusColor = (status: string) => {
-        return status === 'Approved' ? 'text-green-600' : 'text-orange-600';
+        return status === 'Approved' ? 'text-green-600' : 'text-[#E75B3B]';
     };
 
     const getStatusBadgeColor = (status: string) => {
-        return status === 'Approved' ? 'bg-green-500' : 'bg-orange-500';
+        return status === 'Approved' ? 'bg-green-100' : 'bg-[#FFF5F2]';
     };
 
     const renderReportItem = (report: Report) => (
         <TouchableOpacity
             key={report.id}
-            className="bg-white p-4 mb-3 rounded-xl border border-gray-100"
+            className="bg-white p-5 mb-4 rounded-2xl border border-gray-100 shadow-sm"
             onPress={() => {
                 router.push({
                     pathname: '/screens/reports/details',
@@ -90,31 +92,30 @@ export default function ReportStatusScreen() {
                 });
             }}
         >
-            <ThemedView className="flex-row items-center justify-between mb-3">
-                <ThemedText className="text-base font-semibold text-gray-900">
+            <ThemedView className="flex-row items-center justify-between mb-4">
+                <ThemedText className="text-sm text-gray-400 font-medium">
                     Report ID
                 </ThemedText>
-                <ThemedText className="text-base font-medium text-gray-700">
+                <ThemedText className="text-base font-bold text-gray-900">
                     {report.reportId}
                 </ThemedText>
             </ThemedView>
 
-            <ThemedView className="flex-row items-center justify-between mb-3">
-                <ThemedText className="text-sm text-gray-600">
+            <ThemedView className="flex-row items-center justify-between mb-4">
+                <ThemedText className="text-sm text-gray-400 font-medium">
                     Last Updated Date
                 </ThemedText>
-                <ThemedText className="text-sm text-gray-700">
+                <ThemedText className="text-sm font-semibold text-gray-900">
                     {report.lastUpdated}
                 </ThemedText>
             </ThemedView>
 
             <ThemedView className="flex-row items-center justify-between">
-                <ThemedText className="text-sm text-gray-600">
+                <ThemedText className="text-sm text-gray-400 font-medium">
                     Current Status
                 </ThemedText>
-                <ThemedView className="flex-row items-center">
-                    <ThemedView className={`w-2 h-2 rounded-full mr-2 ${getStatusBadgeColor(report.currentStatus)}`} />
-                    <ThemedText className={`text-sm font-medium ${getStatusColor(report.currentStatus)}`}>
+                <ThemedView className={`px-3 py-1.5 rounded-lg ${getStatusBadgeColor(report.currentStatus)}`}>
+                    <ThemedText className={`text-xs font-semibold ${getStatusColor(report.currentStatus)}`}>
                         {report.currentStatus}
                     </ThemedText>
                 </ThemedView>
@@ -130,37 +131,42 @@ export default function ReportStatusScreen() {
                     <Icon as={ArrowLeftIcon} size="md" className="text-gray-700" />
                 </TouchableOpacity>
 
-                <ThemedText className="text-xl font-semibold text-gray-900">View Status of Report</ThemedText>
+                <ThemedText className="text-lg font-bold text-gray-900">View Status of Report</ThemedText>
 
-                <TouchableOpacity onPress={() => router.push('/screens/notifications')}>
-                    <Icon as={BellIcon} size="md" className="text-gray-700" />
-                </TouchableOpacity>
+                <ThemedView className="flex-row items-center gap-x-4">
+                    <TouchableOpacity>
+                        <Icon as={SearchIcon} size="xl" className="text-gray-700" />
+                    </TouchableOpacity>
+                    <TouchableOpacity onPress={() => router.push('/screens/notifications')}>
+                        <Icon as={BellIcon} size="md" className="text-gray-700" />
+                    </TouchableOpacity>
+                </ThemedView>
             </ThemedView>
 
             <ThemedView className="px-4 py-4">
                 {/* Filter Buttons */}
-                <ThemedView className="flex-row gap-x-3 mb-6">
+                <ThemedView className="flex-row gap-x-4 mb-2">
                     <TouchableOpacity
-                        className={`px-6 py-3 rounded-xl flex-1 ${activeFilter === 'pending'
-                            ? 'bg-[#E75B3B]'
-                            : 'bg-white border border-gray-200'
+                        className={`py-3 rounded-xl flex-1 ${activeFilter === 'pending'
+                            ? 'bg-[#FFF5F2]'
+                            : 'bg-white border border-[#E75B3B]'
                             }`}
                         onPress={() => setActiveFilter('pending')}
                     >
-                        <ThemedText className={`text-center font-medium ${activeFilter === 'pending' ? 'text-white' : 'text-gray-700'
+                        <ThemedText className={`text-center font-medium ${activeFilter === 'pending' ? 'text-[#E75B3B]' : 'text-[#E75B3B]'
                             }`}>
                             Pending
                         </ThemedText>
                     </TouchableOpacity>
 
                     <TouchableOpacity
-                        className={`px-6 py-3 rounded-xl flex-1 ${activeFilter === 'resolved'
-                            ? 'bg-orange-500'
-                            : 'bg-white border border-gray-200'
+                        className={`py-3 rounded-xl flex-1 ${activeFilter === 'resolved'
+                            ? 'bg-[#FFF5F2]'
+                            : 'bg-white border border-[#E75B3B]'
                             }`}
                         onPress={() => setActiveFilter('resolved')}
                     >
-                        <ThemedText className={`text-center font-medium ${activeFilter === 'resolved' ? 'text-white' : 'text-gray-700'
+                        <ThemedText className={`text-center font-medium ${activeFilter === 'resolved' ? 'text-[#E75B3B]' : 'text-[#E75B3B]'
                             }`}>
                             Resolved
                         </ThemedText>
@@ -169,9 +175,9 @@ export default function ReportStatusScreen() {
             </ThemedView>
 
             {/* Reports List */}
-            <ScrollView className="flex-1 px-4">
+            <ScrollView className="flex-1 px-4" contentContainerStyle={{ paddingBottom: 20 }}>
                 {filteredReports.length > 0 ? (
-                    <ThemedView className="pb-6">
+                    <ThemedView>
                         {filteredReports.map(renderReportItem)}
                     </ThemedView>
                 ) : (
